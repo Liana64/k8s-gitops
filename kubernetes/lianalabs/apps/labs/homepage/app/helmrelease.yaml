@@ -58,15 +58,14 @@ spec:
       app:
         className: traefik
         hosts:
-          - host: "dashboard.${SECRET_INTERNAL_DOMAIN}"
+          - host: &host "dashboard.${SECRET_INTERNAL_DOMAIN}"
             paths:
               - path: /
                 service:
                   identifier: app
                   port: http
         tls:
-          - secretName: kube-prometheus-stack-tls
-            hosts: ["dashboard.${SECRET_INTERNAL_DOMAIN}"]
+          - hosts: [*host]
     persistence:
       images:
         enabled: true
