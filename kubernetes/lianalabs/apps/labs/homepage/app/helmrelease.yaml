@@ -67,18 +67,6 @@ spec:
         tls:
           - hosts: [*host]
     persistence:
-      images:
-        enabled: true
-        mountPath: /app/public/images
-        path: ${NFS_PATH}/k8s/homepage/images
-        server: ${NFS_HOST}
-        type: nfs
-      logos:
-        enabled: true
-        mountPath: /app/public/icons
-        path: ${NFS_PATH}/k8s/homepage/icons
-        server: ${NFS_HOST}
-        type: nfs
       config:
         type: configMap
         name: homepage-config
@@ -97,6 +85,18 @@ spec:
             readOnly: true
           - subPath: widgets.yaml
             path: /app/config/widgets.yaml
+            readOnly: true
+      images:
+        enabled: true
+        type: nfs
+        server: ${NFS_HOST}
+        path: ${NFS_PATH}/k8s/homepage/images
+        globalMounts:
+          - subPath: greenbg.png
+            path: /app/public/images/greenbg.png
+            readOnly: true
+          - subPath: vines.png
+            path: /app/public/images/vines.png
             readOnly: true
       bookmarks:
         type: secret
