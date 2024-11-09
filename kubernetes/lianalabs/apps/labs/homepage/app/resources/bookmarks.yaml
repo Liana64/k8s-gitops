@@ -1,0 +1,27 @@
+---
+- Cloud:
+    - GitHub:
+        - icon: github.png
+          href: https://github.com
+    - Cloudflare:
+        - abbr: CF
+          href: https://www.cloudflare.com/
+    - Namecheap:
+        - abbr: NC
+          href: https://www.namecheap.com/
+    - Backblaze:
+        - abbr: BB
+          href: https://secure.backblaze.com/b2_reports.htm
+    - Mailgun:
+        - abbr: MG
+          href: https://login.mailgun.com
+    - GitHub:
+        - abbr: GH
+          href: https://github.com/
+- Links:
+    - Homepage Documentation:
+        - abbr: HD
+          href: https://gethomepage.dev/
+    - Homepage Dashboard Icons:
+        - abbr: HI
+          href: https://github.com/walkxcode/dashboard-icons

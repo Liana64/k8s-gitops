@@ -1,0 +1,11 @@
+---
+machine:
+  features:
+    hostDNS:
+      enabled: true
+      resolveMemberNames: true
+      # For BGP mode, set to true
+      forwardKubeDNSToHost: true # Requires Cilium `bpf.masquerade: false`
+    kubePrism:
+      enabled: true
+      port: 7445

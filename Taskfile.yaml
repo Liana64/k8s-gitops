@@ -1,0 +1,44 @@
+---
+version: "3"
+
+vars:
+  KUBERNETES_DIR: "{{.ROOT_DIR}}/kubernetes"
+  KUBECONFIG_FILE: "{{.ROOT_DIR}}/kubeconfig"
+  SCRIPTS_DIR: "{{.ROOT_DIR}}/scripts"
+  SOPS_CONFIG_FILE: "{{.ROOT_DIR}}/.sops.yaml"
+  AGE_DIR: ~/.config/sops/age
+  AGE_FILE: "{{.AGE_DIR}}/keys.txt"
+
+#env:
+#  KUBECONFIG: "{{.KUBECONFIG_FILE}}"
+#  SOPS_AGE_KEY_FILE: "{{.AGE_FILE}}"
+
+dotenv: [".env"]
+
+includes:
+  flux:
+    taskfile: .taskfiles/flux.yaml
+    aliases: [f]
+  kubernetes:
+    taskfile: .taskfiles/kubernetes.yaml
+    aliases: [k]
+  sops:
+    taskfile: .taskfiles/sops.yaml
+    aliases: [s]
+  talos:
+    taskfile: .taskfiles/talos.yaml
+    aliases: [t]
+
+tasks:
+  default:
+    silent: true
+    cmds:
+      - task -l
+
+  init:
+    desc: Install dependencies and setup environment
+    cmds:
+      - task: setup:init
+      - task: precommit:init
+      - task: precommit:update
+      - task: sops:setup

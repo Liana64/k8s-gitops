@@ -1,0 +1,49 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: traefik
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: traefik
+      version: 33.0.0
+      sourceRef:
+        kind: HelmRepository
+        name: traefik
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  dependsOn:
+    - name: cert-manager
+      namespace: cert-manager
+  values:
+    deployment:
+      enabled: true
+      replicas: 1
+    service:
+      annotations:
+        io.cilium/lb-ipam-ips: ${LB_TRAEFIK}
+        #      spec:
+        #externalTrafficPolicy: Local
+    ingressClass:
+      enabled: true
+      isDefaultClass: true
+    metrics:
+      serviceMonitor:
+        enabled: true
+        namespaceSelector:
+          any: true
+    resources:
+      requests:
+        memory: 128Mi
+        cpu: 100m
+      limits:
+        memory: 1536Mi
