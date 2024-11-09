@@ -28,6 +28,7 @@ includes:
   talos:
     taskfile: .taskfiles/talos.yaml
     aliases: [t]
+  precommit: .taskfiles/precommit.yaml
 
 tasks:
   default:

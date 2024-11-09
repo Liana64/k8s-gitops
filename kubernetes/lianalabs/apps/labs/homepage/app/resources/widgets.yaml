@@ -1,4 +1,11 @@
 ---
+- search:
+    provider: custom
+    url: https://kagi.com/search?q=%s
+    target: _self
+    focus: false
+    suggestionUrl: https://kagi.com/api/autosuggest?q=%s
+    showSearchSuggestions: true
 - greeting:
     text_size: 2xl
     text: Liana Laboratories
@@ -11,16 +18,15 @@
       timeStyle: long
 - kubernetes:
     cluster:
-      cpu: true
-      label: cluster
-      memory: true
       show: true
-      showLabel: true
-    nodes:
+      showLabel: false
       cpu: true
       memory: true
+    nodes:
       show: false
-      showLabel: true
+      showLabel: false
+      cpu: true
+      memory: true
 - openmeteo:
     label: Chicago
     latitude: "{{HOMEPAGE_VAR_LATITUDE}}"

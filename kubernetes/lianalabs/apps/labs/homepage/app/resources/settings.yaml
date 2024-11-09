@@ -6,23 +6,32 @@ headerStyle: boxedWidgets
 providers:
   openweathermap: "{{OPENWEATHERMAP_API_KEY}}"
 layout:
-  Services:
-    style: row
-    columns: 3
-    icon: mdi-kubernetes
-  Home:
-    style: row
-    columns: 2
-    icon: mdi-home
   Network:
-    style: column
-    icon: mdi-network
-  Personal:
-    style: column
-    icon: mdi-desktop-classic
-  Work:
-    style: column
-    icon: mdi-briefcase
+    tab: Main
+    style: row
+    columns: 4
+  Observability:
+    tab: Main
+  Services:
+    tab: Main
+  Production:
+    tab: Main
+  Endpoints:
+    tab: Admin
+  IPMIs:
+    tab: Admin
+  Hypervisors:
+    tab: Admin
+  Backups:
+    tab: Admin
+  Downloads:
+    tab: Media
+    style: row
+    columns: 4
+  Media:
+    tab: Media
+    style: row
+    columns: 4
 quicklaunch:
   searchDescriptions: true
   hideInternetSearch: false
