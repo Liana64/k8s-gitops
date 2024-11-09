@@ -1,0 +1,19 @@
+# Trash
+.DS_Store
+Thumbs.db
+tmp
+.task
+Brewfile.lock.json
+*.log
+
+# Kubernetes
+kubeconfig
+talosconfig
+
+# Secrets
+identity
+.envrc
+*.agekey
+*.pub
+*.key
+*.pem

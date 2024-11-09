@@ -1,0 +1,82 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+vars:
+  KUBECONFORM_SCRIPT: "{{.SCRIPTS_DIR}}/kubeconform.sh"
+  KUBECTL_CMD: "kubectl --context {{.cluster}}"
+
+tasks:
+  resources:
+    desc: Gather common resources in your cluster, useful when asking for support
+    cmds:
+      - for: { var: resource }
+        cmd: '{{.KUBECTL_CMD}} get {{.ITEM}} {{.CLI_ARGS | default "-A"}}'
+    vars:
+      resource: >-
+        nodes
+        gitrepositories
+        kustomizations
+        helmrepositories
+        helmreleases
+        certificates
+        certificaterequests
+        ingresses
+        pods
+    requires:
+      vars: ["cluster"]
+
+  kubeconform:
+    desc: Validate Kubernetes manifests with kubeconform
+    summary: |
+      Args:
+        cluster: Cluster to run command against (required)
+    cmd: bash {{.KUBECONFORM_SCRIPT}} {{.KUBERNETES_DIR}}/{{.cluster}}
+    preconditions:
+      - msg: Missing kubeconform script
+        sh: test -f {{.KUBECONFORM_SCRIPT}}
+    requires:
+      vars: ["cluster"]
+
+  top:
+    desc: List top metrics
+    cmds:
+      - "{{.KUBECTL_CMD}} top node"
+      - "{{.KUBECTL_CMD}} top pod -A"
+    requires:
+      vars: ["cluster"]
+
+  browse-pvc:
+    desc: Browse PersistentVolumeClaims
+    summary: |
+      Args:
+        cluster: Cluster to run command against (required)
+        ns: Namespace to browse PersistentVolumeClaims in (default: default)
+        claim: PersistentVolumeClaim to browse (required)
+    interactive: true
+    cmd: "{{.KUBECTL_CMD}} browse-pvc --namespace {{.ns}} {{.claim}}"
+    vars:
+      ns: '{{.ns | default "default"}}'
+    requires:
+      vars: ["cluster", "claim"]
+
+  drain:
+    desc: Drain a node
+    summary: |
+      Args:
+        cluster: Cluster to run command against (required)
+        node: Node to drain (required)
+    cmd: "{{.KUBECTL_CMD}} drain {{.node}} --ignore-daemonsets --delete-local-data --force"
+    requires:
+      vars: ["cluster", "node"]
+
+  sanitize:
+    desc: Delete pods that aren't working as intended
+    summary: |
+      Args:
+        cluster: Cluster to run command against (required)
+    cmds:
+      - for: ["Evicted", "Failed", "Succeeded"]
+        cmd: "{{.KUBECTL_CMD}} delete pods --field-selector status.phase={{.ITEM}} -A --ignore-not-found=true"
+    requires:
+      vars: ["cluster"]

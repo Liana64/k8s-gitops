@@ -1,0 +1,112 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+tasks:
+  verify:
+    desc: Verify flux meets the prerequisites
+    cmd: flux check --pre
+
+  bootstrap:
+    desc: Bootstrap Flux into a Kubernetes cluster
+    summary: |
+      Args:
+        cluster: Cluster to run command against (required)
+    prompt: Bootstrap Flux into the '{{.cluster}}' cluster ... continue?
+    cmds:
+      - kubectl --context {{.cluster}} apply --kubeconfig {{.KUBECONFIG_FILE}} --server-side --kustomize {{.KUBERNETES_DIR}}/{{.cluster}}/bootstrap/flux
+      - cat {{.AGE_FILE}} | kubectl -n flux-system create secret generic sops-age --from-file=age.agekey=/dev/stdin
+      - sops --decrypt {{.KUBERNETES_DIR}}/{{.cluster}}/flux/vars/cluster-secrets.sops.yaml | kubectl apply --kubeconfig {{.KUBECONFIG_FILE}} --server-side --filename -
+      - kubectl --context {{.cluster}} apply --kubeconfig {{.KUBECONFIG_FILE}} --server-side --filename {{.KUBERNETES_DIR}}/{{.cluster}}/flux/vars/cluster-settings.yaml
+      - kubectl --context {{.cluster}} apply --kubeconfig {{.KUBECONFIG_FILE}} --server-side --kustomize {{.KUBERNETES_DIR}}/{{.cluster}}/flux/config
+      - task: github-deploy-key
+    requires:
+      vars: ["cluster"]
+    preconditions:
+      - msg: Missing kubeconfig
+        sh: test -f {{.KUBECONFIG_FILE}}
+      - msg: Missing Sops Age key file
+        sh: test -f {{.AGE_FILE}}
+
+  apply:
+    desc: Apply a Flux Kustomization resource for a cluster
+    summary: |
+      Args:
+        path: Path under apps containing the Flux Kustomization resource (ks.yaml) (required)
+        ns: Namespace the Flux Kustomization exists in (default: flux-system)
+    cmd: |
+      flux --context {{.cluster}} build ks $(basename {{.path}}) \
+          --namespace {{.ns}} \
+          --kustomization-file {{.KUBERNETES_DIR}}/{{.cluster}}/apps/{{.path}}/ks.yaml \
+          --path {{.KUBERNETES_DIR}}/{{.cluster}}/apps/{{.path}} \
+          {{- if contains "not found" .ks }}--dry-run \{{ end }}
+      | \
+      kubectl --context {{.cluster}} apply --kubeconfig {{.KUBECONFIG_FILE}} --server-side \
+          --field-manager=kustomize-controller -f -
+    requires:
+      vars: ["cluster", "path"]
+    vars:
+      ns: '{{.ns | default "flux-system"}}'
+      ks:
+        sh: flux --context {{.cluster}} --namespace {{.ns}} get kustomizations $(basename {{.path}}) 2>&1
+    preconditions:
+      - msg: Missing kubeconfig
+        sh: test -f {{.KUBECONFIG_FILE}}
+      - msg: Missing Flux Kustomization for app {{.path}}
+        sh: test -f {{.KUBERNETES_DIR}}/{{.cluster}}/apps/{{.path}}/ks.yaml
+
+  reconcile:
+    desc: Force update Flux to pull in changes from your Git repository
+    cmd: flux --context {{.cluster}} reconcile --namespace flux-system kustomization cluster --with-source
+    requires:
+      vars: ["cluster"]
+    preconditions:
+      - msg: Missing kubeconfig
+        sh: test -f {{.KUBECONFIG_FILE}}
+
+  github-deploy-key:
+    cmds:
+      - kubectl --context {{.cluster}} create namespace flux-system --dry-run=client -o yaml | kubectl --context {{.cluster}} apply --filename -
+      - sops --decrypt {{.KUBERNETES_DIR}}/{{.cluster}}/bootstrap/flux/github-deploy-key.sops.yaml | kubectl apply --context {{.cluster}} --server-side --filename -
+    requires:
+      vars: ["cluster"]
+    preconditions:
+      - msg: Missing kubeconfig
+        sh: test -f {{.KUBECONFIG_FILE}}
+      - msg: Missing Sops Age key file
+        sh: test -f {{.AGE_FILE}}
+      - msg: Missing Github deploy key file
+        sh: test -f {{.KUBERNETES_DIR}}/{{.cluster}}/bootstrap/flux/github-deploy-key.sops.yaml
+
+  redo:
+    desc: Force reset drift in HelmRelease
+    cmds:
+      - flux --context {{.cluster}} suspend hr {{.CLI_ARGS}}
+      - flux --context {{.cluster}} resume hr {{.CLI_ARGS}}
+    requires:
+      vars: ["cluster"]
+
+  # https://github.com/fluxcd/helm-controller/issues/454#issuecomment-962208864
+  redo-failed:
+    desc: Restart all failed Helm Releases
+    cmds:
+      - kubectl --context {{.cluster}} get hr --all-namespaces | grep False | awk '{print $2, $1}' | gxargs -l bash -c 'flux suspend hr $0 -n $1'
+      - kubectl --context {{.cluster}} get hr --all-namespaces | grep False | awk '{print $2, $1}' | gxargs -l bash -c 'flux resume hr $0 -n $1'
+    requires:
+      vars: ["cluster"]
+
+  # https://github.com/fluxcd/helm-controller/issues/454#issuecomment-962208864
+  retry:
+    desc: Restart specific helmrelease
+    cmds:
+      - flux --context {{.cluster}} suspend hr {{.hr}} -n {{.ns}}
+      - sleep 2
+      - flux --context {{.cluster}} resume hr {{.hr}} -n {{.ns}}
+    requires:
+      vars: ["cluster", "ns", "hr"]
+
+  errors:
+    desc: List errors from all namespaces
+    cmd: flux --context {{.cluster}} logs -A --level=error
+    requires:
+      vars: ["cluster"]
