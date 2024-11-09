@@ -63,7 +63,7 @@ spec:
               - path: /
                 service:
                   identifier: app
-                  port: http
+                  port: https
         tls:
           - hosts: [*host]
     persistence:
