@@ -8,6 +8,8 @@ data:
   TIMEZONE: America/Chicago
   LETSENCRYPT_ENVIRONMENT: production
   CLUSTER_NAME: lianalabs
+  NFS_SERVER: 10.28.20.10
+  NFS_PATH: /r720xd-nfs
 
   LB_TRAEFIK: 10.28.12.100
   LB_POSTGRES: 10.28.12.101
