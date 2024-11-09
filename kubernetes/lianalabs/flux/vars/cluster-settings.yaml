@@ -9,7 +9,7 @@ data:
   LETSENCRYPT_ENVIRONMENT: production
   CLUSTER_NAME: lianalabs
   NFS_HOST: 10.28.20.10
-  NFS_PATH: /mnt/r720xd-nvme/r720xd-nfs/k8s
+  NFS_PATH: /mnt/r720xd-nvme/r720xd-nfs
 
   LB_TRAEFIK: 10.28.12.100
   LB_POSTGRES: 10.28.12.101
