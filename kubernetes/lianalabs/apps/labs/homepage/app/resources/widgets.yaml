@@ -1,10 +1,10 @@
 ---
 - search:
     provider: custom
-    url: https://kagi.com/search?q=%s
+    url: https://kagi.com/search?q=
     target: _self
     focus: false
-    suggestionUrl: https://kagi.com/api/autosuggest?q=%s
+    suggestionUrl: https://kagi.com/api/autosuggest?q=
     showSearchSuggestions: true
 - greeting:
     text_size: 2xl
