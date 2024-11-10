@@ -47,9 +47,28 @@ spec:
               ONLY_NEW: False
             securityContext:
               allowPrivilegeEscalation: false
-              # App doesn't even log anything.
               readOnlyRootFilesystem: false
-              #capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                cpu: 200m
+                memory: 512Mi
+        initContainers:
+          app:
+            image:
+              repository: ghcr.io/archivebox/archivebox
+              tag: 0.7.2
+            args: ["init"]
+            env:
+              TZ: "${TIMEZONE}"
+              PUID: 1000
+              PGID: 1000
+              ONLY_NEW: False
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
             resources:
               requests:
                 cpu: 10m
