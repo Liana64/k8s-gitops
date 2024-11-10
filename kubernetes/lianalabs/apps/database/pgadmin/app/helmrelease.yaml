@@ -83,7 +83,7 @@ spec:
     ingress:
       app:
         enabled: true
-        className: internal
+        className: traefik
         annotations:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Services
