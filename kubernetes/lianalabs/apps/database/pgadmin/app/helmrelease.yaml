@@ -85,17 +85,21 @@ spec:
         enabled: true
         className: traefik
         annotations:
+          cert-manager.io/cluster-issuer: "letsencrypt-production"
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Services
           gethomepage.dev/name: *app
           gethomepage.dev/icon: si-postgresql
         hosts:
-          - host: "{{ .Release.Name }}.${SECRET_INTERNAL_DOMAIN}"
+          - host: &host "{{ .Release.Name }}.${SECRET_INTERNAL_DOMAIN}"
             paths:
               - path: /
                 service:
                   identifier: app
                   port: http
+        tls:
+          - hosts:
+              - *host
     persistence:
       config:
         storageClass: local-nvme
