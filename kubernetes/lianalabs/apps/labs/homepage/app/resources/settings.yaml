@@ -2,7 +2,7 @@
 title: Dashboard
 theme: dark
 color: slate
-headerStyle: boxedWidget
+headerStyle: clean
 favicon: /images/vines.png
 background:
   image: /images/greenbg.png
