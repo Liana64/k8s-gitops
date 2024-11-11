@@ -125,5 +125,6 @@ spec:
         storageClass: local-nvme
         accessMode: ReadWriteOnce
         size: 64Gi
+        retain: true
         globalMounts:
           - path: /data
