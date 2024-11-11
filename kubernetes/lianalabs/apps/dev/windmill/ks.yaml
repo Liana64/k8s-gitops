@@ -6,11 +6,11 @@ metadata:
   name: &app windmill
   namespace: flux-system
 spec:
-  targetNamespace: labs
+  targetNamespace: dev
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./kubernetes/lianalabs/apps/labs/windmill/app
+  path: ./kubernetes/lianalabs/apps/dev/windmill/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -22,5 +22,3 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      GATUS_SUBDOMAIN: rss
-      GATUS_PATH: /healthcheck
