@@ -10,3 +10,4 @@ resources:
   - ./changedetection/ks.yaml
   - ./atuin/ks.yaml
   - ./it-tools/ks.yaml
+  - ./cyberchef/ks.yaml
