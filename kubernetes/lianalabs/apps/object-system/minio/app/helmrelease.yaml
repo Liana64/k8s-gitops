@@ -111,7 +111,7 @@ spec:
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
         hosts:
-          - host: &apiHost s3.${SECRET_INTERNAL_DOMAIN}
+          - host: &apiHost "s3.${SECRET_INTERNAL_DOMAIN}"
             paths:
               - path: /
                 service:
