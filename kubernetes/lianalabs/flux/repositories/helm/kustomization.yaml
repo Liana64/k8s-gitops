@@ -19,3 +19,4 @@ resources:
   - ./spegel.yaml
   - ./stakater.yaml
   - ./traefik.yaml
+  - ./teleport.yaml
