@@ -29,12 +29,12 @@ spec:
           reloader.stakater.com/auto: "true"
         initContainers:
           - name: init-db
-            image: ghcr.io/onedr0p/postgres-init:17
+            image: ghcr.io/onedr0p/postgres-init:16
             envFrom:
               - secretRef:
                   name: &secret windmill-secret
           - name: init-grants
-            image: ghcr.io/onedr0p/postgres-init:17
+            image: ghcr.io/onedr0p/postgres-init:16
             command:
               - /bin/bash
               - -c
