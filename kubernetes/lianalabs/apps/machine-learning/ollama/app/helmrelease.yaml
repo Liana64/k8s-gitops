@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -19,15 +20,16 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   values:
     controllers:
-      main:
+      ollama:
         type: deployment
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
-          main:
+          app:
             image:
               repository: docker.io/ollama/ollama
               tag: 0.4.1
@@ -46,8 +48,8 @@ spec:
                 memory: 8Gi
                 # gpu.intel.com/i915: "1"
     service:
-      main:
-        controller: main
+      app:
+        controller: *app
         ports:
           http:
             port: &port 11434
