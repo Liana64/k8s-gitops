@@ -7,3 +7,5 @@ resources:
   - ./dragonfly/ks.yaml
   - ./cloudnative-pg/ks.yaml
   - ./pgadmin/ks.yaml
+  - ./redis/ks.yaml
+  - ./minio/ks.yaml
