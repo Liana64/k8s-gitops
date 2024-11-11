@@ -20,3 +20,4 @@ resources:
   - ./stakater.yaml
   - ./traefik.yaml
   - ./teleport.yaml
+  - ./windmill.yaml

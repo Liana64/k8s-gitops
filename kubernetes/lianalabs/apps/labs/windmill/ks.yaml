@@ -3,16 +3,14 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app miniflux
+  name: &app windmill
   namespace: flux-system
 spec:
   targetNamespace: labs
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: cloudnative-pg
-  path: ./kubernetes/lianalabs/apps/labs/miniflux/app
+  path: ./kubernetes/lianalabs/apps/labs/windmill/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -24,3 +22,5 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      GATUS_SUBDOMAIN: rss
+      GATUS_PATH: /healthcheck
