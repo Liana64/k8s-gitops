@@ -80,7 +80,7 @@ spec:
         hosts: ["prometheus.${SECRET_INTERNAL_DOMAIN}"]
         pathType: Prefix
         tls:
-          - secretName: kube-prometheus-stack-tls
+          - secretName: prometheus-tls
             hosts: ["prometheus.${SECRET_INTERNAL_DOMAIN}"]
       prometheusSpec:
         scrapeInterval: 1m # Must match interval in Grafana Helm chart
@@ -160,7 +160,7 @@ spec:
         hosts: ["alertmanager.${SECRET_INTERNAL_DOMAIN}"]
         pathType: Prefix
         tls:
-          - secretName: kube-prometheus-stack-tls
+          - secretName: alertmanager-tls
             hosts: ["alertmanager.${SECRET_INTERNAL_DOMAIN}"]
       alertmanagerSpec:
         storage:
