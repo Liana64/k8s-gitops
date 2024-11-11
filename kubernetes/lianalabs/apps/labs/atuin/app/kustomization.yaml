@@ -5,5 +5,4 @@ kind: Kustomization
 resources:
   - ./secret.sops.yaml
   - ./helmrelease.yaml
-  - ../../../../templates/gatus/internal
   - ../../../database/cloudnative-pg/app/secret.sops.yaml
