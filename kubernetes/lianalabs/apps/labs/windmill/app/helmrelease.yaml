@@ -48,11 +48,6 @@ spec:
             envFrom:
               - secretRef:
                   name: *secret
-            volumeMounts:
-              - name: grants
-                readOnly: true
-                subPath: grants.sh
-                mountPath: /var/run/grants.sh
       baseDomain: &host "windmill.${SECRET_INTERNAL_DOMAIN}"
       baseProtocol: https
       appReplicas: 1
@@ -89,3 +84,9 @@ spec:
           hosts: [*host]
     postgresql:
       enabled: false
+      enabled: false
+  valuesFrom:
+    - kind: Secret
+      name: *secret
+      valuesKey: WINDMILL_POSTGRES_URL
+      targetPath: windmill.databaseUrl
