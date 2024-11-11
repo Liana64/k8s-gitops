@@ -1,15 +1,16 @@
 ---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app echo-server
+  name: &app actual
   namespace: flux-system
 spec:
-  targetNamespace: observability
+  targetNamespace: home
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./kubernetes/lianalabs/apps/observability/echo-server/app
+  path: ./kubernetes/lianalabs/apps/home/actual/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -18,3 +19,6 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 5m
+  postBuild:
+    substitute:
+      APP: *app
