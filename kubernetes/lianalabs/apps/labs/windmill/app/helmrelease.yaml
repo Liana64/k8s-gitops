@@ -84,7 +84,6 @@ spec:
           hosts: [*host]
     postgresql:
       enabled: false
-      enabled: false
   valuesFrom:
     - kind: Secret
       name: *secret
