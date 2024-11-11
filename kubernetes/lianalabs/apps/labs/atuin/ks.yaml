@@ -12,7 +12,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: cloudnative-pg
-  path: ./kubernetes/lianalabs/apps/default/atuin/app
+  path: ./kubernetes/lianalabs/apps/labs/atuin/app
   prune: true
   sourceRef:
     kind: GitRepository
