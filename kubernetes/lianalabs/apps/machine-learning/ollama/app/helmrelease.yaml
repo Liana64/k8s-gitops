@@ -40,11 +40,12 @@ spec:
               OLLAMA_MODELS: /models
               #HSA_OVERRIDE_GFX_VERSION: "11.0.0"
             resources:
-              requests:
+              remachine-learninequests:
                 cpu: 200m
                 memory: 4Gi
                 # gpu.intel.com/i915: "1"
               limits:
+                cpu: 8000m
                 memory: 8Gi
                 # gpu.intel.com/i915: "1"
     service:
