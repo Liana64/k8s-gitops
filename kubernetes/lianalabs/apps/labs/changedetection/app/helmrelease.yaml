@@ -77,6 +77,10 @@ spec:
         className: traefik
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Services
+          gethomepage.dev/name: *app
+          gethomepage.dev/icon: changedetection-io.png
         hosts:
           - host: &host "change.${SECRET_INTERNAL_DOMAIN}"
             paths:
