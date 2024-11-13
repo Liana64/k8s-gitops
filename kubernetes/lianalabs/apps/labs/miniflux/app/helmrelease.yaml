@@ -54,6 +54,11 @@ spec:
               BASE_URL: "https://rss.${SECRET_EXTERNAL_DOMAIN}"
               CREATE_ADMIN: "1"
               LOG_DATE_TIME: "1"
+              OAUTH2_CLIENT_ID: miniflux
+              OAUTH2_USER_CREATION: "1"
+              OAUTH2_OIDC_DISCOVERY_ENDPOINT: "https://auth.${SECRET_EXTERNAL_DOMAIN}"
+              OAUTH2_PROVIDER: oidc
+              OAUTH2_REDIRECT_URL: https://rss.${SECRET_INTERNAL_DOMAIN}/oauth2/oidc/callback
               METRICS_ALLOWED_NETWORKS: "${CLUSTER_CIDR}"
               METRICS_COLLECTOR: "1"
               POLLING_SCHEDULER: entry_frequency
@@ -111,7 +116,8 @@ spec:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Services
-          gethomepage.dev/name: *app
+          gethomepage.dev/name: Miniflux
+          gethomepage.dev/description: Minimalist RSS aggregator
           gethomepage.dev/icon: miniflux
         hosts:
           - host: &host "rss.${SECRET_INTERNAL_DOMAIN}"

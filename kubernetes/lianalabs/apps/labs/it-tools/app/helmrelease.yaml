@@ -58,8 +58,9 @@ spec:
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Services
+          gethomepage.dev/group: Tools
           gethomepage.dev/name: *app
+          gethomepage.dev/description: Tools for developers
           gethomepage.dev/icon: it-tools
         hosts:
           - host: &host "it-tools.${SECRET_INTERNAL_DOMAIN}"

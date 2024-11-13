@@ -5,6 +5,18 @@
 #         reconcile the cluster with flux
 #         remove previous WIP commit
 
+echo -n "Checking variables..."
+
+if [ ! -d "$ROOT_DIR" ]; then
+    echo ""
+    echo "$ROOT_DIR does not exist. Make sure your env is loaded!"
+    exit 1
+fi
+
+cd $ROOT_DIR
+
+echo " Finished."
+
 # Source: https://github.com/ohmyzsh/ohmyzsh/blob/1546e1226a7b739776bda43f264b221739ba0397/lib/git.zsh#L68-L81
 function git_current_branch {
   local ref
@@ -31,8 +43,22 @@ function gpcf {
   git push --force-with-lease origin "$(git_current_branch)"
 }
 
+echo "Encrypting secrets"
+echo ""
 task sops:encrypt-all
+echo ""
 gwip
 gpcf
-task flux:reconcile cluster=main
+echo "Reconciling flux"
+echo ""
+task flux:reconcile cluster=lianalabs
+echo ""
+echo "Git Log:"
 gunwip
+echo ""
+echo "Waiting..."
+echo ""
+sleep 5
+echo "Flux Status:"
+flux get all -A
+echo ""

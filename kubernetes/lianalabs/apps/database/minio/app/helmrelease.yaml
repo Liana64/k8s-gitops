@@ -94,7 +94,8 @@ spec:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Services
-          gethomepage.dev/name: *app
+          gethomepage.dev/name: MinIO Console
+          gethomepage.dev/description: MinIO admin dashboard
           gethomepage.dev/icon: minio
         hosts:
           - host: &appHost "{{ .Release.Name }}.${SECRET_INTERNAL_DOMAIN}"

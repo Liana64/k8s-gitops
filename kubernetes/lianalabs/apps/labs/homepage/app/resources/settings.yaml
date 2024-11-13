@@ -15,11 +15,9 @@ layout:
     tab: Main
     style: row
     columns: 4
-  Observability:
-    tab: Main
   Services:
     tab: Main
-  Production:
+  Home:
     tab: Main
   Endpoints:
     tab: Admin

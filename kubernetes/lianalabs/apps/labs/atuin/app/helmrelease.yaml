@@ -113,8 +113,9 @@ spec:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Services
-          gethomepage.dev/name: *app
-          gethomepage.dev/icon: atuin.png
+          gethomepage.dev/name: Atuin
+          gethomepage.dev/description: Magical shell history
+          gethomepage.dev/icon: /icons/atuin.png
         hosts:
           - host: &host "sh.${SECRET_INTERNAL_DOMAIN}"
             paths:

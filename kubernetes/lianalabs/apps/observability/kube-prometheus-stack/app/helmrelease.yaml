@@ -76,6 +76,7 @@ spec:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Services
           gethomepage.dev/name: Prometheus
+          gethomepage.dev/description: Time-series event monitoring
           gethomepage.dev/icon: prometheus.png
         hosts: ["prometheus.${SECRET_INTERNAL_DOMAIN}"]
         pathType: Prefix
@@ -141,6 +142,7 @@ spec:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Services
           gethomepage.dev/name: Grafana
+          gethomepage.dev/description: Data visualization
           gethomepage.dev/icon: grafana.png
         hosts: ["grafana.${SECRET_INTERNAL_DOMAIN}"]
         pathType: Prefix
@@ -156,6 +158,7 @@ spec:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Services
           gethomepage.dev/name: Alert Manager
+          gethomepage.dev/description: Alert handler for kube-prometheus-stack
           gethomepage.dev/icon: alertmanager.png
         hosts: ["alertmanager.${SECRET_INTERNAL_DOMAIN}"]
         pathType: Prefix

@@ -29,9 +29,10 @@ spec:
       ingressClassName: traefik
       annotations:
         gethomepage.dev/enabled: "true"
-        gethomepage.dev/group: Services
+        gethomepage.dev/group: Research
         gethomepage.dev/icon: jupyter
-        gethomepage.dev/name: *app
+        gethomepage.dev/name: JupyterHub
+        gethomepage.dev/description: JupyterLab orchestration
       hosts:
         - &host "jupyterhub.${SECRET_INTERNAL_DOMAIN}"
       tls:

@@ -10,6 +10,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn:
+    - name: traefik
   path: ./kubernetes/lianalabs/apps/home/actual/app
   prune: true
   sourceRef:

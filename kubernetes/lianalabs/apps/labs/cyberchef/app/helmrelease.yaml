@@ -68,8 +68,9 @@ spec:
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Services
-          gethomepage.dev/name: *app
+          gethomepage.dev/group: Tools
+          gethomepage.dev/name: CyberChef
+          gethomepage.dev/description: Cryptography tool
           gethomepage.dev/icon: *app
         hosts:
           - host: &host "cyberchef.${SECRET_INTERNAL_DOMAIN}"

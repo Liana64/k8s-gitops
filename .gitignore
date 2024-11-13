@@ -17,3 +17,5 @@ identity
 *.pub
 *.key
 *.pem
+*.crt
+*.csr

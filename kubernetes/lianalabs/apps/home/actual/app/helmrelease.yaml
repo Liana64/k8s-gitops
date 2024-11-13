@@ -66,7 +66,8 @@ spec:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Home
-          gethomepage.dev/name: *app
+          gethomepage.dev/name: Actual
+          gethomepage.dev/description: Personal finance tool
           gethomepage.dev/icon: actual.png
         hosts:
           - host: &host "actual.${SECRET_INTERNAL_DOMAIN}"
@@ -83,5 +84,6 @@ spec:
         storageClass: local-nvme
         accessMode: ReadWriteOnce
         size: 2Gi
+        retain: true
         globalMounts:
           - path: /data

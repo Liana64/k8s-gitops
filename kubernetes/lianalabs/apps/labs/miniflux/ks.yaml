@@ -11,6 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: traefik
     - name: cloudnative-pg
   path: ./kubernetes/lianalabs/apps/labs/miniflux/app
   prune: true

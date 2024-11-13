@@ -14,3 +14,4 @@ cd $ROOT_DIR
 task sops:encrypt-all
 git push -u origin main
 task flux:reconcile
+flux get all -A

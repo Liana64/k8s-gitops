@@ -76,6 +76,7 @@ spec:
       annotations:
         gethomepage.dev/enabled: "true"
         gethomepage.dev/name: Windmill
+        gethomepage.dev/description: Workflow engine
         gethomepage.dev/group: Services
         gethomepage.dev/icon: webhook.png
         gethomepage.dev/href: https://windmill.${SECRET_INTERNAL_DOMAIN}

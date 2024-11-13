@@ -84,8 +84,9 @@ spec:
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Services
-          gethomepage.dev/name: Echo
+          gethomepage.dev/group: Tools
+          gethomepage.dev/name: Echo Server
+          gethomepage.dev/description: HTTP/WebSocket echo server
           gethomepage.dev/icon: mdi-web
         hosts:
           - host: &host "echo.${SECRET_EXTERNAL_DOMAIN}"

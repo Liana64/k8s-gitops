@@ -60,8 +60,9 @@ spec:
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Services
-          gethomepage.dev/name: *app
+          gethomepage.dev/group: Research
+          gethomepage.dev/name: Ollama
+          gethomepage.dev/description: LLM server
           gethomepage.dev/icon: *app
         hosts:
           - host: &host "ollama.${SECRET_INTERNAL_DOMAIN}"

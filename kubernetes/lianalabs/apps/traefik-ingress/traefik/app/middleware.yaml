@@ -1,0 +1,40 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: ip-whitelist-admins
+spec:
+  headers:
+    frameDeny: true
+    browserXssFilter: true
+  ipWhiteList:
+    sourceRange:
+      - 10.28.11.0/24
+      - 10.28.12.0/24
+      - 10.99.100.0/24
+      - 10.200.0.0/24
+    ipStrategy:
+      depth: 2
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: secure
+spec:
+  headers:
+    browserXssFilter: true
+    contentTypeNosniff: true
+    frameDeny: true
+    forceSTSHeader: true
+    stsIncludeSubdomains: true
+    stsPreload: true
+    stsSeconds: 31536000
+    referrerPolicy: "strict-origin-when-cross-origin"
+    customFrameOptionsValue: "SAMEORIGIN"
+    customResponseHeaders:
+      X-Robots-Tag: "noindex,nofollow"
+      server: ""
+      X-Forwarded-Proto: "https"
+      x-powered-by: "Immanence without hope"
+    sslProxyHeaders:
+      X-Forwarded-Proto: https

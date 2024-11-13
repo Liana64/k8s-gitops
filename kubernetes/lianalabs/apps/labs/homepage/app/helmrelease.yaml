@@ -101,6 +101,15 @@ spec:
           - subPath: vines.png
             path: /app/public/images/vines.png
             readOnly: true
+      icons:
+        enabled: true
+        type: nfs
+        server: ${NFS_HOST}
+        path: ${NFS_PATH}/k8s/homepage/icons
+        globalMounts:
+          - subPath: atuin.png
+            path: /app/public/icons/atuin.png
+            readOnly: true
       bookmarks:
         type: secret
         name: homepage-secret

@@ -89,8 +89,9 @@ spec:
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Services
-          gethomepage.dev/name: *app
+          gethomepage.dev/group: Tools
+          gethomepage.dev/name: ArchiveBox
+          gethomepage.dev/description: Website archiver
           gethomepage.dev/icon: archivebox
         hosts:
           - host: &host "archivebox.${SECRET_INTERNAL_DOMAIN}"

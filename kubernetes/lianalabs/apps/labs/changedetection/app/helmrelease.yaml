@@ -33,12 +33,12 @@ spec:
               tag: "0.47.06"
             env:
               PORT: &port 5000
-            # resources:
-            #   requests:
-            #     cpu: 10m
-            #     memory: 100Mi
-            #   limits:
-            #     memory: 250Mi
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 1536Mi
           browser:
             image:
               pullPolicy: Always
@@ -71,7 +71,6 @@ spec:
         ports:
           http:
             port: *port
-
     ingress:
       app:
         className: traefik
@@ -79,7 +78,8 @@ spec:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Services
-          gethomepage.dev/name: *app
+          gethomepage.dev/name: ChangeDetection
+          gethomepage.dev/description: Change monitoring for the web
           gethomepage.dev/icon: changedetection-io.png
         hosts:
           - host: &host "change.${SECRET_INTERNAL_DOMAIN}"
