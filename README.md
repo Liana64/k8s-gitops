@@ -1,6 +1,7 @@
 # 🧪 k8s-gitops
 
 **Liana Laboratories Self-Hosting Initiative**
+
 Welcome to the Liana Laboratories Kubernetes Testing Facility. This GitOps repository represents our self-hosted Kubernetes lab, built on Talos and adhering to GitOps practices. Taskfiles and scripts have been adapted from brettinternet's [homeops](https://github.com/brettinternet/homeops).
 
 ## ✅ Requirements
