@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: teleport-cluster
-      version: 16.4.6
+      version: 17.0.1
       sourceRef:
         kind: HelmRepository
         name: teleport
@@ -19,12 +19,11 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
-      strategy: rollback
       retries: 3
   values:
     clusterName: teleport.${SECRET_EXTERNAL_DOMAIN}
     chartMode: standalone
-    kubeClusterName: LianaLabs
+    kubeClusterName: lianalabs
     validateConfigOnDeploy: true
     enterprise: false
     auth:
@@ -54,22 +53,32 @@ spec:
       enabled: true
       suppressAutomaticWildcards: false
       spec:
-        ingressClassName: traefik
+        ingressClassName: traefik-external
     annotations:
       ingress:
+        external-dns.alpha.kubernetes.io/hostname: "teleport.${SECRET_EXTERNAL_DOMAIN}"
         cert-manager.io/cluster-issuer: "letsencrypt-production"
         gethomepage.dev/enabled: "true"
         gethomepage.dev/group: Services
-        gethomepage.dev/name: *app
-        gethomepage.dev/icon: teleport.png
-    tls:
-      existingSecretName: "teleport-cluster-tls"
+        gethomepage.dev/name: Teleport
+        gethomepage.dev/description: Teleport dashboard
+        gethomepage.dev/icon: teleport
+        traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+      service:
+        traefik.ingress.kubernetes.io/service.serversscheme: https
+    highAvailability:
+      certManager:
+        enabled: true
+        issuerName: "letsencrypt-production"
+        issuerKind: "ClusterIssuer"
+    #    tls:
+    #      existingSecretName: teleport-tls
     authentication:
       type: local
     proxyListenerMode: multiplex
     persistence:
       enabled: true
-      storageClassName: local-nvme
+      existingClaimName: teleport
     serviceAccount:
       create: true
     rbac:

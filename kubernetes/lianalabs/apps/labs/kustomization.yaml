@@ -11,3 +11,4 @@ resources:
   - ./atuin/ks.yaml
   - ./it-tools/ks.yaml
   - ./cyberchef/ks.yaml
+  - ./redlib/ks.yaml

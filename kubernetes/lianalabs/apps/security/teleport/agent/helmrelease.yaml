@@ -1,0 +1,44 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app teleport-kube-agent
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: teleport-kube-agent
+      version: 17.0.1
+      sourceRef:
+        kind: HelmRepository
+        name: teleport
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    log:
+      level: INFO
+      output: stderr
+      format: text
+      extraFields: ["timestamp", "level", "component", "caller"]
+    roles: kube,app,discovery,node
+    insecureSkipProxyTLSVerify: true
+    proxyAddr: teleport.${SECRET_EXTERNAL_DOMAIN}:443
+    joinParams:
+      method: kubernetes
+      tokenName: kubernetes-token
+    kubeClusterName: lianalabs
+    teleportConfig:
+      discovery_service:
+        kubernetes:
+          - types: ["app"]
+            namespaces: ["*"]
+            labels:
+              teleport: enabled

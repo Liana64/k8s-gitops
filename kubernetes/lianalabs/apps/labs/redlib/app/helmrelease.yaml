@@ -1,0 +1,99 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app redlib
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.2.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    controllers:
+      redlib:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: quay.io/redlib/redlib
+              tag: latest
+            env:
+              LIBREDDIT_DEFAULT_THEME: laserwave
+              LIBREDDIT_DEFAULT_LAYOUT: compact
+              LIBREDDIT_DEFAULT_WIDE: on
+              LIBREDDIT_DEFAULT_USE_HLS: on
+              LIBREDDIT_DEFAULT_HIDE_HLS_NOTIFICATION: on
+              LIBREDDIT_DEFAULT_POST_SORT: "hot"
+              LIBREDDIT_DEFAULT_SHOW_NSFW: on
+              LIBREDDIT_DEFAULT_BLUR_NSFW: on
+              TZ: ${TIMEZONE}
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: &path /settings
+                    port: &port 8080
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 12m
+                memory: 64Mi
+              limits:
+                memory: 256Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+    ingress:
+      app:
+        className: traefik
+        annotations:
+          cert-manager.io/cluster-issuer: "letsencrypt-production"
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Services
+          gethomepage.dev/name: Redlib
+          gethomepage.dev/description: Reddit client with privacy features
+          gethomepage.dev/icon: reddit
+        hosts:
+          - host: &host "redlib.${SECRET_INTERNAL_DOMAIN}"
+            paths: &paths
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+          - host: &customHost reddit.${SECRET_INTERNAL_DOMAIN}
+            paths: *paths
+        tls:
+          - secretName: redlib-tls
+            hosts:
+              - *host
+              - *customHost
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port

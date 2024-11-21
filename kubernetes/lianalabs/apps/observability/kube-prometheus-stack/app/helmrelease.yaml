@@ -106,6 +106,7 @@ spec:
             spec:
               storageClassName: "local-nvme"
               accessModes: ["ReadWriteOnce"]
+              retain: true
               resources:
                 requests:
                   storage: 75Gi
@@ -137,6 +138,8 @@ spec:
       ingress:
         enabled: true
         ingressClassName: traefik
+        labels:
+          teleport: enabled
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           gethomepage.dev/enabled: "true"

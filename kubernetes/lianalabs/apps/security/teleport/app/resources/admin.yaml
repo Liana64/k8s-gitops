@@ -1,0 +1,16 @@
+---
+kind: role
+version: v7
+metadata:
+  name: admin
+  description: System administrator
+spec:
+  allow:
+    kubernetes_groups: ["system:masters"]
+    kubernetes_labels:
+      "*": "*"
+    kubernetes_resources:
+      - kind: "*"
+        namespace: "*"
+        name: "*"
+        verbs: ["*"]

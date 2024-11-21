@@ -1,0 +1,19 @@
+---
+kind: token
+metadata:
+  expires: "2050-01-01T00:00:00Z"
+  name: kubernetes-token
+  revision: 8d372a54-3a88-4753-ad05-1a887958abba
+spec:
+  join_method: kubernetes
+  kubernetes:
+    allow:
+      - service_account: security:teleport-kube-agent
+    type: in_cluster
+  roles:
+    - Kube
+    - App
+    - Discovery
+    - Node
+    - WindowsDesktop
+version: v2
