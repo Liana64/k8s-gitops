@@ -17,6 +17,8 @@ layout:
     columns: 4
   Services:
     tab: Main
+  Tools:
+    tab: Main
   Home:
     tab: Main
   Endpoints:
