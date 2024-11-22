@@ -73,7 +73,7 @@ spec:
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Services
+          gethomepage.dev/group: Tools
           gethomepage.dev/name: Redlib
           gethomepage.dev/description: Reddit client with privacy features
           gethomepage.dev/icon: reddit

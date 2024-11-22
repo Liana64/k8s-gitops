@@ -19,6 +19,9 @@
         - abbr: GH
           href: https://github.com/
 - Links:
+    - Self-hosted content:
+        - abbr: SH
+          href: https://selfh.st/
     - Homepage Documentation:
         - abbr: HD
           href: https://gethomepage.dev/
