@@ -7,4 +7,6 @@ resources:
   - ./kube-prometheus-stack/ks.yaml
   - ./loki/ks.yaml
   - ./netshoot/ks.yaml
+  - ./speedtest-exporter/ks.yaml
+  - ./changedetection/ks.yaml
   #- ./gatus/ks.yaml

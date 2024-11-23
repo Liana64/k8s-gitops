@@ -11,7 +11,7 @@ session:
     - name: '{{ env "SECRET_EXTERNAL_DOMAIN" }}_session'
       domain: '{{ env "SECRET_EXTERNAL_DOMAIN" }}'
       authelia_url: 'https://auth.{{ env "SECRET_EXTERNAL_DOMAIN" }}'
-      default_redirection_url: 'https://{{ env "SECRET_EXTERNAL_DOMAIN" }}'
+      default_redirection_url: 'https://{{ env "SECRET_INTERNAL_DOMAIN" }}'
 
 access_control:
   default_policy: &policy two_factor
@@ -62,6 +62,6 @@ identity_providers:
         scopes: [openid, profile, groups, email]
         redirect_uris:
           [
-            'https://rss.{{ env "SECRET_EXTERNAL_DOMAIN" }}/oauth2/oidc/callback',
+            'https://rss.{{ env "SECRET_INTERNAL_DOMAIN" }}/oauth2/oidc/callback',
           ]
         userinfo_signed_response_alg: none

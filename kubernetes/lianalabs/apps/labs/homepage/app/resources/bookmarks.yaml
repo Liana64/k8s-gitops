@@ -19,9 +19,9 @@
         - abbr: GH
           href: https://github.com/
 - Links:
-    - Self-hosted content:
-        - abbr: SH
-          href: https://selfh.st/
+    - Kubesearch:
+        - abbr: KS
+          href: https://kubesearch.dev/
     - Homepage Documentation:
         - abbr: HD
           href: https://gethomepage.dev/

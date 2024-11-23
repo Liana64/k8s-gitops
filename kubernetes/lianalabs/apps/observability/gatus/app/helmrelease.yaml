@@ -138,7 +138,7 @@ spec:
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Services
+          gethomepage.dev/group: Observability
           gethomepage.dev/name: Gatus
           gethomepage.dev/description: Status monitoring page
           gethomepage.dev/icon: gatus

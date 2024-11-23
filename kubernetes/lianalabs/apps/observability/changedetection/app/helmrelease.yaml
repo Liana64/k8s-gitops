@@ -77,7 +77,7 @@ spec:
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Services
+          gethomepage.dev/group: Observability
           gethomepage.dev/name: ChangeDetection
           gethomepage.dev/description: Change monitoring for the web
           gethomepage.dev/icon: changedetection-io.png

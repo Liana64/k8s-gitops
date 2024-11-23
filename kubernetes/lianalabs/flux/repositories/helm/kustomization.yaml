@@ -11,16 +11,16 @@ resources:
   - ./coredns.yaml
   - ./grafana.yaml
   - ./jetstack.yaml
-  - ./piped.yaml
   - ./k8tz.yaml
   - ./metrics-server.yaml
   - ./node-feature-discovery.yaml
   - ./openebs.yaml
+  - ./piped.yaml
   - ./piraeus.yaml
   - ./postfinance.yaml
   - ./prometheus-community.yaml
   - ./spegel.yaml
   - ./stakater.yaml
-  - ./traefik.yaml
   - ./teleport.yaml
+  - ./traefik.yaml
   - ./windmill.yaml

@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./actual/ks.yaml
+  - ./stirling-pdf/ks.yaml

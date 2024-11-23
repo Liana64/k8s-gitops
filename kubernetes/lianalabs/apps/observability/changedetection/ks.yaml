@@ -1,18 +1,18 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app redlib
+  name: &app changedetection
   namespace: flux-system
 spec:
-  targetNamespace: labs
+  targetNamespace: observability
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: traefik
-  path: ./kubernetes/lianalabs/apps/labs/redlib/app
+  path: ./kubernetes/lianalabs/apps/observability/changedetection/app
   prune: true
   sourceRef:
     kind: GitRepository

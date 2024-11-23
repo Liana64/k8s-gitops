@@ -6,13 +6,13 @@ metadata:
   name: &app it-tools
   namespace: flux-system
 spec:
-  targetNamespace: labs
+  targetNamespace: tools
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: traefik
-  path: ./kubernetes/lianalabs/apps/labs/it-tools/app
+  path: ./kubernetes/lianalabs/apps/tools/it-tools/app
   prune: true
   sourceRef:
     kind: GitRepository

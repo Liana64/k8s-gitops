@@ -1,0 +1,111 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app piped
+  namespace: media
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: piped
+      version: 6.0.4
+      sourceRef:
+        kind: HelmRepository
+        name: piped
+        namespace: flux-system
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    crds: Skip
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    postgresql:
+      enabled: false
+    frontend:
+      image:
+        repository: "docker.io/1337kavin/piped-frontend"
+        tag: "latest"
+        pullPolicy: Always
+      env:
+        BACKEND_HOSTNAME: &api api.yt.${SECRET_INTERNAL_DOMAIN}
+        TZ: ${TIMEZONE}
+
+    backend:
+      image:
+        repository: docker.io/1337kavin/piped
+        pullPolicy: "Always"
+      initContainers:
+        01-init-db:
+          image:
+            repository: ghcr.io/onedr0p/postgres-init
+            tag: "16"
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: &secret piped-secret
+      podAnnotations:
+        configmap.reloader.stakater.com/reload: "piped-backend-config"
+      env:
+        TZ: ${TIMEZONE}
+      config:
+        PORT: 8080
+        HTTP_WORKERS: 4
+        PROXY_PART: &proxy https://proxy.yt.${SECRET_INTERNAL_DOMAIN}
+        # DISABLE_REGISTRATION: false
+        database:
+          secret:
+            name: *secret
+            connection_url: CONNECTION_URL
+            username: INIT_POSTGRES_USER
+            password: INIT_POSTGRES_PASS
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: traefik
+        annotations:
+          cert-manager.io/cluster-issuer: "letsencrypt-production"
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Tools
+          gethomepage.dev/name: Piped
+          gethomepage.dev/description: YouTube client
+          gethomepage.dev/icon: mdi-youtube
+        hosts:
+          - host: &host yt.${SECRET_INTERNAL_DOMAIN}
+            paths:
+              - path: "/"
+        tls:
+          - secretName: piped-frontend-tls
+            hosts:
+              - *host
+      backend:
+        enabled: true
+        ingressClassName: traefik
+        annotations:
+          hajimari.io/enable: "false"
+        hosts:
+          - host: *api
+            paths:
+              - path: "/"
+        tls:
+          - secretName: piped-api-tls
+            hosts:
+              - *api
+      ytproxy:
+        enabled: true
+        ingressClassName: traefik
+        annotations:
+          hajimari.io/enable: "false"
+        hosts:
+          - host: &proxy proxy.yt.${SECRET_INTERNAL_DOMAIN}
+            paths:
+              - path: "/"
+        tls:
+          - secretName: piped-proxy-tls
+            hosts:
+              - *proxy

@@ -60,7 +60,7 @@ spec:
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
         hosts:
-          - host: &host "dashboard.${SECRET_INTERNAL_DOMAIN}"
+          - host: &host "${SECRET_INTERNAL_DOMAIN}"
             paths:
               - path: /
                 service:

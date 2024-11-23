@@ -5,11 +5,7 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./homepage/ks.yaml
-  - ./archivebox/ks.yaml
   - ./miniflux/ks.yaml
-  - ./changedetection/ks.yaml
   - ./atuin/ks.yaml
-  - ./it-tools/ks.yaml
-  - ./cyberchef/ks.yaml
-  - ./redlib/ks.yaml
   - ./linkding/ks.yaml
+  - ./netbox/ks.yaml
