@@ -1,8 +1,8 @@
 ---
 # yaml-language-server: $schema=schemas/talconfig.json
 
-talosVersion: v1.8.2
-kubernetesVersion: v1.31.2
+talosVersion: v1.8.3
+kubernetesVersion: v1.31.3
 
 clusterName: &clusterName lianalabs
 

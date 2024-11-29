@@ -5,11 +5,13 @@ kind: Kustomization
 resources:
   - ./backube.yaml
   - ./bitnami.yaml
+  - ./bitwarden.yaml
   - ./bjw-s.yaml
   - ./cilium.yaml
   - ./cloudnative-pg.yaml
   - ./coredns.yaml
   - ./grafana.yaml
+  - ./itzg.yaml
   - ./jetstack.yaml
   - ./k8tz.yaml
   - ./metrics-server.yaml
