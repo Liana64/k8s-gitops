@@ -118,7 +118,7 @@ spec:
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Services
+          gethomepage.dev/group: Observability
           gethomepage.dev/name: NetBox
           gethomepage.dev/description: Network documentation
           gethomepage.dev/icon: netbox
