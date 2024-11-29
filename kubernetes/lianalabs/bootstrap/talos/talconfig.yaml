@@ -50,6 +50,9 @@ nodes:
       - device: /dev/sdb
         partitions:
           - mountpoint: /var/mnt/nvme-1
+      - device: /dev/sdc
+        partitions:
+          - mountpoint: /var/mnt/pool-1
     networkInterfaces:
       - interface: eth0
         dhcp: true
@@ -64,6 +67,18 @@ nodes:
               - destination: /var/mnt/nvme-1
                 type: bind
                 source: /var/mnt/nvme-1
+                options:
+                  - bind
+                  - rshared
+                  - rw
+      - # Mount ZFS pool storage to kubelet
+        |-
+        machine:
+          kubelet:
+            extraMounts:
+              - destination: /var/mnt/pool-1
+                type: bind
+                source: /var/mnt/pool-1
                 options:
                   - bind
                   - rshared
