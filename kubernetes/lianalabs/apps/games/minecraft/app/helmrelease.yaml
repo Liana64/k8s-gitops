@@ -40,7 +40,7 @@ spec:
               TZ: ${TIMEZONE}
               EULA: true
               SERVER_NAME: Shoujo Magical Gamers
-              MOTD: "Minecraft 1.21.3"
+              MOTD: "Medieval Edition (1.21.3)"
               MAX_PLAYERS: 16
               MODE: survival
               VERSION: "1.21.3"
@@ -90,6 +90,24 @@ spec:
                 spark:5924846
                 chat-heads:5902516
                 first-join-message:5847342
+                bogged-spawn:5847461
+                animal-feeding-trough:5877750
+                crate-delight-fabric:5928450
+                dungeon-and-taverns:5835774
+                idwtialsimmoedm:5886289
+                basic-weapons:5905709
+                weaker-spiderwebs:5838129
+                spiders-produce-webs:5838662
+                random-village-names:5841918
+                double-doors:5839965
+                grindstone-sharper-tools:5839909
+                architectury-api:5850077
+                journeymap:5947314
+                xaeros-world-map:5890989
+                natures-compass:5914932
+                not-enough-animations:5895058
+                trashslot:5856665
+                pick-up-notifier:5932279
             envFrom:
               - secretRef:
                   name: minecraft-secret
