@@ -105,9 +105,7 @@ spec:
                 journeymap:5947314
                 xaeros-world-map:5890989
                 natures-compass:5914932
-                not-enough-animations:5895058
                 trashslot:5856665
-                pick-up-notifier:5932279
             envFrom:
               - secretRef:
                   name: minecraft-secret

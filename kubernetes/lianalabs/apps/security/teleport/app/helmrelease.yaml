@@ -56,7 +56,7 @@ spec:
         ingressClassName: traefik-external
     annotations:
       ingress:
-        external-dns.alpha.kubernetes.io/hostname: "teleport.${SECRET_EXTERNAL_DOMAIN}"
+        external-dns.alpha.kubernetes.io/hostname: "{{ .Release.Name }}.${SECRET_EXTERNAL_DOMAIN}"
         cert-manager.io/cluster-issuer: "letsencrypt-production"
         gethomepage.dev/enabled: "true"
         gethomepage.dev/group: Services

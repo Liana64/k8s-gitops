@@ -80,7 +80,7 @@ spec:
             scrapeTimeout: 10s
     ingress:
       app:
-        className: traefik
+        className: traefik-external
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           gethomepage.dev/enabled: "true"

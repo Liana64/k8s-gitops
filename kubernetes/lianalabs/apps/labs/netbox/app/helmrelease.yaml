@@ -123,7 +123,7 @@ spec:
           gethomepage.dev/description: Network documentation
           gethomepage.dev/icon: netbox
         hosts:
-          - host: &host "netbox.${SECRET_INTERNAL_DOMAIN}"
+          - host: &host "{{ .Release.Name }}.${SECRET_INTERNAL_DOMAIN}"
             paths:
               - path: /
                 service:

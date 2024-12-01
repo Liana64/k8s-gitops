@@ -26,9 +26,9 @@ nodes:
         dhcp: true
         vip:
           ip: *kubeApiIP
-    # https://factory.talos.dev/?arch=amd64&board=undefined&cmdline=-console+console%3Dtty0&cmdline-set=true&extensions=-&extensions=siderolabs%2Fcrun&extensions=siderolabs%2Fqemu-guest-agent&platform=nocloud&secureboot=undefined&target=cloud&version=1.8.2
-    talosImageURL: &talosNoCloudImage factory.talos.dev/installer/664b407b468ace3dbc275db6fc399bcb383d55f8e72528a3a15e0cb68ecf41f6
-    schematic: &schematic
+    # https://factory.talos.dev/?arch=amd64&cmdline=-console+console%3Dtty0&cmdline-set=true&extensions=-&extensions=siderolabs%2Fcrun&extensions=siderolabs%2Fqemu-guest-agent&platform=nocloud&target=cloud&version=1.8.3
+    talosImageURL: &talosMinimalImage factory.talos.dev/installer/664b407b468ace3dbc275db6fc399bcb383d55f8e72528a3a15e0cb68ecf41f6
+    schematic: &schematicMinimal
       customization:
         extraKernelArgs:
           - -console
@@ -38,7 +38,8 @@ nodes:
             - siderolabs/crun
             - siderolabs/qemu-guest-agent
     nodeLabels:
-      bgp-policy: bgp
+      hardware/manufacturer: "Lenovo"
+      hardware/model: "RD350"
       node-role.kubernetes.io/control-plane: "control-plane"
       topology.kubernetes.io/region: &region "us-central"
       topology.kubernetes.io/zone: *clusterName
@@ -56,8 +57,8 @@ nodes:
     networkInterfaces:
       - interface: eth0
         dhcp: true
-    talosImageURL: *talosNoCloudImage
-    schematic: *schematic
+    talosImageURL: *talosMinimalImage
+    schematic: *schematicMinimal
     patches:
       - # Mount NVMe storage to kubelet
         |-
@@ -71,7 +72,7 @@ nodes:
                   - bind
                   - rshared
                   - rw
-      - # Mount ZFS pool storage to kubelet
+      - # Mount RD350 ZFS pool storage to kubelet
         |-
         machine:
           kubelet:
@@ -84,9 +85,69 @@ nodes:
                   - rshared
                   - rw
     nodeLabels:
-      # TODO: Fix BGP
-      # bgp-policy: bgp
-
+      hardware/manufacturer: "Lenovo"
+      hardware/model: "RD350"
+      node-role.kubernetes.io/worker: "worker"
+      topology.kubernetes.io/region: *region
+      topology.kubernetes.io/zone: *clusterName
+  - hostname: n3
+    controlPlane: true
+    ipAddress: 10.28.11.102
+    installDiskSelector: *nvmeDisk
+    networkInterfaces:
+      - interface: eth0
+        dhcp: true
+        vip:
+          ip: *kubeApiIP
+    talosImageURL: *talosMinimalImage
+    schematic: *schematicMinimal
+    nodeLabels:
+      hardware/manufacturer: "Dell"
+      hardware/model: "R720xd"
+      node-role.kubernetes.io/control-plane: "control-plane"
+      topology.kubernetes.io/region: *region
+      topology.kubernetes.io/zone: *clusterName
+  - hostname: n4
+    controlPlane: true
+    ipAddress: 10.28.11.103
+    installDiskSelector: *nvmeDisk
+    machineDisks:
+      - device: /dev/sdb
+        partitions:
+          - mountpoint: /var/mnt/nvme-1
+    networkInterfaces:
+      - interface: eth0
+        dhcp: true
+    # https://factory.talos.dev/?arch=amd64&cmdline=-console+console%3Dtty0&cmdline-set=true&extensions=-&extensions=siderolabs%2Fcrun&extensions=siderolabs%2Fnvidia-container-toolkit-production&extensions=siderolabs%2Fqemu-guest-agent&extensions=siderolabs%2Fnonfree-kmod-nvidia-production&platform=nocloud&target=cloud&version=1.8.3
+    talosImageURL: factory.talos.dev/installer/04cbc433b5aab79851452cc3dfb25142c7c50f7f828e051acfed90d6b8b10b79
+    schematic:
+      customization:
+        extraKernelArgs:
+          - -console
+          - console=tty0
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/crun
+            - siderolabs/nonfree-kmod-nvidia-production
+            - siderolabs/nvidia-container-toolkit-production
+            - siderolabs/qemu-guest-agent
+    patches:
+      - # Mount NVMe storage to kubelet
+        |-
+        machine:
+          kubelet:
+            extraMounts:
+              - destination: /var/mnt/nvme-2
+                type: bind
+                source: /var/mnt/nvme-2
+                options:
+                  - bind
+                  - rshared
+                  - rw
+      - "@./patches/worker/nvidia.yaml"
+    nodeLabels:
+      hardware/manufacturer: "Dell"
+      hardware/model: "R720xd"
       node-role.kubernetes.io/worker: "worker"
       topology.kubernetes.io/region: *region
       topology.kubernetes.io/zone: *clusterName
