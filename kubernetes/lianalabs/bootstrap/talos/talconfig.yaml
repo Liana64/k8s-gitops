@@ -108,7 +108,7 @@ nodes:
       topology.kubernetes.io/region: *region
       topology.kubernetes.io/zone: *clusterName
   - hostname: n4
-    controlPlane: true
+    controlPlane: false
     ipAddress: 10.28.11.103
     installDiskSelector: *nvmeDisk
     machineDisks:

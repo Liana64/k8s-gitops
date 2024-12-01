@@ -7,7 +7,7 @@ vars:
   SCRIPTS_DIR: "{{.ROOT_DIR}}/scripts"
   SOPS_CONFIG_FILE: "{{.ROOT_DIR}}/.sops.yaml"
   AGE_DIR: ~/.config/sops/age
-  AGE_FILE: "{{.AGE_DIR}}/rd350.key"
+  AGE_FILE: "{{.AGE_DIR}}/lianalabs.key"
 
 #env:
 #  KUBECONFIG: "{{.KUBECONFIG_FILE}}"
