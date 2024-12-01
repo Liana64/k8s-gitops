@@ -1,0 +1,73 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app thelounge
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.5.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    controllers:
+      thelounge:
+        containers:
+          app:
+            image:
+              repository: ghcr.io/thelounge/thelounge
+              tag: 4.4.3@sha256:8e0a075f7461aaa566cf552eef1d1586b29be9ca1e377ef61cb77461b2d16c6c
+            env:
+              THELOUNGE_HOME: /config
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 512Mi
+    ingress:
+      app:
+        className: traefik
+        annotations:
+          cert-manager.io/cluster-issuer: "letsencrypt-production"
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Services
+          gethomepage.dev/name: The Lounge
+          gethomepage.dev/description: IRC client
+          gethomepage.dev/icon: thelounge
+        hosts:
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - secretName: thelounge-tls
+            hosts: [*host]
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: 9000
+    persistence:
+      config:
+        existingClaim: *app
