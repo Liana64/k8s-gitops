@@ -23,6 +23,8 @@ layout:
     tab: Main
   Home:
     tab: Main
+  Media:
+    tab: Main
   Endpoints:
     tab: Admin
   IPMIs:
@@ -35,10 +37,10 @@ layout:
     tab: Media
     style: row
     columns: 4
-  Media:
-    tab: Media
-    style: row
-    columns: 4
+  #  Media:
+  #    tab: Media
+  #    style: row
+  #    columns: 4
 quicklaunch:
   searchDescriptions: true
   hideInternetSearch: false

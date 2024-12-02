@@ -44,7 +44,7 @@ spec:
                 memory: 250M
     service:
       app:
-        controller: pingvin
+        controller: *app
         ports:
           http:
             port: 3000
@@ -91,7 +91,6 @@ spec:
         storageClass: cluster-nvme
         accessMode: ReadWriteOnce
         size: 32Gi
-        retain: true
         globalMounts:
-          - path: /opt/app/backend/data/data
+          - path: /opt/app/backend/data
           - path: /opt/app/frontend/public/img
