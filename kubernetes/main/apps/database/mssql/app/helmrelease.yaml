@@ -80,14 +80,14 @@ spec:
       name: *app
     persistence:
       data:
-        storageClass: local-nvme
+        storageClass: cluster-nvme
         accessMode: ReadWriteOnce
         size: 24Gi
         retain: true
         globalMounts:
           - path: /var/opt/mssql
       backups:
-        storageClass: local-nvme
+        storageClass: cluster-nvme
         accessMode: ReadWriteOnce
         size: 10Gi
         retain: true

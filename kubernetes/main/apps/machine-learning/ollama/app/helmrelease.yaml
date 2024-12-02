@@ -34,7 +34,6 @@ spec:
               repository: docker.io/ollama/ollama
               tag: 0.4.1
             env:
-              TZ: ${TIMEZONE}
               OLLAMA_HOST: 0.0.0.0
               OLLAMA_ORIGINS: "*"
               OLLAMA_MODELS: /models
@@ -76,7 +75,7 @@ spec:
             hosts: [*host]
     persistence:
       data:
-        storageClass: local-nvme
+        storageClass: cluster-nvme
         accessMode: ReadWriteOnce
         size: 64Gi
         #retain: true

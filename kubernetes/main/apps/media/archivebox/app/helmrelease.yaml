@@ -42,7 +42,6 @@ spec:
               tag: 0.7.2
             args: ["server"]
             env:
-              TZ: "${TIMEZONE}"
               PUID: 1000
               PGID: 1000
               ONLY_NEW: False
@@ -94,7 +93,7 @@ spec:
           gethomepage.dev/description: Website archiver
           gethomepage.dev/icon: archivebox
         hosts:
-          - host: &host "archivebox.${SECRET_INTERNAL_DOMAIN}"
+          - host: &host "{{ .Release.Name }}.${SECRET_INTERNAL_DOMAIN}"
             paths:
               - path: /
                 service:
@@ -105,7 +104,7 @@ spec:
             hosts: [*host]
     persistence:
       data:
-        storageClass: local-nvme
+        storageClass: cluster-nvme
         accessMode: ReadWriteOnce
         size: 5Gi
         retain: true

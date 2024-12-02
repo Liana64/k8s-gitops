@@ -10,20 +10,20 @@
 #  remove previous WIP commit
 #
 # Options:
-#  -c, --cluster <cluster_name>  Specify the cluster to reconcile (default: lianalabs)
+#  -c, --cluster <cluster_name>  Specify the cluster to reconcile (default: main)
 #  -h, --help                   Show this help message
 # Usage:  create WIP commit
 #         push to current branch
 #         reconcile the cluster with flux
 #         remove previous WIP commit
 
-CLUSTER="lianalabs"
+CLUSTER="main"
 
 function show_help {
     echo "Usage: $0 [options]"
     echo ""
     echo "Options:"
-    echo "  -c, --cluster <cluster_name>  Specify the cluster to reconcile (default: lianalabs)"
+    echo "  -c, --cluster <cluster_name>  Specify the cluster to reconcile (default: main)"
     echo "  -h, --help                   Show this help message"
     exit 0
 }

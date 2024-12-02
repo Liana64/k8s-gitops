@@ -3,11 +3,11 @@
 version: "3"
 
 vars:
-  BOOTSTRAP_TALOS_DIR: "{{.KUBERNETES_DIR}}/{{.cluster}}/bootstrap/talos"
+  BOOTSTRAP_TALOS_DIR: "{{.KUBERNETES_DIR}}/{{.CLUSTER}}/bootstrap/talos"
   TALHELPER_CLUSTER_DIR: "{{.BOOTSTRAP_TALOS_DIR}}/clusterconfig"
   TALHELPER_SECRET_FILE: "{{.BOOTSTRAP_TALOS_DIR}}/talsecret.sops.yaml"
   TALHELPER_CONFIG_FILE: "{{.BOOTSTRAP_TALOS_DIR}}/talconfig.yaml"
-  HELMFILE_FILE: "{{.KUBERNETES_DIR}}/{{.cluster}}/bootstrap/helmfile.yaml"
+  HELMFILE_FILE: "{{.KUBERNETES_DIR}}/{{.CLUSTER}}/bootstrap/helmfile.yaml"
   TALOSCONFIG_FILE: "{{.TALHELPER_CLUSTER_DIR}}/talosconfig"
 
 env:
@@ -88,9 +88,9 @@ tasks:
       - until talhelper gencommand kubeconfig --config-file {{.TALHELPER_CONFIG_FILE}} --out-dir {{.TALHELPER_CLUSTER_DIR}} --extra-flags="{{.ROOT_DIR}} --force" | bash; do sleep 10; done
       - |-
         CLUSTER_NAME="$(yq 'select(document_index == 0).clusterName' {{.TALHELPER_CONFIG_FILE}})"
-        kubectl config rename-context admin@$CLUSTER_NAME {{.cluster}} || true
-        kubectl config use-context {{.cluster}}
-        kubectl config unset contexts.{{.cluster}}.namespace
+        kubectl config rename-context admin@$CLUSTER_NAME $CLUSTER_NAME || true
+        kubectl config use-context $CLUSTER_NAME
+        kubectl config unset contexts.$CLUSTER_NAME.namespace
         kubectl config delete-context admin@$CLUSTER_NAME || true
     requires:
       vars: ["cluster"]

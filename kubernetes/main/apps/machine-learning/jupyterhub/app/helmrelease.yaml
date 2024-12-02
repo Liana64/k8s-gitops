@@ -23,7 +23,7 @@ spec:
         type: dynamic
         capacity: 8Gi
         dynamic:
-          storageClass: local-nvme
+          storageClass: cluster-nvme
     ingress:
       enabled: true
       ingressClassName: traefik

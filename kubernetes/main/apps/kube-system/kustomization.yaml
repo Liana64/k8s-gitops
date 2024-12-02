@@ -8,5 +8,6 @@ resources:
   - ./coredns/ks.yaml
   - ./kubelet-csr-approver/ks.yaml
   - ./metrics-server/ks.yaml
+  - ./nvidia-device-plugin/ks.yaml
   - ./reloader/ks.yaml
   - ./spegel/ks.yaml

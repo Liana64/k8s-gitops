@@ -52,10 +52,10 @@ nodes:
     machineDisks:
       - device: /dev/sdb
         partitions:
-          - mountpoint: /var/mnt/nvme-1
+          - mountpoint: /var/mnt/nvme
       - device: /dev/sdc
         partitions:
-          - mountpoint: /var/mnt/pool-1
+          - mountpoint: /var/mnt/pool
     networkInterfaces:
       - interface: eth0
         dhcp: true
@@ -67,9 +67,9 @@ nodes:
         machine:
           kubelet:
             extraMounts:
-              - destination: /var/mnt/nvme-1
+              - destination: /var/mnt/nvme
                 type: bind
-                source: /var/mnt/nvme-1
+                source: /var/mnt/nvme
                 options:
                   - bind
                   - rshared
@@ -79,9 +79,9 @@ nodes:
         machine:
           kubelet:
             extraMounts:
-              - destination: /var/mnt/pool-1
+              - destination: /var/mnt/pool
                 type: bind
-                source: /var/mnt/pool-1
+                source: /var/mnt/pool
                 options:
                   - bind
                   - rshared
@@ -116,7 +116,7 @@ nodes:
     machineDisks:
       - device: /dev/sdb
         partitions:
-          - mountpoint: /var/mnt/nvme-1
+          - mountpoint: /var/mnt/nvme
     networkInterfaces:
       - interface: eth0
         dhcp: true
@@ -139,9 +139,9 @@ nodes:
         machine:
           kubelet:
             extraMounts:
-              - destination: /var/mnt/nvme-2
+              - destination: /var/mnt/nvme
                 type: bind
-                source: /var/mnt/nvme-2
+                source: /var/mnt/nvme
                 options:
                   - bind
                   - rshared

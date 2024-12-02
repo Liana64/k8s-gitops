@@ -103,7 +103,7 @@ spec:
             hosts: [*host]
     persistence:
       config:
-        storageClass: local-nvme
+        storageClass: cluster-nvme
         accessMode: ReadWriteOnce
         size: 1Gi
         globalMounts:

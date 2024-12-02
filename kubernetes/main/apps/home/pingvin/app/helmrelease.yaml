@@ -35,7 +35,6 @@ spec:
               repository: stonith404/pingvin-share
               tag: v1.5.0@sha256:6ab8c404a24a48767ba73955bc9b4c44e48307a39aab8ea74ddf351de0f2e280
             env:
-              TZ: ${TIMEZONE}
               TRUST_PROXY: true
             resources:
               requests:
@@ -89,7 +88,7 @@ spec:
             secretName: "pingvin-external-tls"
     persistence:
       data:
-        storageClass: local-nvme
+        storageClass: cluster-nvme
         accessMode: ReadWriteOnce
         size: 32Gi
         retain: true

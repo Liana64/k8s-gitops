@@ -115,7 +115,7 @@ spec:
             hosts: [*host]
     persistence:
       data:
-        storageClass: local-nvme
+        storageClass: cluster-nvme
         accessMode: ReadWriteOnce
         size: 2Gi
         retain: true

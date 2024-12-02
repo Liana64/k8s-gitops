@@ -33,7 +33,6 @@ spec:
               repository: quay.io/minio/minio
               tag: RELEASE.2024-11-07T00-52-20Z
             env:
-              TZ: "${TIMEZONE:=Etc/UTC}"
               MINIO_UPDATE: "off"
               MINIO_PROMETHEUS_URL: http://kube-prometheus-stack-prometheus.monitoring:9090
               MINIO_PROMETHEUS_JOB_ID: minio
@@ -123,7 +122,7 @@ spec:
             hosts: [*apiHost]
     persistence:
       data:
-        storageClass: local-nvme
+        storageClass: cluster-nvme
         accessMode: ReadWriteOnce
         size: 64Gi
         retain: true

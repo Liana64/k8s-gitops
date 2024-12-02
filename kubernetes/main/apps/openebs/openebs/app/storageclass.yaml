@@ -2,34 +2,29 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: local-nvme
+  name: cluster-nvme
   annotations:
     openebs.io/cas-type: local
     cas.openebs.io/config: |
       - name: StorageType
         value: hostpath
       - name: BasePath
-        value: "/var/mnt/nvme-1"
+        value: "/var/mnt/nvme"
 provisioner: openebs.io/local
 reclaimPolicy: Delete
 volumeBindingMode: WaitForFirstConsumer
-allowedTopologies:
-  - matchLabelExpressions:
-      - key: kubernetes.io/hostname
-        values:
-          - n2
 ---
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: local-pool
+  name: rd350-pool
   annotations:
     openebs.io/cas-type: local
     cas.openebs.io/config: |
       - name: StorageType
         value: hostpath
       - name: BasePath
-        value: "/var/mnt/pool-1"
+        value: "/var/mnt/pool"
 provisioner: openebs.io/local
 reclaimPolicy: Delete
 volumeBindingMode: WaitForFirstConsumer

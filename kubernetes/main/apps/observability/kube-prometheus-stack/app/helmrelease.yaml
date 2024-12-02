@@ -104,7 +104,7 @@ spec:
         storageSpec:
           volumeClaimTemplate:
             spec:
-              storageClassName: "local-nvme"
+              storageClassName: "cluster-nvme"
               accessModes: ["ReadWriteOnce"]
               retain: true
               resources:
@@ -115,7 +115,7 @@ spec:
       persistence:
         enabled: true
         type: pvc
-        storageClassName: "local-nvme"
+        storageClassName: "cluster-nvme"
         accessModes: ["ReadWriteOnce"]
         size: 32Gi
       sidecar:
@@ -180,7 +180,7 @@ spec:
         storage:
           volumeClaimTemplate:
             spec:
-              storageClassName: "local-nvme"
+              storageClassName: "cluster-nvme"
               accessModes: ["ReadWriteOnce"]
               resources:
                 requests:

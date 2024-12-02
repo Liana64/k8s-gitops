@@ -16,6 +16,7 @@ resources:
   - ./k8tz.yaml
   - ./metrics-server.yaml
   - ./node-feature-discovery.yaml
+  - ./nvidia-device-plugin.yaml
   - ./openebs.yaml
   - ./piped.yaml
   - ./piraeus.yaml

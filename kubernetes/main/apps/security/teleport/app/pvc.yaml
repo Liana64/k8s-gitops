@@ -5,7 +5,7 @@ metadata:
   name: teleport
   namespace: security
 spec:
-  storageClassName: local-nvme
+  storageClassName: cluster-nvme
   accessModes: ["ReadWriteOnce"]
   resources:
     requests:

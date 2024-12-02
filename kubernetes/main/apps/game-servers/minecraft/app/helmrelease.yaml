@@ -37,7 +37,6 @@ spec:
               repository: ghcr.io/itzg/minecraft-server
               tag: 2024.10.2@sha256:8bd119f65ef6e65bdb12f756bfb44a305b36b1adf868ade8027014fabc29c755
             env:
-              TZ: ${TIMEZONE}
               EULA: true
               SERVER_NAME: Shoujo Magical Gamers
               MOTD: "Medieval Edition (1.21.3)"
@@ -155,7 +154,7 @@ spec:
             port: 25565
     persistence:
       data:
-        storageClass: local-nvme
+        storageClass: cluster-nvme
         accessMode: ReadWriteOnce
         size: 48Gi
         retain: true

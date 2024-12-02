@@ -34,8 +34,6 @@ spec:
             image:
               repository: ghcr.io/schlagmichdoch/pairdrop
               tag: v1.10.10@sha256:89a19e22de00843cb47a81f95bdb68c7fa5c1357b318e571419004b6b3618252
-            env:
-              TZ: ${TIMEZONE}
             resources:
               requests:
                 cpu: 5m
