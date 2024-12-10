@@ -30,7 +30,7 @@ spec:
             fsGroup: 2000
             fsGroupChangePolicy: "OnRootMismatch"
             supplementalGroups:
-              - 501
+              - 3005
         containers:
           app:
             image:

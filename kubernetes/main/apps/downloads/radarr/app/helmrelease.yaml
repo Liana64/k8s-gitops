@@ -22,13 +22,11 @@ spec:
           reloader.stakater.com/auto: "true"
         pod:
           securityContext:
-            runAsUser: 2000
-            runAsGroup: 2000
+            runAsUser: 600
+            runAsGroup: 3005
             runAsNonRoot: true
-            fsGroup: 2000
+            fsGroup: 3005
             fsGroupChangePolicy: "OnRootMismatch"
-            supplementalGroups:
-              - 501
         containers:
           app:
             image:
@@ -112,4 +110,4 @@ spec:
           radarr:
             app:
               - path: /data/r720xd-media
-                readOnly: true
+                readOnly: false

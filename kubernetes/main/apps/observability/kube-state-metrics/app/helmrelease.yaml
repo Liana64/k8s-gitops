@@ -16,7 +16,6 @@ spec:
         name: prometheus-community
         namespace: flux-system
   values:
-    fullnameOverride: kube-state-metrics
     prometheus:
       monitor:
         enabled: true

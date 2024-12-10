@@ -1,0 +1,205 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: bitwarden
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: self-host
+      version: 2024.11.0
+      sourceRef:
+        kind: HelmRepository
+        name: bitwarden
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    sharedStorageClassName: "cluster-nvme"
+    general:
+      admins: "${SECRET_ADMIN_EMAIL}"
+      disableUserRegistration: "false"
+      cloudRegion: US
+      enableCloudCommunication: true
+      sharedStorageClassName: "cluster-nvme"
+      volumeAccessMode: "ReadWriteOnce"
+      domain: "bitwarden.${SECRET_EXTERNAL_DOMAIN}"
+      ingress:
+        enabled: true
+        className: traefik
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Home
+          gethomepage.dev/name: Bitwarden
+          gethomepage.dev/description: Password management
+          gethomepage.dev/icon: bitwarden
+        tls:
+          name: bitwarden-tls
+          clusterIssuer: letsencrypt-production
+        paths:
+          web:
+            path: /
+            pathType: ImplementationSpecific
+          attachments:
+            path: /attachments/
+            pathType: ImplementationSpecific
+          api:
+            path: /api/
+            pathType: ImplementationSpecific
+          icons:
+            path: /icons/
+            pathType: ImplementationSpecific
+          notifications:
+            path: /notifications/
+            pathType: ImplementationSpecific
+          events:
+            path: /events/
+            pathType: ImplementationSpecific
+          scim:
+            path: /scim/
+            pathType: ImplementationSpecific
+          sso:
+            path: /sso/
+            pathType: ImplementationSpecific
+          identity:
+            path: /identity/
+            pathType: ImplementationSpecific
+          admin:
+            path: /admin/
+            pathType: ImplementationSpecific
+      email:
+        smtpSsl: "false"
+        smtpPort: "465"
+        smtpHost: "${SECRET_SMTP_HOST}"
+        replyToEmail: "${SECRET_SMTP_FROM}"
+    secrets:
+      secretName: bitwarden-secret
+    database:
+      enabled: false
+      #volume:
+      #  backups:
+      #    storageClass: "cluster-nvme"
+      #  data:
+      #    storageClass: "cluster-nvme"
+      #  log:
+      #    storageClass: "cluster-nvme"
+    volume:
+      dataprotection:
+        storageClass: "cluster-nvme"
+      attachments:
+        storageClass: "cluster-nvme"
+      licenses:
+        storageClass: "cluster-nvme"
+      logs:
+        enabled: true
+        storageClass: "cluster-nvme"
+    #    rawManifests:
+    #      preInstall: []
+    #      postInstall:
+    #        - apiVersion: traefik.io/v1alpha1
+    #          kind: Middleware
+    #          metadata:
+    #            name: "bitwarden-self-host-middleware-stripprefix"
+    #          spec:
+    #            stripPrefix:
+    #              prefixes:
+    #                - /api
+    #                - /attachements
+    #                - /icons
+    #                - /notifications
+    #                - /events
+    #                - /scim
+    #                ##### NOTE:  Admin, Identity, and SSO will not function correctly with path strip middleware
+    #        - apiVersion: traefik.io/v1alpha1
+    #          kind: IngressRoute
+    #          metadata:
+    #            name: "bitwarden-self-host-ingress"
+    #          spec:
+    #            entryPoints:
+    #              - websecure
+    #            routes:
+    #              - kind: Rule
+    #                match: Host(`bitwarden.${SECRET_EXTERNAL_DOMAIN}`) && PathPrefix(`/`)
+    #                services:
+    #                  - kind: Service
+    #                    name: bitwarden-self-host-web
+    #                    passHostHeader: true
+    #                    port: 5000
+    #              - kind: Rule
+    #                match: Host(`bitwarden.${SECRET_EXTERNAL_DOMAIN}`) && PathPrefix(`/api/`)
+    #                services:
+    #                  - kind: Service
+    #                    name: bitwarden-self-host-api
+    #                    port: 5000
+    #                middlewares:
+    #                  - name: "bitwarden-self-host-middleware-stripprefix"
+    #              - kind: Rule
+    #                match: Host(`bitwarden.${SECRET_EXTERNAL_DOMAIN}`) && PathPrefix(`/attachments/`)
+    #                services:
+    #                  - kind: Service
+    #                    name: bitwarden-self-host-api
+    #                    port: 5000
+    #                middlewares:
+    #                  - name: "bitwarden-self-host-middleware-stripprefix"
+    #              - kind: Rule
+    #                match: Host(`bitwarden.${SECRET_EXTERNAL_DOMAIN}`) && PathPrefix(`/icons/`)
+    #                services:
+    #                  - kind: Service
+    #                    name: bitwarden-self-host-icons
+    #                    port: 5000
+    #                middlewares:
+    #                  - name: "bitwarden-self-host-middleware-stripprefix"
+    #              - kind: Rule
+    #                match: Host(`bitwarden.${SECRET_EXTERNAL_DOMAIN}`) && PathPrefix(`/notifications/`)
+    #                services:
+    #                  - kind: Service
+    #                    name: bitwarden-self-host-notifications
+    #                    port: 5000
+    #                middlewares:
+    #                  - name: "bitwarden-self-host-middleware-stripprefix"
+    #              - kind: Rule
+    #                match: Host(`bitwarden.${SECRET_EXTERNAL_DOMAIN}`) && PathPrefix(`/events/`)
+    #                services:
+    #                  - kind: Service
+    #                    name: bitwarden-self-host-events
+    #                    port: 5000
+    #                middlewares:
+    #                  - name: "bitwarden-self-host-middleware-stripprefix"
+    #              - kind: Rule
+    #                match: Host(`bitwarden.${SECRET_EXTERNAL_DOMAIN}`) && PathPrefix(`/scim/`)
+    #                services:
+    #                  - kind: Service
+    #                    name: bitwarden-self-host-scim
+    #                    port: 5000
+    #                middlewares:
+    #                  - name: "bitwarden-self-host-middleware-stripprefix"
+    #              ##### NOTE:  SSO will not function correctly with path strip middleware
+    #              - kind: Rule
+    #                match: Host(`bitwarden.${SECRET_EXTERNAL_DOMAIN}`) && PathPrefix(`/sso/`)
+    #                services:
+    #                  - kind: Service
+    #                    name: bitwarden-self-host-sso
+    #                    port: 5000
+    #              ##### NOTE:  Identity will not function correctly with path strip middleware
+    #              - kind: Rule
+    #                match: Host(`bitwarden.${SECRET_EXTERNAL_DOMAIN}`) && PathPrefix(`/identity/`)
+    #                services:
+    #                  - kind: Service
+    #                    name: bitwarden-self-host-identity
+    #                    port: 5000
+    #              ##### NOTE:  Admin will not function correctly with path strip middleware
+    #              - kind: Rule
+    #                match: Host(`bitwarden.${SECRET_EXTERNAL_DOMAIN}`) && PathPrefix(`/admin`)
+    #                services:
+    #                  - kind: Service
+    #                    name: bitwarden-self-host-admin
+    #                    port: 5000
+    #            tls:
+    #              certResolver: letsencrypt-production
