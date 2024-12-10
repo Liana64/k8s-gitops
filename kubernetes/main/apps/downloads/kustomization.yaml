@@ -5,6 +5,10 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./archivebox/ks.yaml
+  - ./bazarr/ks.yaml
+  - ./flaresolverr/ks.yaml
   - ./prowlarr/ks.yaml
   - ./radarr/ks.yaml
+  - ./recyclarr/ks.yaml
+  - ./sonarr/ks.yaml
   - ./qbittorrent/ks.yaml

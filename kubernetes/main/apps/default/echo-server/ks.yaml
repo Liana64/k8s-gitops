@@ -5,11 +5,11 @@ metadata:
   name: &app echo-server
   namespace: flux-system
 spec:
-  targetNamespace: tools
+  targetNamespace: default
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./kubernetes/main/apps/tools/echo-server/app
+  path: ./kubernetes/main/apps/default/echo-server/app
   prune: true
   sourceRef:
     kind: GitRepository

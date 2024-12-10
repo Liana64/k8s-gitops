@@ -52,7 +52,7 @@ spec:
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Home
+          gethomepage.dev/group: Tools
           gethomepage.dev/name: Stirling PDF
           gethomepage.dev/description: PDF manipulation tool
           gethomepage.dev/icon: stirling-pdf

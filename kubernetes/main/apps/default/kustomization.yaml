@@ -5,9 +5,7 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./it-tools/ks.yaml
-  - ./cyberchef/ks.yaml
   - ./web-check/ks.yaml
-  - ./redlib/ks.yaml
   - ./excalidraw/ks.yaml
   - ./echo-server/ks.yaml
   - ./stirling-pdf/ks.yaml

@@ -65,8 +65,8 @@ spec:
               - 501
           terminationGracePeriodSeconds: 120
         containers:
-          app:
-            nameOverride: qbittorrent
+          qbittorrent:
+            #nameOverride: qbittorrent
             image:
               repository: ghcr.io/liana64/qbittorrent-beta
               tag: 5.0.2@sha256:84961a7f137dc4d80460ca0bf4746477f751767579278ae0d4164dcb5cc735d5
@@ -80,7 +80,7 @@ spec:
               QBT_Application__MemoryWorkingSetLimit:
                 valueFrom:
                   resourceFieldRef:
-                    containerName: app
+                    containerName: qbittorrent
                     resource: limits.memory
                     divisor: 1Mi
               QBT_Preferences__WebUI__Username:
@@ -138,7 +138,7 @@ spec:
                 drop:
                   - ALL
     service:
-      app:
+      qbittorrent:
         controller: qbittorrent
         ports:
           http:
@@ -184,7 +184,7 @@ spec:
         path: ${NFS_MEDIA}
         advancedMounts:
           qbittorrent:
-            app:
+            qbittorrent:
               - path: /data/r720xd-media
                 readOnly: false
       dnsdist:

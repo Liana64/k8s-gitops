@@ -25,14 +25,12 @@ layout:
     tab: Main
   Media:
     tab: Main
+  Downloads:
+    tab: Main
   Endpoints:
     tab: Admin
   IPMIs:
     tab: Admin
-  Downloads:
-    tab: Media
-    style: row
-    columns: 4
 quicklaunch:
   searchDescriptions: true
   hideInternetSearch: false

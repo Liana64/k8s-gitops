@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: prowlarr
+  name: bazarr
 spec:
   interval: 30m
   chart:
@@ -15,49 +15,45 @@ spec:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
+
   values:
     controllers:
-      prowlarr:
+      bazarr:
         annotations:
           reloader.stakater.com/auto: "true"
+
         pod:
           securityContext:
             runAsUser: 2000
             runAsGroup: 2000
             runAsNonRoot: true
             fsGroup: 2000
-            fsGroupChangePolicy: OnRootMismatch
+            fsGroupChangePolicy: "OnRootMismatch"
+            supplementalGroups:
+              - 65542 # gladius:external-services
+
         containers:
           app:
             image:
-              repository: ghcr.io/liana64/prowlarr-develop
-              tag: 1.28.0.4862@sha256:744c44b81e1ddb8c4265c775e5f6f0a308ed29ce3498e4cece0456eb70274efe
-            env:
-              COMPlus_EnableDiagnostics: "0"
-              PROWLARR__INSTANCE_NAME: Prowlarr
-              PROWLARR__PORT: &port 9696
-              PROWLARR__LOG_LEVEL: info
-              PROWLARR__ANALYTICS_ENABLED: "False"
-              PROWLARR__AUTHENTICATION_METHOD: External
-              PROWLARR__API_KEY:
-                valueFrom:
-                  secretKeyRef:
-                    name: prowlarr-secret
-                    key: API_KEY
+              repository: ghcr.io/liana64/bazarr
+              tag: 1.4.5@sha256:0df4900c308a9106c922cee359e91cdfb31b30181cf95c230fd22fe7bf785cdc
             probes:
-              liveness:
+              liveness: &probes
                 enabled: true
-              readiness:
-                enabled: true
-              startup:
-                enabled: true
+                custom: true
                 spec:
-                  failureThreshold: 30
-                  periodSeconds: 5
+                  httpGet:
+                    path: /health
+                    port: &port 6767
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
             resources:
               requests:
-                cpu: 18m
-                memory: 128Mi
+                cpu: 15m
+                memory: 256Mi
               limits:
                 memory: 512Mi
             securityContext:
@@ -66,9 +62,10 @@ spec:
               capabilities:
                 drop:
                   - ALL
+
     service:
       app:
-        controller: prowlarr
+        controller: bazarr
         ports:
           http:
             port: *port
@@ -80,19 +77,20 @@ spec:
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_EXTERNAL_DOMAIN}"
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Downloads
-          gethomepage.dev/name: Prowlarr
-          gethomepage.dev/description: Torrent proxy
-          gethomepage.dev/icon: prowlarr
+          gethomepage.dev/name: Bazarr
+          gethomepage.dev/description: Subtitles
+          gethomepage.dev/icon: bazarr
         hosts:
-          - host: &host "prowlarr.${SECRET_INTERNAL_DOMAIN}"
+          - host: &host "bazarr.${SECRET_INTERNAL_DOMAIN}"
             paths:
               - path: /
                 service:
                   identifier: app
                   port: http
         tls:
-          - secretName: prowlarr-tls
+          - secretName: bazarr-tls
             hosts: [*host]
+
     persistence:
       config:
         storageClass: cluster-nvme
@@ -101,3 +99,12 @@ spec:
         retain: true
         globalMounts:
           - path: /config
+      nfs-media:
+        type: nfs
+        server: ${NFS_HOST}
+        path: ${NFS_MEDIA}
+        advancedMounts:
+          bazarr:
+            app:
+              - path: /data/r720xd-media
+                readOnly: false
