@@ -18,9 +18,9 @@ spec:
   values:
     controllers:
       jellyfin:
+        strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
-
         pod:
           nodeSelector:
             feature.node.kubernetes.io/pci-10de.present: "true"
@@ -29,6 +29,8 @@ spec:
             runAsGroup: 2000
             fsGroup: 2000
             fsGroupChangePolicy: "OnRootMismatch"
+            supplementalGroups:
+              - 501
         containers:
           app:
             image:
@@ -55,11 +57,11 @@ spec:
             resources:
               requests:
                 cpu: 100m
-                nvidia.com/gpu: 1
                 memory: 512Mi
-              limits:
                 nvidia.com/gpu: 1
+              limits:
                 memory: 4Gi
+                nvidia.com/gpu: 1
     service:
       app:
         controller: *app
@@ -103,6 +105,7 @@ spec:
           jellyfin:
             app:
               - path: /data/r720xd-media
+                readOnly: true
       tmpfs:
         type: emptyDir
         advancedMounts:

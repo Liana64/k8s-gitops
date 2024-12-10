@@ -9,3 +9,5 @@ resources:
   - ./web-check/ks.yaml
   - ./redlib/ks.yaml
   - ./excalidraw/ks.yaml
+  - ./echo-server/ks.yaml
+  - ./stirling-pdf/ks.yaml

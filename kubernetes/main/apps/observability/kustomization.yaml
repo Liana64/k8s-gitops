@@ -5,8 +5,8 @@ resources:
   - ./namespace.yaml
   - ./prometheus-operator-crds/ks.yaml
   - ./kube-prometheus-stack/ks.yaml
+  - ./kube-state-metrics/ks.yaml
   - ./loki/ks.yaml
-  - ./netshoot/ks.yaml
   - ./speedtest-exporter/ks.yaml
   - ./changedetection/ks.yaml
   #- ./gatus/ks.yaml

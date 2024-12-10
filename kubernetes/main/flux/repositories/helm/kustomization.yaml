@@ -10,6 +10,7 @@ resources:
   - ./cilium.yaml
   - ./cloudnative-pg.yaml
   - ./coredns.yaml
+  - ./descheduler.yaml
   - ./grafana.yaml
   - ./itzg.yaml
   - ./jetstack.yaml
