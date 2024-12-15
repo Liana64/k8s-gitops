@@ -72,7 +72,7 @@ spec:
               - *host
             secretName: "pingvin-tls"
       external:
-        className: traefik-external
+        className: traefik
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
         hosts:

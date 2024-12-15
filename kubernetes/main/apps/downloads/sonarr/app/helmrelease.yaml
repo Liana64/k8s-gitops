@@ -24,13 +24,11 @@ spec:
 
         pod:
           securityContext:
-            runAsUser: 2000
-            runAsGroup: 2000
+            runAsUser: 600
+            runAsGroup: 3005
             runAsNonRoot: true
-            fsGroup: 2000
+            fsGroup: 3005
             fsGroupChangePolicy: "OnRootMismatch"
-            supplementalGroups:
-              - 65542 # gladius:external-services
 
         containers:
           app:
@@ -118,8 +116,4 @@ spec:
           sonarr:
             app:
               - path: /data/r720xd-media
-                readOnly: true
-      add-ons:
-        type: emptyDir
-      tmp:
-        type: emptyDir
+                readOnly: false
