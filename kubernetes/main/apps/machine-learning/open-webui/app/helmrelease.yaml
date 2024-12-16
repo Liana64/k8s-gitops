@@ -1,0 +1,72 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app ollama-ui
+  namespace: default
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.5.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+      interval: 15m
+  maxHistory: 3
+  install:
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  values:
+    controllers:
+      ollama-ui:
+        replicas: 1
+        containers:
+          app:
+            image:
+              repository: ghcr.io/open-webui/open-webui
+              tag: main
+            env:
+              OLLAMA_API_BASE_URL: http://ollama:11434
+    service:
+      app:
+        controller: ollama-ui
+        ports:
+          http:
+            port: 8080
+
+    ingress:
+      app:
+        className: traefik
+        annotations:
+          cert-manager.io/cluster-issuer: "letsencrypt-production"
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Research
+          gethomepage.dev/name: Open Web UI
+          gethomepage.dev/description: LLM chat
+          gethomepage.dev/icon: *app
+        hosts:
+          - host: &host "chat.${SECRET_INTERNAL_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - secretName: open-webui-tls
+            hosts: [*host]
+
+    persistence:
+#      config:
+#        enabled: true
+#        type: nfs
+#        server: 192.168.1.2
+#        path: /volume1/network-storage/ollama/data
+#        globalMounts:
+#          - path: /data

@@ -45,12 +45,14 @@ spec:
               limits:
                 cpu: 8000m
                 memory: 8Gi
+
     service:
       app:
         controller: *app
         ports:
           http:
             port: &port 11434
+
     ingress:
       app:
         className: traefik
@@ -71,6 +73,7 @@ spec:
         tls:
           - secretName: ollama-tls
             hosts: [*host]
+
     persistence:
       data:
         storageClass: cluster-nvme

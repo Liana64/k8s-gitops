@@ -20,6 +20,7 @@ spec:
       radarr:
         annotations:
           reloader.stakater.com/auto: "true"
+
         pod:
           securityContext:
             runAsUser: 600
@@ -27,6 +28,7 @@ spec:
             runAsNonRoot: true
             fsGroup: 3005
             fsGroupChangePolicy: "OnRootMismatch"
+
         containers:
           app:
             image:
@@ -63,16 +65,18 @@ spec:
                 memory: 2Gi
             securityContext:
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
+              readOnlyRootFilesystem: false
               capabilities:
                 drop:
                   - ALL
+
     service:
       app:
         controller: radarr
         ports:
           http:
             port: *port
+
     ingress:
       app:
         className: traefik
@@ -94,6 +98,7 @@ spec:
         tls:
           - secretName: radarr-tls
             hosts: [*host]
+
     persistence:
       config:
         storageClass: cluster-nvme

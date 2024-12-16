@@ -172,12 +172,6 @@ spec:
         retain: true
         globalMounts:
           - path: /config
-      empty-config:
-        type: emptyDir
-        advancedMounts:
-          qbittorrent:
-            port-forward:
-              - path: /config
       nfs-media:
         type: nfs
         server: ${NFS_HOST}
