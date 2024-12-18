@@ -62,12 +62,14 @@ spec:
               limits:
                 memory: 4Gi
                 nvidia.com/gpu: 1
+
     service:
       app:
         controller: *app
         ports:
           http:
             port: 8096
+
     ingress:
       app:
         className: traefik-external
@@ -75,12 +77,15 @@ spec:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_EXTERNAL_DOMAIN}"
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Media
+          gethomepage.dev/group: Home
           gethomepage.dev/name: Jellyfin
           gethomepage.dev/description: Media server
           gethomepage.dev/icon: jellyfin
+          #gethomepage.dev/widget.type: "jellyfin"
+          #gethomepage.dev/widget.key: "${HOMEPAGE_VAR_JELLYFIN_API_KEY}"
+          #gethomepage.dev/widget.url: &host "{{ .Release.Name }}.${SECRET_EXTERNAL_DOMAIN}"
         hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_EXTERNAL_DOMAIN}"
+          - host: *host
             paths:
               - path: /
                 service:
@@ -89,6 +94,7 @@ spec:
         tls:
           - secretName: jellyfin-tls
             hosts: [*host]
+
     persistence:
       config:
         storageClass: cluster-nvme

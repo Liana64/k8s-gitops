@@ -15,15 +15,15 @@ layout:
     tab: Main
     style: row
     columns: 4
+  Home:
+    tab: Main
   Observability:
     tab: Main
   Services:
     tab: Main
   Tools:
     tab: Main
-  Home:
-    tab: Main
-  Media:
+  Research:
     tab: Main
   Downloads:
     tab: Main

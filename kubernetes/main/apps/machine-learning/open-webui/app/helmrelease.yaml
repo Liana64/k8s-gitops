@@ -33,7 +33,7 @@ spec:
               repository: ghcr.io/open-webui/open-webui
               tag: main
             env:
-              OLLAMA_API_BASE_URL: http://ollama:11434
+              OLLAMA_API_BASE_URL: http://ollama.machine-learning.svc.cluster.local:11434
     service:
       app:
         controller: ollama-ui
@@ -50,7 +50,7 @@ spec:
           gethomepage.dev/group: Research
           gethomepage.dev/name: Open Web UI
           gethomepage.dev/description: LLM chat
-          gethomepage.dev/icon: *app
+          gethomepage.dev/icon: open-webui
         hosts:
           - host: &host "chat.${SECRET_INTERNAL_DOMAIN}"
             paths:

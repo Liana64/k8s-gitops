@@ -1,58 +1,12 @@
 ---
 - Network:
-  #    - OPNsense:
-  #        href: https://opnsense.${SECRET_OLD_DOMAIN}
-  #        siteMonitor: https://opnsense.${SECRET_OLD_DOMAIN}
-  #        icon: opnsense
-  #        description: RSS feed
-  #        widget:
-  #          type: opnsense
-  #          url: https://opnsense.${SECRET_OLD_DOMAIN}
-  #          key: "{{HOMEPAGE_VAR_OPNSENSE_TOKEN}}"
-- Services:
-    - Miniflux:
-        href: https://rss.${SECRET_INTERNAL_DOMAIN}
-        siteMonitor: http://miniflux.labs.svc.cluster.local/healthcheck
-        icon: miniflux
-        description: RSS feed
+    - OPNsense:
+        href: https://opnsense.${SECRET_OLD_DOMAIN}
+        siteMonitor: https://opnsense.${SECRET_OLD_DOMAIN}
+        icon: opnsense
+        description: Firewall and router
         widget:
-          type: miniflux
-          url: http://miniflux.labs.svc.cluster.local
-          key: "{{HOMEPAGE_VAR_MINIFLUX_TOKEN}}"
-- Media:
-    - Jellyfin:
-        href: https://${SECRET_MEDIA_DOMAIN}
-        siteMonitor: https://${SECRET_MEDIA_DOMAIN}
-        icon: jellyfin
-        description: Media streaming
-        widget:
-          type: jellyfin
-          url: https://${SECRET_MEDIA_DOMAIN}
-          key: "{{HOMEPAGE_VAR_JELLYFIN_TOKEN}}"
-    - Jellyfin:
-        href: https://jellyseerr.${SECRET_MEDIA_DOMAIN}
-        siteMonitor: https://jellyseerr.${SECRET_MEDIA_DOMAIN}
-        icon: jellyseerr
-        description: Media requests
-        widget:
-          type: jellyseerr
-          url: https://jellyseerr.${SECRET_MEDIA_DOMAIN}
-          key: "{{HOMEPAGE_VAR_JELLYSEERR_TOKEN}}"
-    - Sonarr:
-        href: https://sonarr.${SECRET_MEDIA_DOMAIN}
-        siteMonitor: https://sonarr.${SECRET_MEDIA_DOMAIN}
-        icon: sonarr
-        description: TV
-        widget:
-          type: sonarr
-          url: https://sonarr.${SECRET_MEDIA_DOMAIN}
-          key: "{{HOMEPAGE_VAR_SONARR_TOKEN}}"
-    - Radarr:
-        href: https://radarr.${SECRET_MEDIA_DOMAIN}
-        siteMonitor: https://radarr.${SECRET_MEDIA_DOMAIN}
-        icon: radarr
-        description: Movies
-        widget:
-          type: radarr
-          url: https://radarr.${SECRET_MEDIA_DOMAIN}
-          key: "{{HOMEPAGE_VAR_RADARR_TOKEN}}"
+          type: opnsense
+          url: https://opnsense.${SECRET_OLD_DOMAIN}
+          username: "{{HOMEPAGE_VAR_OPNSENSE_API_KEY}}"
+          password: "{{HOMEPAGE_VAR_OPNSENSE_API_SECRET}}"

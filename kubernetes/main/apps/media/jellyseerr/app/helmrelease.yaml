@@ -66,6 +66,7 @@ spec:
         ports:
           http:
             port: *port
+
     ingress:
       app:
         className: traefik-external
@@ -73,12 +74,15 @@ spec:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_EXTERNAL_DOMAIN}"
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Media
+          gethomepage.dev/group: Home
           gethomepage.dev/name: Jellyseerr
           gethomepage.dev/description: Media requests
           gethomepage.dev/icon: jellyseerr
+          #gethomepage.dev/widget.type: "jellyseerr"
+          #gethomepage.dev/widget.key: "${HOMEPAGE_VAR_JELLYSEERR_API_KEY}"
+          #gethomepage.dev/widget.url: &host "requests.${SECRET_EXTERNAL_DOMAIN}"
         hosts:
-          - host: &host "requests.${SECRET_EXTERNAL_DOMAIN}"
+          - host: *host
             paths:
               - path: /
                 service:
@@ -87,6 +91,7 @@ spec:
         tls:
           - secretName: jellyseerr-tls
             hosts: [*host]
+
     persistence:
       config:
         storageClass: cluster-nvme

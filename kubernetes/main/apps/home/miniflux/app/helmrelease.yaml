@@ -117,8 +117,10 @@ spec:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Services
           gethomepage.dev/name: Miniflux
-          gethomepage.dev/description: Minimalist RSS aggregator
+          gethomepage.dev/description: RSS aggregator
           gethomepage.dev/icon: miniflux
+          gethomepage.dev/widget.url: "https://rss.${SECRET_INTERNAL_DOMAIN}"
+          gethomepage.dev/widget.key: "{{HOMEPAGE_VAR_MINIFLUX_TOKEN}}"
         hosts:
           - host: &host "rss.${SECRET_INTERNAL_DOMAIN}"
             paths:

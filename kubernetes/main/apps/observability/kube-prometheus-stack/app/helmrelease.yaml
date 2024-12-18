@@ -78,6 +78,7 @@ spec:
           gethomepage.dev/name: Prometheus
           gethomepage.dev/description: Time-series event monitoring
           gethomepage.dev/icon: prometheus.png
+          gethomepage.dev/pod-selector: app.kubernetes.io/name=kube-prometheus-stack-prometheus
         hosts: ["prometheus.${SECRET_INTERNAL_DOMAIN}"]
         pathType: Prefix
         tls:
@@ -171,6 +172,7 @@ spec:
           gethomepage.dev/name: Alert Manager
           gethomepage.dev/description: Alert handler for kube-prometheus-stack
           gethomepage.dev/icon: alertmanager.png
+          gethomepage.dev/pod-selector: app.kubernetes.io/name=kube-prometheus-stack-alertmanager
         hosts: ["alertmanager.${SECRET_INTERNAL_DOMAIN}"]
         pathType: Prefix
         tls:
