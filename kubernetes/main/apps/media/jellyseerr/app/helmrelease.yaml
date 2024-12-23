@@ -82,7 +82,7 @@ spec:
           #gethomepage.dev/widget.key: "${HOMEPAGE_VAR_JELLYSEERR_API_KEY}"
           #gethomepage.dev/widget.url: &host "requests.${SECRET_EXTERNAL_DOMAIN}"
         hosts:
-          - host: *host
+          - host: &host "requests.${SECRET_EXTERNAL_DOMAIN}"
             paths:
               - path: /
                 service:

@@ -112,55 +112,8 @@ spec:
                 requests:
                   storage: 75Gi
     grafana:
+      enabled: false
       forceDeployDashboards: true
-      persistence:
-        enabled: true
-        type: pvc
-        storageClassName: "cluster-nvme"
-        accessModes: ["ReadWriteOnce"]
-        size: 32Gi
-      sidecar:
-        dashboards:
-          enabled: true
-          searchNamespace: ALL
-          label: grafana_dashboard
-          folderAnnotation: grafana_folder
-          default:
-            speedtest-exporter:
-              # renovate: depName="Speedtest-Exporter Dashboard"
-              gnetId: 13665
-              revision: 4
-          datasource:
-            - name: DS_PROMETHEUS
-              value: Prometheus
-          provider:
-            disableDelete: true
-            foldersFromFilesStructure: true
-        datasources:
-          enabled: true
-          searchNamespace: ALL
-          labelValue: ""
-      serviceMonitor:
-        enabled: true
-      testFramework:
-        enabled: false
-      ingress:
-        enabled: true
-        ingressClassName: traefik
-        labels:
-          teleport: enabled
-        annotations:
-          cert-manager.io/cluster-issuer: "letsencrypt-production"
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Observability
-          gethomepage.dev/name: Grafana
-          gethomepage.dev/description: Data visualization
-          gethomepage.dev/icon: grafana.png
-        hosts: ["grafana.${SECRET_INTERNAL_DOMAIN}"]
-        pathType: Prefix
-        tls:
-          - secretName: kube-prometheus-stack-tls
-            hosts: ["grafana.${SECRET_INTERNAL_DOMAIN}"]
     alertmanager:
       ingress:
         enabled: true

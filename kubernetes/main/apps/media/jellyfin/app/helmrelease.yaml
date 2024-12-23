@@ -85,7 +85,7 @@ spec:
           #gethomepage.dev/widget.key: "${HOMEPAGE_VAR_JELLYFIN_API_KEY}"
           #gethomepage.dev/widget.url: &host "{{ .Release.Name }}.${SECRET_EXTERNAL_DOMAIN}"
         hosts:
-          - host: *host
+          - host: &host "{{ .Release.Name }}.${SECRET_EXTERNAL_DOMAIN}"
             paths:
               - path: /
                 service:

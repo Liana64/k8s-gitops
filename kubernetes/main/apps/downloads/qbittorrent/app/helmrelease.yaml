@@ -26,14 +26,14 @@ spec:
           dnsdist:
             image:
               repository: docker.io/powerdns/dnsdist-19
-              tag: 1.9.7@sha256:6ed810f4d5da4585ccfc2667a794a78319ff2960a43266fc6a160c063d04e1ef
+              tag: 1.9.8
             restartPolicy: Always
           gluetun:
             dependsOn:
               - dnsdist
             image:
               repository: ghcr.io/qdm12/gluetun
-              tag: latest@sha256:aaaf6c7c108f7f7caae978499b4cb823a135324992ce7cea4acd405a29298141
+              tag: v3.39.1
             env:
               DOT: "off"
               DNS_ADDRESS: "127.0.0.2"
@@ -69,7 +69,7 @@ spec:
             nameOverride: qbittorrent
             image:
               repository: ghcr.io/liana64/qbittorrent-beta
-              tag: 5.0.2@sha256:84961a7f137dc4d80460ca0bf4746477f751767579278ae0d4164dcb5cc735d5
+              tag: 5.0.3
             env:
               UMASK: "022"
               QBT_WEBUI_PORT: &port 8080
@@ -119,7 +119,7 @@ spec:
           port-forward:
             image:
               repository: ghcr.io/bjw-s/gluetun-qb-port-sync
-              tag: latest@sha256:ebabf8031406a29a1e642cb9eb83b96de9fc442daf3effc85b23047dde7acbd1
+              tag: 0.0.2
             env:
               GLUETUN_CONTROL_SERVER_HOST: localhost
               GLUETUN_CONTROL_SERVER_PORT: 8000
@@ -170,8 +170,16 @@ spec:
         accessMode: ReadWriteOnce
         size: 1Gi
         retain: true
-        globalMounts:
-          - path: /config
+        advancedMounts:
+          qbittorrent:
+            app:
+              - path: /config
+      empty-config:
+        type: emptyDir
+        advancedMounts:
+          qbittorrent:
+            port-forward:
+              - path: /config
       nfs-media:
         type: nfs
         server: ${NFS_HOST}
