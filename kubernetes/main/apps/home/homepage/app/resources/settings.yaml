@@ -11,7 +11,7 @@ background:
 providers:
   openweathermap: "{{OPENWEATHERMAP_API_KEY}}"
 layout:
-  Network:
+  Overview:
     tab: Main
     style: row
     columns: 4
@@ -21,11 +21,13 @@ layout:
     tab: Main
   Services:
     tab: Main
+  Media:
+    tab: Main
+  Downloads:
+    tab: Main
   Tools:
     tab: Main
   Research:
-    tab: Main
-  Downloads:
     tab: Main
   Endpoints:
     tab: Admin

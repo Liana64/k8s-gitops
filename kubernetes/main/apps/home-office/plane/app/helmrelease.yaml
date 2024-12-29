@@ -1,0 +1,152 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.ok8.sh/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app plane
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: plane-ce
+      version: 1.0.27
+      sourceRef:
+        kind: HelmRepository
+        name: *app
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    planeVersion: stable
+
+    ingress:
+      enabled: true
+      appHost: "plane.${SECRET_INTERNAL_DOMAIN}"
+      ingressClass: traefik
+      ingress_annotations:
+        cert-manager.io/cluster-issuer: "letsencrypt-production"
+        gethomepage.dev/enabled: "true"
+        gethomepage.dev/group: Home
+        gethomepage.dev/name: Plane
+        gethomepage.dev/description: Project management
+        gethomepage.dev/icon: "/icons/plane.png"
+
+    ssl:
+      generateCerts: true
+      issuer: "letsencrypt-production"
+
+    redis:
+      local_setup: false
+
+    postgres:
+      local_setup: false
+
+    minio:
+      local_setup: false
+
+    rabbitmq:
+      local_setup: false
+
+    web:
+      replicas: 1
+      memoryLimit: 1Gi
+      cpuLimit: 500m
+      image: makeplane/plane-frontend
+      pullPolicy: IfNotPresent
+      assign_cluster_ip: true
+
+    space:
+      replicas: 1
+      memoryLimit: 1Gi
+      cpuLimit: 500m
+      image: makeplane/plane-space
+      pullPolicy: IfNotPresent
+      assign_cluster_ip: true
+
+    admin:
+      replicas: 1
+      memoryLimit: 1Gi
+      cpuLimit: 500m
+      image: makeplane/plane-admin
+      pullPolicy: IfNotPresent
+      assign_cluster_ip: true
+
+    api:
+      replicas: 1
+      memoryLimit: 1Gi
+      cpuLimit: 500m
+      image: makeplane/plane-backend
+      pullPolicy: IfNotPresent
+      assign_cluster_ip: false
+
+    worker:
+      replicas: 1
+      memoryLimit: 8Gi
+      cpuLimit: "6"
+      image: makeplane/plane-backend
+      pullPolicy: IfNotPresent
+
+    beatworker:
+      replicas: 1
+      memoryLimit: 1Gi
+      cpuLimit: 500m
+      image: makeplane/plane-backend
+      pullPolicy: IfNotPresent
+
+    env:
+      docstore_bucket: "uploads"
+      doc_upload_size_limit: "5242880" # 5MB
+      sentry_dsn: ""
+      sentry_environment: ""
+
+      cors_allowed_origins: ""
+      default_cluster_domain: cluster.local
+
+  valuesFrom:
+    - targetPath: rabbitmq.external_rabbitmq_url
+      kind: Secret
+      name: plane-secret
+      valuesKey: RABBITMQ_URL
+    - targetPath: env.pgdb_username
+      kind: Secret
+      name: plane-secret
+      valuesKey: POSTGRES_USER
+    - targetPath: env.pgdb_password
+      kind: Secret
+      name: plane-secret
+      valuesKey: POSTGRES_PASSWORD
+    - targetPath: env.pgdb_name
+      kind: Secret
+      name: plane-secret
+      valuesKey: POSTGRES_DB
+    - targetPath: env.pgdb_remote_url
+      kind: Secret
+      name: plane-secret
+      valuesKey: POSTGRES_URL
+    - targetPath: env.remote_redis_url
+      kind: Secret
+      name: plane-secret
+      valuesKey: REDIS_URL
+    - targetPath: env.aws_access_key
+      kind: Secret
+      name: plane-secret
+      valuesKey: MINIO_ACCESS_KEY
+    - targetPath: env.aws_secret_access_key
+      kind: Secret
+      name: plane-secret
+      valuesKey: MINIO_SECRET_KEY
+    - targetPath: env.aws_s3_endpoint_url
+      kind: Secret
+      name: plane-secret
+      valuesKey: MINIO_URL
+    - targetPath: env.secret_key
+      kind: Secret
+      name: plane-secret
+      valuesKey: SECRET_KEY

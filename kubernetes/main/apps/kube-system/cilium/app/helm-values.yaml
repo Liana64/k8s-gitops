@@ -2,7 +2,10 @@
 ## BPF Masquerade should be enabled for use with Talos and host DNS (`machine.features.hostDNS.forwardKubeDNSToHost`)
 ## CNI exclusivity should be false and endpoint routes enabled for use with Istio
 ##
-########
+## Sizing the client rate limit (`k8sClientRateLimit.qps` and `k8sClientRateLimit.burst`) is important when using L2 announcements due to increased API usage
+## See: https://docs.cilium.io/en/latest/network/l2-announcements/#sizing-client-rate-limit
+##
+#############
 
 ---
 autoDirectNodeRoutes: true
@@ -30,9 +33,11 @@ k8sServiceHost: 127.0.0.1
 k8sServicePort: 7445
 kubeProxyReplacement: true
 kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
-bgp:
-  announce:
-    loadbalancerIP: true
+k8sClientRateLimit:
+  qps: 50
+  burst: 200
+#bgpControlPlane:
+#  enabled: true
 l2announcements:
   enabled: true
 loadBalancer:

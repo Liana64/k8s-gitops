@@ -10,3 +10,4 @@ resources:
   - ./reloader/ks.yaml
   - ./spegel/ks.yaml
   - ./volsync/ks.yaml
+  #- ./csi-driver-smb/ks.yaml

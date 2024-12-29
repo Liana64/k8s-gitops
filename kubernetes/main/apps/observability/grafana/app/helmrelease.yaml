@@ -212,6 +212,18 @@ spec:
           gnetId: 763 # https://grafana.com/grafana/dashboards/763?tab=revisions
           revision: 5
           datasource: Prometheus
+        rabbitmq-overview:
+          url: https://raw.githubusercontent.com/rabbitmq/rabbitmq-server/b836ca1d0824d8d4c24a62985ce869c388697c79/deps/rabbitmq_prometheus/docker/grafana/dashboards/RabbitMQ-Overview.json
+          datasource: Prometheus
+        rabbitmq-perftest:
+          url: https://raw.githubusercontent.com/rabbitmq/rabbitmq-server/b836ca1d0824d8d4c24a62985ce869c388697c79/deps/rabbitmq_prometheus/docker/grafana/dashboards/RabbitMQ-PerfTest.json
+          datasource: Prometheus
+        rabbitmq-quorum:
+          url: https://raw.githubusercontent.com/rabbitmq/rabbitmq-server/b836ca1d0824d8d4c24a62985ce869c388697c79/deps/rabbitmq_prometheus/docker/grafana/dashboards/RabbitMQ-Quorum-Queues-Raft.json
+          datasource: Prometheus
+        rabbitmq-stream:
+          url: https://raw.githubusercontent.com/rabbitmq/rabbitmq-server/b836ca1d0824d8d4c24a62985ce869c388697c79/deps/rabbitmq_prometheus/docker/grafana/dashboards/RabbitMQ-Stream.json
+          datasource: Prometheus
         prometheus:
           # renovate: depName="Prometheus"
           gnetId: 19105
@@ -244,8 +256,9 @@ spec:
       annotations:
         cert-manager.io/cluster-issuer: "letsencrypt-production"
         gethomepage.dev/enabled: "true"
-        gethomepage.dev/group: Services
+        gethomepage.dev/group: Observability
         gethomepage.dev/name: Grafana
+        gethomepage.dev/description: Observability dashboard
         gethomepage.dev/icon: grafana
       ingressClassName: traefik
       hosts: ["grafana.${SECRET_INTERNAL_DOMAIN}"]

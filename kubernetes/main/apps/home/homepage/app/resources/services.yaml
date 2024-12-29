@@ -1,5 +1,5 @@
 ---
-- Network:
+- Overview:
     - OPNsense:
         href: https://opnsense.${SECRET_OLD_DOMAIN}
         siteMonitor: https://opnsense.${SECRET_OLD_DOMAIN}

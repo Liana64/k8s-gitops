@@ -111,6 +111,9 @@ spec:
           - subPath: atuin.png
             path: /app/public/icons/atuin.png
             readOnly: true
+          - subPath: plane.png
+            path: /app/public/icons/plane.png
+            readOnly: true
       bookmarks:
         type: secret
         name: homepage-secret

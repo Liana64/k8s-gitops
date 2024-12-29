@@ -1,0 +1,111 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app writefreely
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.5.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    controllers:
+      writefreely:
+        replicas: 1
+        strategy: RollingUpdate
+        annotations:
+          reloader.stakater.com/auto: "true"
+          secret.reloader.stakater.com/reload: writefreely-secret
+        containers:
+          app:
+            image:
+              repository: ghcr.io/liana64/writefreely
+              tag: 0.15.1@sha256:77d92d89555f51d9c9733b58e9ae9397b799d21fd7793b1f33f19c383c6ad027
+            resources:
+              requests:
+                cpu: 32m
+                memory: 10Mi
+              limits:
+                cpu: 512m
+                memory: 280Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+        pod:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 2
+            runAsGroup: 2
+            fsGroup: 2
+            fsGroupChangePolicy: "OnRootMismatch"
+            seccompProfile: { type: RuntimeDefault }
+
+    service:
+      app:
+        controller: writefreely
+        ports:
+          http:
+            port: 8080
+
+    ingress:
+      app:
+        className: traefik-external
+        annotations:
+          external-dns.alpha.kubernetes.io/target: external.${SECRET_EXTERNAL_DOMAIN}
+          cert-manager.io/cluster-issuer: "letsencrypt-production"
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Services
+          gethomepage.dev/name: Writefreely
+          gethomepage.dev/description: Blog
+          gethomepage.dev/icon: *app
+        hosts:
+          - host: &host "blog.${SECRET_EXTERNAL_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - secretName: writefreely-tls
+            hosts: [*host]
+
+    persistence:
+      data:
+        storageClass: cluster-nvme
+        accessMode: ReadWriteOnce
+        size: 2Gi
+        retain: true
+        globalMounts:
+          - path: /config
+      config:
+        type: secret
+        name: writefreely-secret
+        globalMounts:
+          - subPath: config.ini
+            path: /go/config.ini
+            readOnly: true
+      keys:
+        storageClass: cluster-nvme
+        accessMode: ReadWriteOnce
+        size: 128Mi
+        retain: true
+        globalMounts:
+          - path: /go/keys

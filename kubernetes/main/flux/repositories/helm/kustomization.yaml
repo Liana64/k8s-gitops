@@ -29,3 +29,5 @@ resources:
   - ./teleport.yaml
   - ./traefik.yaml
   - ./windmill.yaml
+  - ./csi-driver-smb.yaml
+  - ./plane.yaml

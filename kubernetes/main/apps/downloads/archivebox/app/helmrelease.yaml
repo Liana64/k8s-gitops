@@ -119,3 +119,13 @@ spec:
             app:
               - path: /data
                 subPath: ./data
+      nfs-media:
+        type: nfs
+        server: ${NFS_HOST}
+        path: ${NFS_MEDIA}
+        advancedMounts:
+          archivebox:
+            app:
+              - path: /data/r720xd-media
+                readOnly: false
+              #- path: "/data/r720xd-media/M Media/00-09 Archives/01 Backups/01.10 ArchiveBox"
