@@ -21,6 +21,7 @@ spec:
         strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
+
         pod:
           runtimeClassName: nvidia
           terminationGracePeriodSeconds: 1
@@ -33,6 +34,7 @@ spec:
             fsGroupChangePolicy: "OnRootMismatch"
             supplementalGroups:
               - 3005
+
         containers:
           app:
             image:
@@ -62,6 +64,7 @@ spec:
                 memory: 512Mi
                 nvidia.com/gpu: 1
               limits:
+                cpu: "20"
                 memory: 4Gi
                 nvidia.com/gpu: 1
 
