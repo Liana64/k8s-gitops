@@ -5,4 +5,4 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   #- ./apprise/ks.yaml
-  #- ./thelounge/ks.yaml
+  - ./thelounge/ks.yaml
