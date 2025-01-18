@@ -126,3 +126,12 @@ spec:
         retain: true
         globalMounts:
           - path: /config
+      dnsdist:
+        type: configMap
+        name: irc-dnsdist
+        advancedMounts:
+          thelounge:
+            dnsdist:
+              - path: /etc/dnsdist/dnsdist.conf
+                subPath: dnsdist.conf
+                readOnly: true
