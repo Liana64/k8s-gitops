@@ -59,7 +59,7 @@ spec:
     kubeControllerManager:
       enabled: true
       endpoints: &kubeApiIP
-        - 10.28.10.10
+        - 192.168.86.100
     kubeScheduler:
       enabled: true
       endpoints: *kubeApiIP
