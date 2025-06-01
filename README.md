@@ -2,7 +2,7 @@
 
 **Liana Laboratories Self-Hosting Initiative**
 
-This is my Kubernetes homelab, currently running on a Lenovo RD350 and Dell R720xd. Feel free to have a look around and adapt however you want!
+This is my Kubernetes homelab, currently running on a MinisForum ms-01. Feel free to have a look around and adapt however you want!
 
 **Are you an aspiring homelabber?**
 
