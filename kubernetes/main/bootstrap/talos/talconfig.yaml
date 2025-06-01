@@ -22,7 +22,7 @@ nodes:
     controlPlane: true
     ipAddress: 192.168.86.121
     installDiskSelector: &nvmeDisk
-      size: < 128GB
+      size: < 200GB
     networkInterfaces:
       - interface: eth0
         dhcp: true
