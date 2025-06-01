@@ -5,4 +5,4 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./atuin/ks.yaml
-  - ./netbox/ks.yaml
+  #  - ./netbox/ks.yaml

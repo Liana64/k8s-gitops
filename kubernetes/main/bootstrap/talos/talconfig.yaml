@@ -2,9 +2,9 @@
 # yaml-language-server: $schema=schemas/talconfig.json
 
 # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
-talosVersion: v1.8.3
+talosVersion: v1.10.2
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
-kubernetesVersion: v1.31.3
+kubernetesVersion: v1.33.1
 
 clusterName: &clusterName lianalabs
 
@@ -13,14 +13,14 @@ clusterPodNets: ["10.244.0.0/16"]
 clusterSvcNets: ["10.86.0.0/16"]
 
 additionalApiServerCertSans: &sans
-  - &kubeApiIP "10.28.11.10"
+  - &kubeApiIP "192.168.86.120"
   - 127.0.0.1 # KubePrism
 additionalMachineCertSans: *sans
 
 nodes:
   - hostname: n1
     controlPlane: true
-    ipAddress: 10.28.11.100
+    ipAddress: 192.168.86.121
     installDiskSelector: &nvmeDisk
       size: < 128GB
     networkInterfaces:
@@ -28,8 +28,8 @@ nodes:
         dhcp: true
         vip:
           ip: *kubeApiIP
-    # https://factory.talos.dev/?arch=amd64&cmdline=-console+console%3Dtty0&cmdline-set=true&extensions=-&extensions=siderolabs%2Fcrun&extensions=siderolabs%2Fqemu-guest-agent&platform=nocloud&target=cloud&version=1.8.3
-    talosImageURL: &talosMinimalImage factory.talos.dev/installer/664b407b468ace3dbc275db6fc399bcb383d55f8e72528a3a15e0cb68ecf41f6
+    # https://factory.talos.dev/?arch=amd64&cmdline-set=true&extensions=-&extensions=siderolabs%2Fcrun&extensions=siderolabs%2Fqemu-guest-agent&extensions=siderolabs%2Fthunderbolt&platform=nocloud&target=cloud&version=1.10.2
+    talosImageURL: &talosMinimalImage factory.talos.dev/nocloud-installer/2325a7a679ea163a34597ec2d70bbcc4b6877e1c09082332cd5982b1bde0057d
     schematic: &schematicMinimal
       customization:
         extraKernelArgs:
@@ -39,119 +39,25 @@ nodes:
           officialExtensions:
             - siderolabs/crun
             - siderolabs/qemu-guest-agent
+            - siderolabs/thunderbolt
+    patches:
+      - # Mount NVMe storage to kubelet
+        |-
+        machine:
+          kubelet:
+            extraMounts:
+              - destination: /var/mnt/nvme
+                type: bind
+                source: /var/mnt/nvme
+                options:
+                  - bind
+                  - rshared
+                  - rw
     nodeLabels:
-      hardware/manufacturer: "Lenovo"
-      hardware/model: "RD350"
+      hardware/manufacturer: "MinisForum"
+      hardware/model: "MS-01"
       node-role.kubernetes.io/control-plane: "control-plane"
       topology.kubernetes.io/region: &region "us-central"
-      topology.kubernetes.io/zone: *clusterName
-  - hostname: n2
-    controlPlane: false
-    ipAddress: 10.28.11.101
-    installDiskSelector: *nvmeDisk
-    machineDisks:
-      - device: /dev/sdb
-        partitions:
-          - mountpoint: /var/mnt/nvme
-      - device: /dev/sdc
-        partitions:
-          - mountpoint: /var/mnt/pool
-    networkInterfaces:
-      - interface: eth0
-        dhcp: true
-    talosImageURL: *talosMinimalImage
-    schematic: *schematicMinimal
-    patches:
-      - # Mount NVMe storage to kubelet
-        |-
-        machine:
-          kubelet:
-            extraMounts:
-              - destination: /var/mnt/nvme
-                type: bind
-                source: /var/mnt/nvme
-                options:
-                  - bind
-                  - rshared
-                  - rw
-      - # Mount RD350 ZFS pool storage to kubelet
-        |-
-        machine:
-          kubelet:
-            extraMounts:
-              - destination: /var/mnt/pool
-                type: bind
-                source: /var/mnt/pool
-                options:
-                  - bind
-                  - rshared
-                  - rw
-    nodeLabels:
-      hardware/manufacturer: "Lenovo"
-      hardware/model: "RD350"
-      node-role.kubernetes.io/worker: "worker"
-      topology.kubernetes.io/region: *region
-      topology.kubernetes.io/zone: *clusterName
-  - hostname: n3
-    controlPlane: true
-    ipAddress: 10.28.11.102
-    installDiskSelector: *nvmeDisk
-    networkInterfaces:
-      - interface: eth0
-        dhcp: true
-        vip:
-          ip: *kubeApiIP
-    talosImageURL: *talosMinimalImage
-    schematic: *schematicMinimal
-    nodeLabels:
-      hardware/manufacturer: "Dell"
-      hardware/model: "R720xd"
-      node-role.kubernetes.io/control-plane: "control-plane"
-      topology.kubernetes.io/region: *region
-      topology.kubernetes.io/zone: *clusterName
-  - hostname: n4
-    controlPlane: false
-    ipAddress: 10.28.11.103
-    installDiskSelector: *nvmeDisk
-    machineDisks:
-      - device: /dev/sdb
-        partitions:
-          - mountpoint: /var/mnt/nvme
-    networkInterfaces:
-      - interface: eth0
-        dhcp: true
-    # https://factory.talos.dev/?arch=amd64&cmdline=-console+console%3Dtty0&cmdline-set=true&extensions=-&extensions=siderolabs%2Fcrun&extensions=siderolabs%2Fnvidia-container-toolkit-production&extensions=siderolabs%2Fqemu-guest-agent&extensions=siderolabs%2Fnonfree-kmod-nvidia-production&platform=nocloud&target=cloud&version=1.8.3
-    talosImageURL: factory.talos.dev/installer/04cbc433b5aab79851452cc3dfb25142c7c50f7f828e051acfed90d6b8b10b79
-    schematic:
-      customization:
-        extraKernelArgs:
-          - -console
-          - console=tty0
-        systemExtensions:
-          officialExtensions:
-            - siderolabs/crun
-            - siderolabs/nonfree-kmod-nvidia-production
-            - siderolabs/nvidia-container-toolkit-production
-            - siderolabs/qemu-guest-agent
-    patches:
-      - # Mount NVMe storage to kubelet
-        |-
-        machine:
-          kubelet:
-            extraMounts:
-              - destination: /var/mnt/nvme
-                type: bind
-                source: /var/mnt/nvme
-                options:
-                  - bind
-                  - rshared
-                  - rw
-      - "@./patches/worker/nvidia.yaml"
-    nodeLabels:
-      hardware/manufacturer: "Dell"
-      hardware/model: "R720xd"
-      node-role.kubernetes.io/worker: "worker"
-      topology.kubernetes.io/region: *region
       topology.kubernetes.io/zone: *clusterName
 
 patches:
