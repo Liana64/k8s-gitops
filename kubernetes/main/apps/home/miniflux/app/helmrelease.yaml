@@ -119,8 +119,8 @@ spec:
           gethomepage.dev/name: Miniflux
           gethomepage.dev/description: RSS aggregator
           gethomepage.dev/icon: miniflux
-          gethomepage.dev/widget.url: "https://rss.${SECRET_INTERNAL_DOMAIN}"
-          gethomepage.dev/widget.key: "{{HOMEPAGE_VAR_MINIFLUX_TOKEN}}"
+          #gethomepage.dev/widget.url: "https://rss.${SECRET_INTERNAL_DOMAIN}"
+          #gethomepage.dev/widget.key: "{{HOMEPAGE_VAR_MINIFLUX_TOKEN}}"
         hosts:
           - host: &host "rss.${SECRET_INTERNAL_DOMAIN}"
             paths:
