@@ -71,7 +71,7 @@ spec:
             nameOverride: qbittorrent
             image:
               repository: ghcr.io/liana64/qbittorrent-beta
-              tag: 5.1.0@sha256:1974eb29a5ab1c609125324337b934cd4f63886f73fd8f0820c9faa3284b90ef@
+              tag: 5.1.0@sha256:1974eb29a5ab1c609125324337b934cd4f63886f73fd8f0820c9faa3284b90ef
             env:
               UMASK: "022"
               QBT_WEBUI_PORT: &port 8080
@@ -106,9 +106,9 @@ spec:
             resources:
               requests:
                 cpu: 150m
-                memory: 2048Mi
+                memory: 1024Mi
               limits:
-                memory: 8192Mi
+                memory: 2048Mi
             securityContext:
               runAsUser: 2000
               runAsGroup: 2000

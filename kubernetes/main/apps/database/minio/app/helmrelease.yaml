@@ -31,7 +31,7 @@ spec:
           app:
             image:
               repository: quay.io/minio/minio
-              tag: RELEASE.2024-11-07T00-52-20Z
+              tag: RELEASE.2025-05-24T17-08-30Z
             env:
               MINIO_UPDATE: "off"
               MINIO_PROMETHEUS_URL: http://kube-prometheus-stack-prometheus.monitoring:9090
