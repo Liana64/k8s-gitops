@@ -71,14 +71,14 @@ spec:
             nameOverride: qbittorrent
             image:
               repository: ghcr.io/liana64/qbittorrent-beta
-              tag: 5.1.0
+              tag: 5.1.0@sha256:1974eb29a5ab1c609125324337b934cd4f63886f73fd8f0820c9faa3284b90ef@
             env:
               UMASK: "022"
               QBT_WEBUI_PORT: &port 8080
               QBT_BitTorrent__Session__MaxActiveDownloads: 10
               QBT_BitTorrent__Session__MaxActiveTorrents: 16384
               QBT_BitTorrent__Session__MaxActiveUploads: 50
-              QBT_BitTorrent__Session__DefaultSavePath: "/data/r720xd-media/M Media/00-09 Archives/00 Downloads/00.00 Torrent Downloads"
+              QBT_BitTorrent__Session__DefaultSavePath: "/media/downloads"
               QBT_Application__MemoryWorkingSetLimit:
                 valueFrom:
                   resourceFieldRef:
@@ -190,7 +190,7 @@ spec:
         advancedMounts:
           qbittorrent:
             app:
-              - path: /data
+              - path: /media
       dnsdist:
         type: configMap
         name: qbittorrent-dnsdist

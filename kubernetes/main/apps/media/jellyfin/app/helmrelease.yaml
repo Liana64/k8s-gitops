@@ -39,7 +39,7 @@ spec:
           app:
             image:
               repository: ghcr.io/jellyfin/jellyfin
-              tag: 10.10.3@sha256:17c3a8d9dddb97789b5f37112840ebf96566442c14d4754193a6c2eb154bc221
+              tag: 10.10.7@sha256:e4d1dc5374344446a3a78e43dd211247f22afba84ea2e5a13cbe1a94e1ff2141
             env:
               DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
               JELLYFIN_PublishedServerUrl: "{{ .Release.Name }}.${SECRET_EXTERNAL_DOMAIN}"
@@ -111,7 +111,6 @@ spec:
       media:
         enabled: true
         existingClaim: qbittorrent-media
-        namespace: downloads
         advancedMounts:
           jellyfin:
             app:

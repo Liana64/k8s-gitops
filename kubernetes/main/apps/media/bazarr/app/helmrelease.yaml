@@ -36,7 +36,7 @@ spec:
           app:
             image:
               repository: ghcr.io/liana64/bazarr
-              tag: 1.4.5@sha256:0df4900c308a9106c922cee359e91cdfb31b30181cf95c230fd22fe7bf785cdc
+              tag: 1.5.2@sha256:266508f6fb7fb26c9c208cd32c3295a7fafd7fbd5d0eb41727fdf366e81d9f33
             probes:
               liveness: &probes
                 enabled: true
