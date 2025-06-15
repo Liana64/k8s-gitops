@@ -8,19 +8,19 @@ kubernetesVersion: v1.33.1
 
 clusterName: &clusterName lianalabs
 
-endpoint: https://172.16.3.10:6443
+endpoint: https://172.16.4.10:6443
 clusterPodNets: ["10.244.0.0/16"]
 clusterSvcNets: ["10.86.0.0/16"]
 
 additionalApiServerCertSans: &sans
-  - &kubeApiIP "172.16.3.10"
+  - &kubeApiIP "172.16.4.10"
   - 127.0.0.1 # KubePrism
 additionalMachineCertSans: *sans
 
 nodes:
   - hostname: n1
     controlPlane: true
-    ipAddress: 172.16.3.11
+    ipAddress: 172.16.4.11
     installDiskSelector: &nvmeDisk
       size: < 200GB
     networkInterfaces:
