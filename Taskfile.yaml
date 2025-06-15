@@ -6,13 +6,13 @@ vars:
   KUBECONFIG_FILE: "{{.ROOT_DIR}}/kubeconfig"
   SCRIPTS_DIR: "{{.ROOT_DIR}}/scripts"
   SOPS_CONFIG_FILE: "{{.ROOT_DIR}}/.sops.yaml"
-  AGE_DIR: ~/.config/sops/age
+  AGE_DIR: /Users/liana/.config/sops/age
   AGE_FILE: "{{.AGE_DIR}}/lianalabs.key"
   CLUSTER: "main"
   CLUSTER_NAME: "lianalabs"
-#env:
-#  KUBECONFIG: "{{.KUBECONFIG_FILE}}"
-#  SOPS_AGE_KEY_FILE: "{{.AGE_FILE}}"
+env:
+  KUBECONFIG: "{{.KUBECONFIG_FILE}}"
+  SOPS_AGE_KEY_FILE: "{{.AGE_FILE}}"
 
 dotenv: [".env"]
 

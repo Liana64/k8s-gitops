@@ -28,12 +28,12 @@ spec:
           #nodeSelector:
           #  feature.node.kubernetes.io/pci-10de.present: "true"
           securityContext:
-            runAsUser: 2000
-            runAsGroup: 2000
-            fsGroup: 2000
+            runAsUser: 1000
+            runAsGroup: 1000
+            #fsGroup: 2000
             fsGroupChangePolicy: "OnRootMismatch"
-            supplementalGroups:
-              - 3005
+            #supplementalGroups:
+            #  - 3005
 
         containers:
           app:
