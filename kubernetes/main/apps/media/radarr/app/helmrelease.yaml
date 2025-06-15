@@ -23,17 +23,17 @@ spec:
 
         pod:
           securityContext:
-            runAsUser: 600
-            runAsGroup: 3005
+            runAsUser: 1000
+            runAsGroup: 1000
             runAsNonRoot: true
-            fsGroup: 3005
+            #fsGroup: 3005
             fsGroupChangePolicy: "OnRootMismatch"
 
         containers:
           app:
             image:
               repository: ghcr.io/liana64/radarr-develop
-              tag: 5.26.0.10051@sha256:dcf6a5d4fe639b3fd322bcb295e27d678866177257e0e5942bdae9553fd4b304
+              tag: 5.27.0.10101@sha256:f7479edefb57c174eb7d0edb460b169a0e692c953c2c1d787051957f9cc7293a
             env:
               COMPlus_EnableDiagnostics: "0"
               RADARR__INSTANCE_NAME: Radarr
@@ -111,7 +111,7 @@ spec:
         enabled: true
         existingClaim: qbittorrent-media
         advancedMounts:
-          jellyfin:
+          radarr:
             app:
               - path: /media
       #      nfs-media:

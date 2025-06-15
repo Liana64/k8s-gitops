@@ -24,17 +24,17 @@ spec:
 
         pod:
           securityContext:
-            runAsUser: 600
-            runAsGroup: 3005
+            runAsUser: 1000
+            runAsGroup: 1000
             runAsNonRoot: true
-            fsGroup: 3005
+            #fsGroup: 3005
             fsGroupChangePolicy: "OnRootMismatch"
 
         containers:
           app:
             image:
               repository: ghcr.io/liana64/sonarr-develop
-              tag: 4.0.14.2938@sha256:e68b88246fb4595468ab61ecaebe9fc3dbeeda96a089042e68f830ba737d2a2d
+              tag: 4.0.15.2940@sha256:57403e30fca9c78e520d75a2f498dab075e7b80967216f5d7472603d15e00005
             env:
               COMPlus_EnableDiagnostics: "0"
               SONARR__APP__INSTANCENAME: Sonarr
@@ -112,7 +112,7 @@ spec:
         enabled: true
         existingClaim: qbittorrent-media
         advancedMounts:
-          jellyfin:
+          sonarr:
             app:
               - path: /media
       #      nfs-media:

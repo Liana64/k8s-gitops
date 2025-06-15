@@ -8,6 +8,6 @@ resources:
   - ./grafana/ks.yaml
   - ./loki/ks.yaml
   - ./speedtest-exporter/ks.yaml
-  - ./changedetection/ks.yaml
-  - ./blackbox-exporter/ks.yaml
+  #- ./changedetection/ks.yaml
+  #- ./blackbox-exporter/ks.yaml
   #- ./gatus/ks.yaml
