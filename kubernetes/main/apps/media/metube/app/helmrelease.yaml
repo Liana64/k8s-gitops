@@ -35,7 +35,7 @@ spec:
               repository: ghcr.io/alexta69/metube
               tag: "2024-01-26"
             env:
-              DOWNLOAD_DIR: /data/r720xd-media/M Media/40-49 Video/44 Web/44.03 Web"
+              DOWNLOAD_DIR: "/media/downloads"
               STATE_DIR: "/config"
               YTDL_OPTIONS: '{"http_headers":{"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0"}}'
 
@@ -88,7 +88,7 @@ spec:
         enabled: true
         existingClaim: qbittorrent-media
         advancedMounts:
-          jellyfin:
+          metube:
             app:
               - path: /media
       #      nfs-media:

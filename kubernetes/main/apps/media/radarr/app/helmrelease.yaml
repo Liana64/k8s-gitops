@@ -111,7 +111,7 @@ spec:
         enabled: true
         existingClaim: qbittorrent-media
         advancedMounts:
-          jellyfin:
+          radarr:
             app:
               - path: /media
       #      nfs-media:

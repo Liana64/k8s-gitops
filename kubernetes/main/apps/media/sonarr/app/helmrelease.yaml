@@ -112,7 +112,7 @@ spec:
         enabled: true
         existingClaim: qbittorrent-media
         advancedMounts:
-          jellyfin:
+          sonarr:
             app:
               - path: /media
       #      nfs-media:
