@@ -31,7 +31,7 @@ spec:
           app:
             image:
               repository: ghcr.io/liana64/prowlarr-develop
-              tag: 2.0.0.5094@sha256:dce70494a42930f2e10d4c1654fa784c40881b68036f5730fd71af6e6242a6da
+              tag: 2.0.2.5116@sha256:673b64a117c0ae5ed8a4fff3bc70a0fb71520a242a9437730ccedc2807f96025
             env:
               COMPlus_EnableDiagnostics: "0"
               PROWLARR__INSTANCE_NAME: Prowlarr
@@ -101,3 +101,5 @@ spec:
         retain: true
         globalMounts:
           - path: /config
+      tmp:
+        type: emptyDir

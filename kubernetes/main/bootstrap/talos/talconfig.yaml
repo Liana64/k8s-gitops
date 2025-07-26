@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=schemas/talconfig.json
 
 # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
-talosVersion: v1.10.2
+talosVersion: v1.10.5
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
 kubernetesVersion: v1.33.1
 
@@ -28,8 +28,8 @@ nodes:
         dhcp: true
         vip:
           ip: *kubeApiIP
-    # https://factory.talos.dev/?arch=amd64&cmdline-set=true&extensions=-&extensions=siderolabs%2Fcrun&extensions=siderolabs%2Fqemu-guest-agent&extensions=siderolabs%2Fthunderbolt&platform=nocloud&target=cloud&version=1.10.2
-    talosImageURL: &talosMinimalImage factory.talos.dev/nocloud-installer/2325a7a679ea163a34597ec2d70bbcc4b6877e1c09082332cd5982b1bde0057d
+    # https://factory.talos.dev/?arch=amd64&board=undefined&cmdline=-console+console%3Dtty0&cmdline-set=true&extensions=-&extensions=siderolabs%2Fcrun&extensions=siderolabs%2Fqemu-guest-agent&extensions=siderolabs%2Fthunderbolt&platform=nocloud&secureboot=undefined&target=cloud&version=1.10.5
+    talosImageURL: &talosMinimalImage factory.talos.dev/nocloud-installer/13b5653a2a0ad1bac5e52e01df4d903cb09e2a8cc58521ca6eea06ef8a87c301
     schematic: &schematicMinimal
       customization:
         extraKernelArgs:
@@ -53,6 +53,10 @@ nodes:
                   - bind
                   - rshared
                   - rw
+          disks:
+            - device: /dev/sdb
+              partitions:
+                - mountpoint: /var/mnt/nvme
     nodeLabels:
       hardware/manufacturer: "MinisForum"
       hardware/model: "MS-01"

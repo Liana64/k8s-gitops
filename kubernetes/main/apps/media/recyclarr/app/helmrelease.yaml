@@ -68,7 +68,7 @@ spec:
       config:
         storageClass: cluster-nvme
         accessMode: ReadWriteOnce
-        size: 1Gi
+        size: 256Mi
         retain: true
         globalMounts:
           - path: /config

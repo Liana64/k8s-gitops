@@ -29,8 +29,8 @@ spec:
         containers:
           app:
             image:
-              repository: docker.io/fallenbagel/jellyseerr
-              tag: 2.5.2@sha256:2a611369ad1d0d501c2d051fc89b6246ff081fb4a30879fdc75642cf6a37b1a6
+              repository: ghcr.io/fallenbagel/jellyseerr
+              tag: 2.7.2@sha256:d83fcc8478f53073008b0c452c87d94ff5182fce73c426c813301c402b6612de
             env:
               TZ: ${TIMEZONE}
               PORT: &port 5055
@@ -100,9 +100,18 @@ spec:
         retain: true
         globalMounts:
           - path: /app/config
-      logs:
-        type: emptyDir
+      cache:
+        storageClass: cluster-nvme
+        accessMode: ReadWriteOnce
+        size: 512Mi
         globalMounts:
-          - path: /app/config/logs
+          - path: /app/config/cache
       tmp:
         type: emptyDir
+        advancedMounts:
+          jellyseerr:
+            app:
+              - path: /app/config/logs
+                subPath: logs
+              - path: /tmp
+                subPath: tmp
