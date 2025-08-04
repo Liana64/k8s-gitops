@@ -1,0 +1,15 @@
+---
+log:
+  streams: error # UniFi Protect based setups spam the logs with WARN messages
+api:
+  listen: :80
+rtsp:
+  listen: :554
+webrtc:
+  listen: :8555
+  candidates:
+    - ${LB_GO2RTC}:8555
+    #- stun:8555
+  ice_servers:
+    - urls:
+        #- stun:stun.cloudflare.com:3478
