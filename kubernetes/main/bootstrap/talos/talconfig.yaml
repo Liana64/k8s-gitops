@@ -53,10 +53,20 @@ nodes:
                   - bind
                   - rshared
                   - rw
+              - destination: /var/mnt/nvme-large
+                type: bind
+                source: /var/mnt/nvme-large
+                options:
+                  - bind
+                  - rshared
+                  - rw
           disks:
             - device: /dev/sdb
               partitions:
                 - mountpoint: /var/mnt/nvme
+            - device: /dev/sdc
+              partitions:
+                - mountpoint: /var/mnt/nvme-large
     nodeLabels:
       hardware/manufacturer: "MinisForum"
       hardware/model: "MS-01"
