@@ -7,5 +7,6 @@ resources:
   - ./homepage/ks.yaml
   - ./linkding/ks.yaml
   - ./miniflux/ks.yaml
-  - ./owncast/ks.yaml
-  - ./grocy/ks.yaml
+  - ./syncthing/ks.yaml
+  #- ./owncast/ks.yaml
+  #- ./grocy/ks.yaml
