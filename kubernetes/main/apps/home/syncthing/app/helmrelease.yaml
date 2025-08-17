@@ -9,6 +9,7 @@ spec:
   chartRef:
     kind: OCIRepository
     name: app-template
+    namespace: flux-system
   install:
     remediation:
       retries: -1
@@ -19,41 +20,24 @@ spec:
   values:
     controllers:
       syncthing:
+        annotations:
+          reloader.stakater.com/auto: "true"
         containers:
           app:
             image:
-              repository: ghcr.io/haraldkoch/syncthing
-              tag: 2.0.2@sha256:1d58db34f9e8ca8f2ec9d311fcd5db7d8f22bada4321d1ac46939555443dc8e8
-            probes:
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
-            resources:
-              requests:
-                cpu: 15m
-                memory: 150M
-              limits:
-                memory: 300M
-      browser:
-        containers:
-          app:
-            image:
-              repository: ghcr.io/haraldkoch/filebrowser
-              tag: v2.42.5@sha256:e4b5b63bfa75680be117cf22845269c1f3fb3db67ce8e1f6816d0426398e9d6f
+              repository: ghcr.io/syncthing/syncthing
+              tag: 2.0.2@sha256:0c62d8223eb8cdf2451452aa567ef628dfcb2b53af2bd25b56517617ae898c35
             env:
-              FB_DATABASE: /config/filebrowser.db
-              FB_ROOT: /var/syncthing
-              FB_LOG: stdout
-              FB_NOAUTH: true
+              PGID: 1000
+              PUID: 1000
             probes:
               liveness: &probes
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
-                    path: /health
-                    port: &browserPort 80
+                    path: /rest/noauth/health
+                    port: &port 8384
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1
@@ -62,78 +46,67 @@ spec:
             resources:
               requests:
                 cpu: 10m
-                memory: 50Mi
+                memory: 100Mi
               limits:
                 memory: 500Mi
-        pod:
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            fsGroup: 1000
-            fsGroupChangePolicy: "OnRootMismatch"
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
     service:
       app:
         controller: syncthing
-        ipFamilyPolicy: PreferDualStack
         primary: true
         ports:
           http:
-            port: 8384
+            port: *port
             primary: true
-      listen:
+      sync:
         controller: syncthing
         type: LoadBalancer
         annotations:
-          lbipam.cilium.io/ips: "${LB_SYNCTHING}}"
+          lbipam.cilium.io/ips: "${LB_SYNCTHING}"
         externalTrafficPolicy: Local
-        ipFamilies: [IPv4]
         ports:
-          listen:
+          listen-tcp:
             port: 22000
             protocol: TCP
-            targetPort: 22000
+          listen-udp:
+            port: 22000
+            protocol: UDP
           discovery:
-            enabled: true
             port: 21027
             protocol: UDP
-            targetPort: 21027
-      browser:
-        controller: browser
-        ports:
-          http:
-            port: *browserPort
-    route:
+    ingress:
       app:
-        hostnames: ["{{ .Release.Name }}.${SECRET_INTERNAL_DOMAIN}"]
-        parentRefs:
-          - name: internal
-            namespace: kube-system
-            sectionName: https
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: 8384
-      browser:
-        hostnames: ["sync.${SECRET_INTERNAL_DOMAIN}"]
-        parentRefs:
-          - name: internal
-            namespace: kube-system
-            sectionName: https
-        rules:
-          - backendRefs:
-              - identifier: browser
-                port: *browserPort
+        className: traefik
+        annotations:
+          cert-manager.io/cluster-issuer: "letsencrypt-production"
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Home
+          gethomepage.dev/name: Syncthing
+          gethomepage.dev/description: File sync
+          gethomepage.dev/icon: syncthing
+        hosts:
+          - host: &host "syncthing.${SECRET_INTERNAL_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - hosts:
+              - *host
+            secretName: syncthing-tls
     persistence:
       # TODO: volsync
-      config:
-        storageClass: nvme-large
-        accessMode: ReadWriteOnce
-        size: 1Gi
-        retain: true
-        advancedMounts:
-          browser:
-            app:
-              - path: /config
       data:
         storageClass: nvme-large
         accessMode: ReadWriteOnce
