@@ -13,13 +13,9 @@ sonarr:
       # 1080p
       - template: sonarr-v4-quality-profile-web-1080p
       - template: sonarr-v4-custom-formats-web-1080p
-      # 2160p
-      - template: sonarr-v4-quality-profile-web-2160p
-      - template: sonarr-v4-custom-formats-web-2160p
 
     quality_profiles:
       - name: WEB-1080p
-      - name: WEB-2160p
 
     custom_formats:
       # HDR Formats
@@ -31,7 +27,7 @@ sonarr:
           # - 0dad0a507451acddd754fe6dc3a7f5e7 # HDR10+ Boost
           # - 385e9e8581d33133c3961bdcdeffb7b4 # DV HDR10+ Boost
         assign_scores_to:
-          - name: WEB-2160p
+          - name: WEB-1080p
 
       - trash_ids:
           - 32b367365729d530ca1c124a0b180c64 # Bad Dual Groups
@@ -41,7 +37,6 @@ sonarr:
           - 1b3994c551cbb92a2c781af061f4ab44 # Scene
         assign_scores_to:
           - name: WEB-1080p
-          - name: WEB-2160p
 
 radarr:
   radarr_main:
@@ -52,10 +47,9 @@ radarr:
     replace_existing_custom_formats: true
 
     include:
-      - template: radarr-quality-definition-sqp-streaming
-      # 2160p
-      - template: radarr-custom-formats-sqp-1-2160p
-      - template: radarr-quality-profile-sqp-1-2160p-4k-only-imax-e
+      - template: radarr-quality-definition-movie
+      - template: radarr-quality-profile-hd-bluray-web
+      - template: radarr-custom-formats-hd-bluray-web
 
     quality_profiles:
       - name: SQP-1 (2160p)
@@ -71,4 +65,4 @@ radarr:
           - 5c44f52a8714fdd79bb4d98e2673be1f # Retags
           - f537cf427b64c38c8e36298f657e4828 # Scene
         assign_scores_to:
-          - name: SQP-1 (2160p)
+          - name: HD Bluray + WEB

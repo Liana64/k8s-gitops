@@ -61,7 +61,7 @@ spec:
           main:
             image:
               repository: ghcr.io/immich-app/immich-server
-              tag: v1.142.1@sha256:06bc7715fa4c4a1641bd0b566c949cd7327f420632b480389fd4d1e70665d046
+              tag: v2.2.1@sha256:2c951a4063b55ec2de197fdf6a85e32b05872d3a18a18eaf851b827ff2622814
             envFrom:
               - secretRef:
                   name: immich-secret
@@ -84,7 +84,7 @@ spec:
           main:
             image:
               repository: ghcr.io/immich-app/immich-machine-learning
-              tag: v1.142.1@sha256:9855f6a0a998db508ca97894997b17f3a0a61e9388b204d861110c19c42814eb
+              tag: v2.2.1@sha256:590a76bba3d88ccf78b03cde0c0fb8788f7d76ae6caf90ad33a34b5b4cc35f11
             envFrom:
               - secretRef:
                   name: immich-secret
@@ -92,6 +92,15 @@ spec:
                   name: immich-configmap
             env:
               MPLCONFIGDIR: "/cache/matplotlib"
+      redis:
+        containers:
+          main:
+            image:
+              repository: public.ecr.aws/docker/library/redis
+              tag: 8.2.2@sha256:4521b581dbddea6e7d81f8fe95ede93f5648aaa66a9dacd581611bf6fe7527bd
+            env:
+              REDIS_REPLICATION_MODE: master
+            command: ["redis-server"]
 
     service:
       server:
@@ -104,6 +113,11 @@ spec:
         ports:
           http:
             port: 3003
+      redis:
+        controller: redis
+        ports:
+          http:
+            port: 6379
 
     ingress:
       server:
