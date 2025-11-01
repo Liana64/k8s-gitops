@@ -26,7 +26,7 @@ spec:
           app:
             image:
               repository: ghcr.io/syncthing/syncthing
-              tag: 2.0.2@sha256:0c62d8223eb8cdf2451452aa567ef628dfcb2b53af2bd25b56517617ae898c35
+              tag: 2.0.10@sha256:3faeb52baa7de3fbe7007cecc6829a4bc71cc6ac62d3967459a8228979c38943
             env:
               PGID: 1000
               PUID: 1000
