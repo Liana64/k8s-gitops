@@ -46,12 +46,12 @@ spec:
                 valueFrom:
                   secretKeyRef:
                     name: &secret immich-secret
-                    key: IMMICH_DB_USER
+                    key: DB_USERNAME
               INIT_POSTGRES_PASS:
                 valueFrom:
                   secretKeyRef:
                     name: *secret
-                    key: IMMICH_DB_PASSWORD
+                    key: DB_PASSWORD
               INIT_POSTGRES_SUPER_PASS:
                 valueFrom:
                   secretKeyRef:
