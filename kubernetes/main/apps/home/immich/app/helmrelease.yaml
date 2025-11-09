@@ -92,6 +92,43 @@ spec:
                   name: immich-configmap
             env:
               MPLCONFIGDIR: "/cache/matplotlib"
+      valkey:
+        containers:
+          app:
+            image:
+              repository: ghcr.io/valkey-io/valkey
+              tag: 9.0.0@sha256:4503e204c900a00ad393bec83c8c7c4c76b0529cd629e23b34b52011aefd1d27
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    &probe-exec {
+                      command: ["sh", "-c", "valkey-cli ping | grep PONG"],
+                    }
+                  initialDelaySeconds: 30
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  exec: *probe-exec
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  exec: *probe-exec
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 30
 
     service:
       server:
@@ -104,6 +141,11 @@ spec:
         ports:
           http:
             port: 3003
+      valkey:
+        controller: valkey
+        ports:
+          http:
+            port: 6379
 
     ingress:
       server:
@@ -138,7 +180,15 @@ spec:
         advancedMounts:
           server:
             main:
-              - path: /var/syncthing
+              - path: /library
+      data:
+        storageClass: cluster-nvme
+        accessMode: ReadWriteOnce
+        size: 1Gi
+        advancedMounts:
+          server:
+            main:
+              - path: /data
       machine-learning-cache:
         storageClass: cluster-nvme
         accessMode: ReadWriteOnce

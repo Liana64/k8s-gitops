@@ -9,8 +9,8 @@ data:
   ENABLE_MAPBOX: "false"
   LOG_LEVEL: "verbose"
   NODE_ENV: "production"
-  #REDIS_HOSTNAME: immich-redis.home.svc.cluster.local
-  REDIS_HOSTNAME: dragonfly.database.svc.cluster.local
+  REDIS_HOSTNAME: immich-valkey.home.svc.cluster.local
+  #REDIS_HOSTNAME: dragonfly.database.svc.cluster.local
   REDIS_PORT: "6379"
   IMMICH_WEB_URL: http://immich-web.home.svc.cluster.local:3000
   IMMICH_SERVER_URL: http://immich-server.home.svc.cluster.local:3001
@@ -18,3 +18,4 @@ data:
   DB_PORT: "5432"
   DB_DATABASE_NAME: "immich"
   DB_HOSTNAME: postgres-1-rw.database.svc.cluster.local
+  UPLOAD_LOCATION: /data
