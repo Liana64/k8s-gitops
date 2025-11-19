@@ -8,6 +8,6 @@ resources:
   - ./linkding/ks.yaml
   - ./miniflux/ks.yaml
   - ./syncthing/ks.yaml
-  - ./immich/ks.yaml
+  #- ./immich/ks.yaml
   #- ./owncast/ks.yaml
   #- ./grocy/ks.yaml
