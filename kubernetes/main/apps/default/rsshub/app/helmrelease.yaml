@@ -1,0 +1,112 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app rsshub
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      rsshub:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/diygod/rsshub
+              tag: 2025-11-23@sha256:0453cc8723285d376b5c3244821d1ce2ebb21950bc1ca79e798ff62f4ca3cf8d
+            env:
+              NODE_ENV: production
+              CACHE_TYPE: redis
+              REDIS_URL: "redis://dragonfly.database.svc.cluster.local:6379/0"
+              PUPPETEER_WS_ENDPOINT: "ws://playwright.default.svc.cluster.local:3000"
+              PORT: &port 80
+              LISTEN_INADDR_ANY: 1
+              LOG_LEVEL: warning
+              NO_LOGFILES: true
+              SENTRY: false
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+                memory: 512Mi
+              limits:
+                memory: 2048Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port
+    ingress:
+      app:
+        className: traefik
+        annotations:
+          cert-manager.io/cluster-issuer: "letsencrypt-production"
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Tools
+          gethomepage.dev/name: RSSHub
+          gethomepage.dev/description: RSS feed builder
+          gethomepage.dev/icon: rsshub
+        hosts:
+          - host: &host "rsshub.${SECRET_INTERNAL_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - hosts:
+              - *host
+            secretName: "rsshub-tls"
+    persistence:
+      config:
+        storageClass: nvme-large
+        accessMode: ReadWriteOnce
+        size: 1Gi
+        retain: true
+        globalMounts:
+          - path: /data/config
+      next-cache:
+        type: emptyDir
+        globalMounts:
+          - path: /data/.next/cache
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp

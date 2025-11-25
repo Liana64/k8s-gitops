@@ -7,4 +7,6 @@ resources:
   - ./it-tools/ks.yaml
   - ./web-check/ks.yaml
   - ./stirling-pdf/ks.yaml
-  - ./changedetection/ks.yaml
+  #- ./changedetection/ks.yaml
+  - ./playwright/ks.yaml
+  - ./rsshub/ks.yaml
