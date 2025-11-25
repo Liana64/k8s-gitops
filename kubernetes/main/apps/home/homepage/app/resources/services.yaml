@@ -5,8 +5,8 @@
         siteMonitor: https://opnsense.${SECRET_OLD_DOMAIN}
         icon: opnsense
         description: Firewall and router
-        widget:
-          type: opnsense
-          url: https://opnsense.${SECRET_OLD_DOMAIN}
-          username: "{{HOMEPAGE_VAR_OPNSENSE_API_KEY}}"
-          password: "{{HOMEPAGE_VAR_OPNSENSE_API_SECRET}}"
+#        widget:
+#          type: opnsense
+#          url: https://opnsense.${SECRET_OLD_DOMAIN}
+#          username: "{{HOMEPAGE_VAR_OPNSENSE_API_KEY}}"
+#          password: "{{HOMEPAGE_VAR_OPNSENSE_API_SECRET}}"

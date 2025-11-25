@@ -12,6 +12,8 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: traefik
+    - name: dragonfly
+    - name: playwright
   path: ./kubernetes/main/apps/default/rsshub/app
   prune: true
   sourceRef:

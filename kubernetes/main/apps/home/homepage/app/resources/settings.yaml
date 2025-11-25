@@ -14,19 +14,22 @@ layout:
   Overview:
     tab: Main
     style: row
-    columns: 4
+    columns: 5
   Home:
     tab: Main
+    columns: 5
   Observability:
     tab: Main
+    columns: 5
   Services:
     tab: Main
+    columns: 5
   Media:
     tab: Main
-  Downloads:
-    tab: Main
+    columns: 5
   Tools:
     tab: Main
+    columns: 5
   Research:
     tab: Main
   Endpoints:
