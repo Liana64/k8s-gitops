@@ -58,7 +58,7 @@ spec:
           app:
             image:
               repository: ghcr.io/sissbruecker/linkding
-              tag: 1.44.1-plus-alpine@sha256:6f2b14b6198b55682d5ef52ca1fb63493f99ef8b0c63cc1dd73595dbf1a07c6c
+              tag: 1.44.2-plus-alpine@sha256:6d4fcc50bee8ee054ad2dfebbc41217f325398b907aff7ec011996c6a5ec17c9
             env:
               LD_DB_ENGINE: postgres
               LD_DB_DATABASE: *dbName
