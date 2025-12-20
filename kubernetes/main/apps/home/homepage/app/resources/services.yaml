@@ -1,10 +1,15 @@
 ---
 - Overview:
     - OPNsense:
-        href: https://opnsense.${SECRET_OLD_DOMAIN}
-        siteMonitor: https://opnsense.${SECRET_OLD_DOMAIN}
+        href: https://edge.${SECRET_EXTERNAL_DOMAIN}
+        siteMonitor: https://edge.${SECRET_EXTERNAL_DOMAIN}
         icon: opnsense
-        description: Firewall and router
+        description: Edge networking
+    - SLZB06:
+        href: http://slzb.lianas.org/
+        siteMonitor: http://slzb.lianas.org/
+        icon: zigbee2mqtt
+        description: Zigbee adapter
 #        widget:
 #          type: opnsense
 #          url: https://opnsense.${SECRET_OLD_DOMAIN}
