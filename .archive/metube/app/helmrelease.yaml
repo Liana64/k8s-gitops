@@ -1,0 +1,102 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app metube
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.5.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    controllers:
+      metube:
+        labels:
+          nfsMount: "true"
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/alexta69/metube
+              tag: "2024-01-26"
+            env:
+              DOWNLOAD_DIR: "/media/downloads"
+              STATE_DIR: "/config"
+              YTDL_OPTIONS: '{"http_headers":{"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0"}}'
+
+        pod:
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            #fsGroup: 3005
+            fsGroupChangePolicy: "OnRootMismatch"
+
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: 8081
+
+    ingress:
+      app:
+        className: traefik
+        annotations:
+          cert-manager.io/cluster-issuer: "letsencrypt-production"
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_EXTERNAL_DOMAIN}"
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Downloads
+          gethomepage.dev/name: MeTube
+          gethomepage.dev/description: YouTube downloader
+          gethomepage.dev/icon: metube
+        hosts:
+          - host: &host "{{ .Release.Name }}.${SECRET_INTERNAL_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - secretName: metube-tls
+            hosts: [*host]
+
+    persistence:
+      config:
+        storageClass: cluster-nvme
+        accessMode: ReadWriteOnce
+        size: 512Mi
+        retain: true
+        globalMounts:
+          - path: /config
+      media:
+        enabled: true
+        existingClaim: qbittorrent-media
+        advancedMounts:
+          metube:
+            app:
+              - path: /media
+      #      nfs-media:
+      #        type: nfs
+      #        server: ${NFS_HOST}
+      #        path: ${NFS_MEDIA}
+      #        advancedMounts:
+      #          metube:
+      #            app:
+      #              - path: "/data/r720xd-media/M Media/40-49 Video/44 Web"
+      #                readOnly: false
