@@ -20,7 +20,6 @@ Have a look at onedr0p's [cluster-template](https://github.com/onedr0p/cluster-t
 - [Traefik](https://github.com/traefik/traefik) ingresses with security measures
 - Databases for [Cloudnative PG](https://github.com/cloudnative-pg/cloudnative-pg), [MinIO](https://min.io/), [Dragonfly](https://github.com/dragonflydb/dragonfly), and even [MS SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)!
 - Storage using [OpenEBS](https://github.com/openebs/openebs) (I didn't have great experiences with NVMe over TCP, i.e. Mayastor, but that might go differently for you. Also, maybe that was just related to the Talos v1.8.2 kernel panic on nocloud bug). I haven't moved over to Rook Ceph yet, but it's also included.
-- [Teleport](https://github.com/gravitational/teleport) VPN
 - Various drivers and utilities
 - Observability tools and exporters including Prometheus, Grafana, Loki, and others
 - Many self-hosted deployments, including a [Homepage](https://github.com/gethomepage/homepage), game servers, and a media stack
