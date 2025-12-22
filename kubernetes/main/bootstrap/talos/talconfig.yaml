@@ -2,9 +2,9 @@
 # yaml-language-server: $schema=schemas/talconfig.json
 
 # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
-talosVersion: v1.10.5
+talosVersion: v1.11.6
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
-kubernetesVersion: v1.33.1
+kubernetesVersion: v1.34.3
 
 clusterName: &clusterName lianalabs
 
@@ -28,8 +28,8 @@ nodes:
         dhcp: true
         vip:
           ip: *kubeApiIP
-    # https://factory.talos.dev/?arch=amd64&board=undefined&cmdline=-console+console%3Dtty0&cmdline-set=true&extensions=-&extensions=siderolabs%2Fcrun&extensions=siderolabs%2Fqemu-guest-agent&extensions=siderolabs%2Fthunderbolt&platform=nocloud&secureboot=undefined&target=cloud&version=1.10.5
-    talosImageURL: &talosMinimalImage factory.talos.dev/nocloud-installer/13b5653a2a0ad1bac5e52e01df4d903cb09e2a8cc58521ca6eea06ef8a87c301
+    # https://factory.talos.dev/?arch=amd64&cmdline=-console+console%3Dtty0&cmdline-set=true&extensions=-&extensions=siderolabs%2Fcrun&extensions=siderolabs%2Fnut-client&extensions=siderolabs%2Fqemu-guest-agent&extensions=siderolabs%2Fthunderbolt&platform=nocloud&target=cloud&version=1.11.6
+    talosImageURL: &talosMinimalImage factory.talos.dev/nocloud-installer/0ba4ff7ff8c1a33feb4ec262fbfe5a5b327d939eebae930f23333a8e49c01106
     schematic: &schematicMinimal
       customization:
         extraKernelArgs:
@@ -38,6 +38,7 @@ nodes:
         systemExtensions:
           officialExtensions:
             - siderolabs/crun
+            - siderolabs/nut-client
             - siderolabs/qemu-guest-agent
             - siderolabs/thunderbolt
     patches:
