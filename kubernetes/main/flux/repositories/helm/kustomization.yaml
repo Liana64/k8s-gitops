@@ -25,9 +25,6 @@ resources:
   - ./postfinance.yaml
   - ./prometheus-community.yaml
   - ./rook-ceph.yaml
-  - ./superset.yaml
   - ./spegel.yaml
-  - ./stakater.yaml
-  - ./teleport.yaml
   - ./traefik.yaml
   - ./csi-driver-smb.yaml

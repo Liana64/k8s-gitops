@@ -3,13 +3,13 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: OCIRepository
 metadata:
-  name: app-template
+  name: reloader
   namespace: flux-system
 spec:
-  interval: 10m
+  interval: 5m
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
-  url: oci://ghcr.io/bjw-s-labs/helm/app-template
   ref:
-    tag: 4.5.0
+    tag: 2.2.7
+  url: oci://ghcr.io/stakater/charts/reloader
