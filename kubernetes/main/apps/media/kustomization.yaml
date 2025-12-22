@@ -14,4 +14,3 @@ resources:
   - ./recyclarr/ks.yaml
   - ./sonarr/ks.yaml
   - ./filebrowser/ks.yaml
-  #- ./metube/ks.yaml

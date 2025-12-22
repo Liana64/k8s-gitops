@@ -5,23 +5,11 @@ kind: HelmRelease
 metadata:
   name: &app cloudnative-pg
 spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: flux-system
   interval: 30m
-  chart:
-    spec:
-      chart: *app
-      version: 0.24.0
-      sourceRef:
-        kind: HelmRepository
-        name: *app
-        namespace: flux-system
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
   values:
     crds:
       create: true

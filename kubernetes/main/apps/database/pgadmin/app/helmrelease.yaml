@@ -5,23 +5,11 @@ kind: HelmRelease
 metadata:
   name: &app pgadmin
 spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: flux-system
   interval: 30m
-  chart:
-    spec:
-      chart: app-template
-      version: 3.5.1
-      sourceRef:
-        kind: HelmRepository
-        name: bjw-s
-        namespace: flux-system
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
   dependsOn:
     - name: cloudnative-pg
       namespace: database
@@ -33,8 +21,8 @@ spec:
         containers:
           app:
             image:
-              repository: dpage/pgadmin4
-              tag: "8.12"
+              repository: docker.io/dpage/pgadmin4
+              tag: 9.11.0@sha256:50700ac17936d0227f9e3e4bb086a91efb67064debc4b4737c35545bf1564088
             env:
               PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: "False"
               PGADMIN_DISABLE_POSTFIX: "true"
@@ -68,12 +56,12 @@ spec:
                 memory: 100Mi
               limits:
                 memory: 500Mi
-    defaultPodOptions:
-      securityContext:
-        runAsUser: 5050
-        runAsGroup: 5050
-        fsGroup: 5050
-        fsGroupChangePolicy: OnRootMismatch
+        pod:
+          securityContext:
+            runAsUser: 5050
+            runAsGroup: 5050
+            fsGroup: 5050
+            fsGroupChangePolicy: OnRootMismatch
     service:
       app:
         controller: *app
@@ -114,9 +102,3 @@ spec:
         globalMounts:
           - path: /pgadmin4/servers.json
             subPath: servers.json
-      #      local-config:
-      #        type: secret
-      #        name: pgadmin-secret
-      #        globalMounts:
-      #          - path: /pgadmin4/config_local.py
-      #            subPath: config_local.py

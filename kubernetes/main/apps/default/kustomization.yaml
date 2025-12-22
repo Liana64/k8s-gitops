@@ -8,5 +8,5 @@ resources:
   - ./web-check/ks.yaml
   - ./stirling-pdf/ks.yaml
   #- ./changedetection/ks.yaml
-  - ./playwright/ks.yaml
-  - ./rsshub/ks.yaml
+  #- ./playwright/ks.yaml
+  #- ./rsshub/ks.yaml
