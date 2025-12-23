@@ -9,7 +9,22 @@ metadata:
       - name: StorageType
         value: hostpath
       - name: BasePath
-        value: "/var/mnt/nvme"
+        value: "/var/mnt/nvme-1"
+provisioner: openebs.io/local
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: nvme-fast
+  annotations:
+    openebs.io/cas-type: local
+    cas.openebs.io/config: |
+      - name: StorageType
+        value: hostpath
+      - name: BasePath
+        value: "/var/mnt/nvme-2"
 provisioner: openebs.io/local
 reclaimPolicy: Delete
 volumeBindingMode: WaitForFirstConsumer
@@ -24,7 +39,7 @@ metadata:
       - name: StorageType
         value: hostpath
       - name: BasePath
-        value: "/var/mnt/nvme-large"
+        value: "/var/mnt/nvme-3"
 provisioner: openebs.io/local
 reclaimPolicy: Delete
 volumeBindingMode: WaitForFirstConsumer

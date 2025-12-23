@@ -178,9 +178,9 @@ spec:
             port-forward:
               - path: /config
       media:
-        storageClass: cluster-nvme
+        storageClass: nvme-large
         accessMode: ReadWriteOnce
-        size: 600Gi
+        size: 1900Gi
         retain: true
         advancedMounts:
           qbittorrent:

@@ -101,9 +101,9 @@ spec:
     persistence:
       # TODO: volsync
       data:
-        storageClass: nvme-large
+        storageClass: nvme-fast
         accessMode: ReadWriteOnce
-        size: 1900Gi
+        size: 800Gi
         retain: true
         globalMounts:
           - path: /var/syncthing

@@ -85,7 +85,7 @@ spec:
                 port: &port 3000
     persistence:
       config:
-        storageClass: nvme-large
+        storageClass: nvme-fast
         accessMode: ReadWriteOnce
         size: 512Mi
         retain: true

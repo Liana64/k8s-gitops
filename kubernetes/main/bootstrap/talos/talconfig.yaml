@@ -2,9 +2,9 @@
 # yaml-language-server: $schema=schemas/talconfig.json
 
 # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
-talosVersion: v1.11.6
+talosVersion: v1.12.0
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
-kubernetesVersion: v1.34.3
+kubernetesVersion: v1.35.0
 
 clusterName: &clusterName lianalabs
 
@@ -28,8 +28,8 @@ nodes:
         dhcp: true
         vip:
           ip: *kubeApiIP
-    # https://factory.talos.dev/?arch=amd64&cmdline=-console+console%3Dtty0&cmdline-set=true&extensions=-&extensions=siderolabs%2Fcrun&extensions=siderolabs%2Fnut-client&extensions=siderolabs%2Fqemu-guest-agent&extensions=siderolabs%2Fthunderbolt&platform=nocloud&target=cloud&version=1.11.6
-    talosImageURL: &talosMinimalImage factory.talos.dev/nocloud-installer/0ba4ff7ff8c1a33feb4ec262fbfe5a5b327d939eebae930f23333a8e49c01106
+    # https://factory.talos.dev/?arch=amd64&board=undefined&bootloader=auto&cmdline-set=true&extensions=-&extensions=siderolabs%2Fcrun&extensions=siderolabs%2Fqemu-guest-agent&extensions=siderolabs%2Fthunderbolt&platform=nocloud&secureboot=undefined&target=cloud&version=1.12.0
+    talosImageURL: &talosMinimalImage factory.talos.dev/nocloud-installer/2325a7a679ea163a34597ec2d70bbcc4b6877e1c09082332cd5982b1bde0057d
     schematic: &schematicMinimal
       customization:
         extraKernelArgs:
@@ -38,25 +38,30 @@ nodes:
         systemExtensions:
           officialExtensions:
             - siderolabs/crun
-            - siderolabs/nut-client
             - siderolabs/qemu-guest-agent
             - siderolabs/thunderbolt
-    patches:
-      - # Mount NVMe storage to kubelet
-        |-
+    strategicPatches:
+      - |
         machine:
           kubelet:
             extraMounts:
-              - destination: /var/mnt/nvme
+              - destination: /var/mnt/nvme-1
                 type: bind
-                source: /var/mnt/nvme
+                source: /var/mnt/nvme-1
                 options:
                   - bind
                   - rshared
                   - rw
-              - destination: /var/mnt/nvme-large
+              - destination: /var/mnt/nvme-2
                 type: bind
-                source: /var/mnt/nvme-large
+                source: /var/mnt/nvme-2
+                options:
+                  - bind
+                  - rshared
+                  - rw
+              - destination: /var/mnt/nvme-3
+                type: bind
+                source: /var/mnt/nvme-3
                 options:
                   - bind
                   - rshared
@@ -64,10 +69,13 @@ nodes:
           disks:
             - device: /dev/sdb
               partitions:
-                - mountpoint: /var/mnt/nvme
+                - mountpoint: /var/mnt/nvme-1
             - device: /dev/sdc
               partitions:
-                - mountpoint: /var/mnt/nvme-large
+                - mountpoint: /var/mnt/nvme-2
+            - device: /dev/sdd
+              partitions:
+                - mountpoint: /var/mnt/nvme-3
     nodeLabels:
       hardware/manufacturer: "MinisForum"
       hardware/model: "MS-01"
@@ -75,7 +83,7 @@ nodes:
       topology.kubernetes.io/region: &region "us-central"
       topology.kubernetes.io/zone: *clusterName
 
-patches:
+strategicPatches:
   - "@./patches/global/time.yaml"
   - "@./patches/global/cluster-discovery.yaml"
   - "@./patches/global/containerd.yaml"
@@ -85,7 +93,7 @@ patches:
   - "@./patches/global/sysctls.yaml"
 
 controlPlane:
-  patches:
+  strategicPatches:
     - "@./patches/control/cluster.yaml"
     - "@./patches/control/api-access.yaml"
     - "@./patches/control/disable-admission-controller.yaml"

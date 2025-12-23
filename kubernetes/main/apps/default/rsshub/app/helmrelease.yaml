@@ -92,9 +92,9 @@ spec:
             secretName: "rsshub-tls"
     persistence:
       config:
-        storageClass: nvme-large
+        storageClass: nvme-fast
         accessMode: ReadWriteOnce
-        size: 1Gi
+        size: 512Mi
         retain: true
         globalMounts:
           - path: /data/config
