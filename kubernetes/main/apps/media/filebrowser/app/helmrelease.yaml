@@ -76,7 +76,7 @@ spec:
           gethomepage.dev/description: Browse files
           gethomepage.dev/icon: filebrowser
         hosts:
-          - host: &host "fs.${SECRET_INTERNAL_DOMAIN}"
+          - host: &host "fs.${SECRET_EXTERNAL_DOMAIN}"
             paths:
               - path: /
                 service:

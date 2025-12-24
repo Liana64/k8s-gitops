@@ -20,7 +20,7 @@ spec:
           dnsdist:
             image:
               repository: docker.io/powerdns/dnsdist-19
-              tag: 1.9.10
+              tag: 1.9.11
             restartPolicy: Always
           gluetun:
             dependsOn:
@@ -65,7 +65,7 @@ spec:
             nameOverride: qbittorrent
             image:
               repository: ghcr.io/liana64/qbittorrent
-              tag: 5.1.2@sha256:8b32026f06a8922318d8c80c6b867aefc2b7373b31177de1c2d071c866be4a8c
+              tag: 5.1.4@sha256:ff9117ade1d8f07b19f621ec112fa4d8bd573e7c9180165b6bcbe362ed45ac3b
             env:
               UMASK: "022"
               QBT_WEBUI_PORT: &port 8080
