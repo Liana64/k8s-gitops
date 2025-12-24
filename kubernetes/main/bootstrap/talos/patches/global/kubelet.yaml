@@ -1,6 +1,8 @@
 ---
 machine:
   kubelet:
+    extraConfig:
+      serializeImagePulls: false
     extraArgs:
       rotate-server-certificates: true
     nodeIP:

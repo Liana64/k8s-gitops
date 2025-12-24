@@ -29,7 +29,8 @@ nodes:
         vip:
           ip: *kubeApiIP
     # https://factory.talos.dev/?arch=amd64&board=undefined&bootloader=auto&cmdline-set=true&extensions=-&extensions=siderolabs%2Fcrun&extensions=siderolabs%2Fqemu-guest-agent&extensions=siderolabs%2Fthunderbolt&platform=nocloud&secureboot=undefined&target=cloud&version=1.12.0
-    talosImageURL: &talosMinimalImage factory.talos.dev/nocloud-installer/2325a7a679ea163a34597ec2d70bbcc4b6877e1c09082332cd5982b1bde0057d
+    # https://factory.talos.dev/?arch=amd64&bootloader=auto&cmdline=-console+console%3Dtty0&cmdline-set=true&extensions=-&extensions=siderolabs%2Fqemu-guest-agent&extensions=siderolabs%2Fthunderbolt&platform=nocloud&secureboot=true&target=cloud&version=1.12.0
+    talosImageURL: &talosMinimalImage factory.talos.dev/nocloud-installer-secureboot/650b29344f1a1cb82b40720354a44a0b6ce2037dcae47472ddacad7dd891a1eb
     schematic: &schematicMinimal
       customization:
         extraKernelArgs:
@@ -37,10 +38,9 @@ nodes:
           - console=tty0
         systemExtensions:
           officialExtensions:
-            - siderolabs/crun
             - siderolabs/qemu-guest-agent
             - siderolabs/thunderbolt
-    strategicPatches:
+    patches:
       - |
         machine:
           kubelet:
@@ -83,7 +83,7 @@ nodes:
       topology.kubernetes.io/region: &region "us-central"
       topology.kubernetes.io/zone: *clusterName
 
-strategicPatches:
+patches:
   - "@./patches/global/time.yaml"
   - "@./patches/global/cluster-discovery.yaml"
   - "@./patches/global/containerd.yaml"
@@ -91,9 +91,10 @@ strategicPatches:
   - "@./patches/global/kubelet.yaml"
   - "@./patches/global/openebs.yaml"
   - "@./patches/global/sysctls.yaml"
+  - "@./patches/global/luks2.yaml"
 
 controlPlane:
-  strategicPatches:
+  patches:
     - "@./patches/control/cluster.yaml"
     - "@./patches/control/api-access.yaml"
-    - "@./patches/control/disable-admission-controller.yaml"
+    - "@./patches/control/disable-admission-control.yaml"

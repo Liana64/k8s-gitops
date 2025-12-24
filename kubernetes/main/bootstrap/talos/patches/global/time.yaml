@@ -1,6 +1,7 @@
 ---
 machine:
   time:
+    disabled: false
     bootTimeout: 2m0s
     servers:
       - time.nist.gov
