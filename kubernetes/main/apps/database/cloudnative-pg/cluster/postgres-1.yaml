@@ -9,7 +9,7 @@ spec:
   primaryUpdateStrategy: unsupervised
   storage:
     size: 128Gi
-    storageClass: cluster-nvme
+    storageClass: nvme-fast
   superuserSecret:
     name: cloudnative-pg-secret
   enableSuperuserAccess: true
