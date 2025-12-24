@@ -7,3 +7,4 @@ resources:
   - ./traefik/ks.yaml
   - ./netshoot/ks.yaml
   - ./cloudflare-ddns/ks.yaml
+  - ./smtp-relay/ks.yaml
