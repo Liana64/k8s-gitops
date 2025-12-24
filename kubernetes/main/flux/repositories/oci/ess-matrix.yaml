@@ -3,13 +3,13 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: OCIRepository
 metadata:
-  name: app-template
+  name: ess-matrix
   namespace: flux-system
 spec:
   interval: 2h
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
-  url: oci://ghcr.io/bjw-s-labs/helm/app-template
+  url: oci://ghcr.io/element-hq/ess-helm
   ref:
-    tag: 4.5.0
+    tag: 25.12.2
