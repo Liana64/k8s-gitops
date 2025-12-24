@@ -8,7 +8,7 @@ spec:
   imageName: ghcr.io/cloudnative-pg/postgresql:17.0-30
   primaryUpdateStrategy: unsupervised
   storage:
-    size: 64Gi
+    size: 128Gi
     storageClass: cluster-nvme
   superuserSecret:
     name: cloudnative-pg-secret
@@ -28,5 +28,5 @@ spec:
       memory: 2Gi
   monitoring:
     enablePodMonitor: true
-  extensions:
-    - name: vector
+#  extensions:
+#    - name: vector

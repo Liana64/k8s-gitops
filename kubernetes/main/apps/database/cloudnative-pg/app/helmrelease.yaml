@@ -5,11 +5,16 @@ kind: HelmRelease
 metadata:
   name: &app cloudnative-pg
 spec:
-  chartRef:
-    kind: OCIRepository
-    name: app-template
-    namespace: flux-system
-  interval: 30m
+  interval: 15m
+  chart:
+    spec:
+      chart: cloudnative-pg
+      version: 0.27.0
+      sourceRef:
+        kind: HelmRepository
+        name: cloudnative-pg
+        namespace: flux-system
+      interval: 2h
   values:
     crds:
       create: true
