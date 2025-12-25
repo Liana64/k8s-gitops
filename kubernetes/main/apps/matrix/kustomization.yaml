@@ -3,9 +3,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./app-template.yaml
-  - ./external-secrets.yaml
-  - ./spegel.yaml
-  - ./stakater.yaml
-  - ./ess-matrix.yaml
-  - ./matrix-synapse.yaml
+  - ./namespace.yaml
+  - ./synapse/ks.yaml
+  - ./synapse-admin/ks.yaml
+  - ./element/ks.yaml

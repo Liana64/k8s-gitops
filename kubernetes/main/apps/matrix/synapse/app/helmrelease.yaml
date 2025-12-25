@@ -1,0 +1,161 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app synapse
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: matrix-synapse
+    namespace: flux-system
+  #  chartRef:
+  #    chart: matrix-stack
+  #    kind: OCIRepository
+  #    name: ess-matrix
+  #    namespace: flux-system
+  values:
+    serverName: "${SECRET_EXTERNAL_DOMAIN}"
+    publicServerName: "matrix.${SECRET_EXTERNAL_DOMAIN}"
+    wellknown:
+      enabled: true
+      image:
+        repository: ghcr.io/rtsp/docker-lighttpd
+        tag: 1.4.76@sha256:b4b58d217a35dbd6cade82927677de404a46fb3d2b1d5fcb42042b6a6f17b2fb
+      client:
+        m.homeserver:
+          base_url: "https://matrix.${SECRET_EXTERNAL_DOMAIN}"
+    config:
+      reportStats: true
+    extraConfig:
+      email:
+        smtp_host: smtp-relay.networking.svc.cluster.local
+        smtp_port: 25
+        notif_from: "Matrix <matrix@${SECRET_EXTERNAL_DOMAIN}>"
+      presence:
+        enabled: true
+      enable_3pid_lookup: false
+      #app_service_config_files:
+      #        - "/mautrix-whatsapp/registration.yaml"
+      #        - "/mautrix-discord/registration.yaml"
+      #        - "/matrix-hookshot/registration.yaml"
+      #- "/mautrix-discord/double-puppet-registration.yaml"
+      use_appservice_legacy_authorization: true
+      #      url_preview_ip_range_blacklist:
+      #        - "127.0.0.0/8"
+      #        - "192.168.0.0/16"
+      #        - "172.16.0.0/12"
+      #        - "10.0.0.0/8"
+      url_preview_enabled: false
+    #      experimental_features:
+    #        msc3575_enabled: true
+    ingress:
+      app:
+        className: traefik
+        annotations:
+          cert-manager.io/cluster-issuer: "letsencrypt-production"
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Overview
+          gethomepage.dev/name: Matrix
+          gethomepage.dev/description: Matrix Synapse
+          gethomepage.dev/icon: matrix
+        hosts:
+          - host: &host "matrix.${SECRET_EXTERNAL_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - secretName: matrix-synapse-tls
+            hosts: [*host]
+    postgresql:
+      enabled: false
+    redis:
+      enabled: false
+    externalPostgresql:
+      host: "postgres-1-rw.database.svc.cluster.local"
+      port: 5432
+      username: "synapse"
+      existingSecret: "synapse-secret"
+      existingSecretPasswordKey: POSTGRES_PASSWORD
+      database: "synapse_db"
+    externalRedis:
+      host: dragonfly.database.svc.cluster.local
+      port: 6379
+      dbid: 1
+      existingSecret: "synapse-secret"
+      existingSecretPasswordKey: REDIS_PASSWORD
+    synapse:
+      strategy:
+        type: Recreate
+      resources:
+        requests:
+          cpu: 10m
+          memory: 1000Mi
+        limits:
+          memory: 2500Mi
+      annotations:
+        reloader.stakater.com/auto: "true"
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/_synapse/metrics"
+        prometheus.io/port: "9090"
+        #extraVolumes:
+        #        - name: mautrix-whatsapp-registration
+        #          secret:
+        #            secretName: mautrix-whatsapp-secret
+        #        - name: mautrix-discord-registration
+        #          secret:
+        #            secretName: mautrix-discord-secret
+        #        #        - name: matrix-hookshot-registration
+        #        #          secret:
+        #        #            secretName: matrix-hookshot-secret
+        #        - name: synapse-mas-secret
+        #          secret:
+        #            secretName: synapse-mas-secret
+        #      extraVolumeMounts:
+        #        - name: mautrix-whatsapp-registration
+        #          mountPath: /mautrix-whatsapp
+        #          readOnly: true
+        #        - name: mautrix-discord-registration
+        #          mountPath: /mautrix-discord
+        #          readOnly: true
+        #        #        - name: matrix-hookshot-registration
+        #        #          mountPath: /matrix-hookshot
+        #        #          readOnly: true
+        #        - name: synapse-mas-secret
+        #          mountPath: /synapse/config/conf.d/mas_config.yaml
+        #          subPath: mas_config.yaml
+        #          readOnly: true
+    #    signingkey:
+    #      job:
+    #        enabled: false
+    #      existingSecret: synapse-signingkey
+    #      existingSecretKey: signing.key
+    persistence:
+      enabled: true
+      name: synapse
+      storageClass: nvme-fast
+      accessMode: ReadWriteOnce
+      size: 64Gi
+      retain: true
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Deployment
+              name: synapse-matrix-synapse
+            patch: |
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: synapse-matrix-synapse
+              spec:
+                template:
+                  spec:
+                    initContainers:
+                      - name: 01-init-db
+                        image: ghcr.io/liana64/postgres-init:16
+                        envFrom:
+                          - secretRef:
+                              name: synapse-secret
