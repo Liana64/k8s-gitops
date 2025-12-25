@@ -20,7 +20,7 @@ spec:
         initContainers:
           init-db:
             image:
-              repository: ghcr.io/onedr0p/postgres-init
+              repository: ghcr.io/liana64/postgres-init
               tag: 16
             env:
               INIT_POSTGRES_DBNAME: atuin
