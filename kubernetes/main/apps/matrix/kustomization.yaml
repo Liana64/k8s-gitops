@@ -7,3 +7,4 @@ resources:
   - ./synapse/ks.yaml
   - ./synapse-admin/ks.yaml
   - ./element/ks.yaml
+  - ./mautrix-discord/ks.yaml

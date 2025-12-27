@@ -1,0 +1,21 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: external-secrets
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: external-secrets
+    namespace: flux-system
+  values:
+    bitwarden-sdk-server:
+      enabled: true
+    leaderElect: true
+    serviceMonitor:
+      enabled: true
+    grafanaDashboard:
+      enabled: true
+    webhook:
+      replicaCount: 1

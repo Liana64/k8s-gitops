@@ -10,6 +10,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn:
+    - name: synapse
   path: ./kubernetes/main/apps/matrix/element/app
   prune: true
   sourceRef:
