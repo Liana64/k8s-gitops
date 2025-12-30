@@ -54,6 +54,8 @@ spec:
       #includeServerName: false
       annotations:
         cert-manager.io/cluster-issuer: "letsencrypt-production"
+        traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+        traefik.ingress.kubernetes.io/router.middlewares: "networking-traefik-middleware-chain-synapse@kubernetescrd"
         gethomepage.dev/enabled: "true"
         gethomepage.dev/group: Overview
         gethomepage.dev/name: Matrix
@@ -99,10 +101,16 @@ spec:
         - name: mautrix-discord-registration
           secret:
             secretName: mautrix-discord-secret
+      #        - name: mautrix-signal-registration
+      #          secret:
+      #            secretName: mautrix-signal-secret
       extraVolumeMounts:
         - name: mautrix-discord-registration
           mountPath: /mautrix-discord
           readOnly: true
+    #        - name: mautrix-signal-registration
+    #          mountPath: /mautrix-signal
+    #          readOnly: true
     signingkey:
       job:
         enabled: false

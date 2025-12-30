@@ -65,6 +65,8 @@ spec:
         annotations:
           secret.reloader.stakater.com/reload: immich-secret
           configmap.reloader.stakater.com/reload: immich-configmap
+          traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+          traefik.ingress.kubernetes.io/router.middlewares: "networking-traefik-middleware-chain-no-auth@kubernetescrd"
         pod:
           enableServiceLinks: false
           securityContext:
