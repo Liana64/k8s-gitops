@@ -50,7 +50,7 @@ spec:
           traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
           traefik.ingress.kubernetes.io/router.middlewares: "networking-traefik-middleware-chain-synapse@kubernetescrd"
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Overview
+          gethomepage.dev/group: Services
           gethomepage.dev/name: Element
           gethomepage.dev/description: Matrix client
           gethomepage.dev/icon: element

@@ -1,0 +1,96 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app mautrix-meta
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: flux-system
+  values:
+    controllers:
+      mautrix-meta:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/liana64/postgres-init
+              tag: 16
+            envFrom:
+              - secretRef:
+                  name: mautrix-meta-db-secret
+        containers:
+          app:
+            image:
+              repository: dock.mau.dev/mautrix/meta
+              tag: v25.12@sha256:1ba769047d4910675eed1ceb820c5cb6e8f6d0633ef4ce005ab802128c3b904f
+            command: ["/usr/bin/mautrix-meta"]
+            args: ["-c", "/config/config.yaml", "--no-update"]
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      app:
+        ports:
+          http:
+            port: 8000
+
+    ingress:
+      app:
+        className: traefik-external
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_EXTERNAL_DOMAIN}"
+          cert-manager.io/cluster-issuer: "letsencrypt-production"
+          traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+          traefik.ingress.kubernetes.io/router.middlewares: "networking-traefik-middleware-chain-synapse@kubernetescrd"
+        hosts:
+          - host: &host "mautrix-meta.${SECRET_EXTERNAL_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - secretName: mautrix-meta-tls
+            hosts: [*host]
+
+    persistence:
+      config:
+        type: secret
+        name: mautrix-meta-secret
+        globalMounts:
+          - path: /config/config.yaml
+            subPath: config.yaml
+            readOnly: true
+          - path: /config/registration.yaml
+            subPath: registration.yaml
+            readOnly: true
+      tmpfs:
+        type: emptyDir
+        advancedMounts:
+          mautrix-meta:
+            app:
+              - path: /tmp
+                subPath: tmp
