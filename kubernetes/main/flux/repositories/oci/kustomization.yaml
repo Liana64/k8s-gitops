@@ -9,3 +9,4 @@ resources:
   - ./stakater.yaml
   - ./ess-matrix.yaml
   - ./matrix-synapse.yaml
+  - ./reloader.yaml

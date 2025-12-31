@@ -1,17 +1,23 @@
 ---
 - Overview:
     - OPNsense:
-        href: https://edge.${SECRET_EXTERNAL_DOMAIN}
-        siteMonitor: https://edge.${SECRET_EXTERNAL_DOMAIN}
+        href: https://edge.${SECRET_DOMAIN}
+        siteMonitor: https://edge.${SECRET_DOMAIN}
         icon: opnsense
         description: Edge networking
-    - SLZB06:
-        href: http://slzb.lianas.org/
-        siteMonitor: http://slzb.lianas.org/
-        icon: zigbee2mqtt
-        description: Zigbee adapter
 #        widget:
 #          type: opnsense
 #          url: https://opnsense.${SECRET_OLD_DOMAIN}
 #          username: "{{HOMEPAGE_VAR_OPNSENSE_API_KEY}}"
 #          password: "{{HOMEPAGE_VAR_OPNSENSE_API_SECRET}}"
+- Devices:
+    - n1:
+        href: http://ms-01.${SECRET_DOMAIN}:8006
+        siteMonitor: http://ms-01.${SECRET_DOMAIN}:8006
+        icon: proxmox
+        description: ms-01
+    - SLZB06:
+        href: http://slzb.${SECRET_DOMAIN}
+        siteMonitor: http://slzb.${SECRET_DOMAIN}
+        icon: zigbee2mqtt
+        description: Zigbee adapter

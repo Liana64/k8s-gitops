@@ -8,8 +8,3 @@ resources:
   - ./linkding/ks.yaml
   - ./miniflux/ks.yaml
   - ./syncthing/ks.yaml
-  - ./zigbee2mqtt/ks.yaml
-  - ./home-assistant/ks.yaml
-  #- ./immich/ks.yaml
-  #- ./owncast/ks.yaml
-  #- ./grocy/ks.yaml

@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: home-assistant
+  name: &app home-assistant
 spec:
   interval: 1h
   chartRef:
@@ -19,13 +19,13 @@ spec:
           app:
             image:
               repository: ghcr.io/home-operations/home-assistant
-              tag: 2025.7.4@sha256:0f7f057d1817c7bed5632ce510ffcc921799ff34e75c6a53346994ba6c7b14ab
+              tag: 2025.12.4@sha256:c1743f2ed4c2cac05693525d477b73fb45386100660f3f1d6ac23b1720f48023
             env:
               HASS_HTTP_TRUSTED_PROXY_1: 172.16.5.0/24
               HASS_HTTP_TRUSTED_PROXY_2: 10.244.0.0/16
-            envFrom:
-              - secretRef:
-                  name: "{{ .Release.Name }}-secret"
+            #            envFrom:
+            #              - secretRef:
+            #                  name: "{{ .Release.Name }}-secret"
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -47,14 +47,28 @@ spec:
         ports:
           http:
             port: 8123
-    route:
+    ingress:
       app:
-        hostnames:
-          - home.${SECRET_INTERNAL_DOMAIN}
-        parentRefs:
-          - name: external
-            namespace: kube-system
-            sectionName: https
+        className: traefik
+        annotations:
+          cert-manager.io/cluster-issuer: "letsencrypt-production"
+          traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+          traefik.ingress.kubernetes.io/router.middlewares: "networking-traefik-middleware-chain-no-auth@kubernetescrd"
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Home
+          gethomepage.dev/name: home-assistant
+          gethomepage.dev/description: Automate home devices and IoT
+          gethomepage.dev/icon: home-assistant
+        hosts:
+          - host: &host "hass.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - secretName: home-assistant-tls
+            hosts: [*host]
     persistence:
       config:
         storageClass: cluster-nvme

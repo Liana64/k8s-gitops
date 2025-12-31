@@ -4,4 +4,5 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ./namespace.yaml
-  - ./atuin/ks.yaml
+  - ./zigbee2mqtt/ks.yaml
+  - ./home-assistant/ks.yaml

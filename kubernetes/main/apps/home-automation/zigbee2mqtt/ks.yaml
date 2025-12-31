@@ -6,13 +6,13 @@ metadata:
   name: &app zigbee2mqtt
   namespace: flux-system
 spec:
-  targetNamespace: home
+  targetNamespace: home-automation
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: traefik
-  path: ./kubernetes/main/apps/home/zigbee2mqtt/app
+  path: ./kubernetes/main/apps/home-automation/zigbee2mqtt/app
   prune: true
   sourceRef:
     kind: GitRepository

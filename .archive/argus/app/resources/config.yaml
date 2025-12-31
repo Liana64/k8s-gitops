@@ -1,0 +1,21 @@
+---
+settings:
+  log:
+    level: INFO
+  web:
+    disabled_routes:
+      - service_create
+      - service_update
+      - service_delete
+      - service_actions
+      - dv_refresh
+      - lv_refresh_new
+      - dv_refresh_new
+
+defaults:
+  service:
+    options:
+      active: true
+      interval: 5m
+    latest_version:
+      use_prerelease: false
