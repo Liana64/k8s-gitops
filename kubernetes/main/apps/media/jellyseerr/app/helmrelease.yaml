@@ -22,6 +22,7 @@ spec:
             env:
               TZ: ${TIMEZONE}
               PORT: &port 5055
+              forceIpv4First: true
             probes:
               liveness: &probes
                 enabled: true
@@ -57,7 +58,7 @@ spec:
 
     ingress:
       app:
-        className: traefik
+        className: traefik-external
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_EXTERNAL_DOMAIN}"
@@ -72,14 +73,14 @@ spec:
           #gethomepage.dev/widget.key: "${HOMEPAGE_VAR_JELLYSEERR_API_KEY}"
           #gethomepage.dev/widget.url: &host "requests.${SECRET_EXTERNAL_DOMAIN}"
         hosts:
-          - host: &host "requests.${SECRET_EXTERNAL_DOMAIN}"
+          - host: &host "requests.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
                   identifier: app
                   port: http
         tls:
-          - secretName: jellyseerr-tls
+          - secretName: jellyseerr-requests-tls
             hosts: [*host]
 
     persistence:
