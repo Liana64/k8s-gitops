@@ -1,0 +1,30 @@
+#---
+#apiVersion: cilium.io/v2
+#kind: CiliumNetworkPolicy
+#metadata:
+#  name: default-deny-ingress
+#  namespace: media
+#spec:
+#  endpointSelector: {}
+#  ingress:
+#    - fromEntities:
+#        - cluster
+#        - health
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-traefik-to-jellyfin
+  namespace: media
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: jellyfin
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: traefik
+      toPorts:
+        - ports:
+            - port: "8096"
+              protocol: TCP
