@@ -27,9 +27,30 @@ spec:
       namespace: cert-manager
   values:
     namespace: system-controllers
-    replicaCount: 3
+    replicaCount: 1
     timezone: "${TIMEZONE}"
     cronJobTimeZone: true
+    securityContext:
+      capabilities:
+        drop:
+          - ALL
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+    initContainerResources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
     webhook:
       certManager:
         enabled: true
