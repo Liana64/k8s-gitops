@@ -9,6 +9,7 @@ spec:
   chartRef:
     kind: OCIRepository
     name: reloader
+    namespace: flux-system
   values:
     fullnameOverride: reloader
     reloader:
