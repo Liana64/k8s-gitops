@@ -27,8 +27,6 @@ spec:
   dependsOn:
     - name: openebs
       namespace: openebs
-    - name: minio
-      namespace: database
   valuesFrom:
     - targetPath: loki.storage.bucketNames.chunks
       kind: Secret

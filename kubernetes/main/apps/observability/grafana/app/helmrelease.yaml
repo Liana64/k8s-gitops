@@ -62,16 +62,29 @@ spec:
       GF_SECURITY_ANGULAR_SUPPORT_ENABLED: true
       GF_SECURITY_COOKIE_SAMESITE: grafana
       GF_SERVER_ROOT_URL: "https://grafana.${SECRET_INTERNAL_DOMAIN}"
+      GF_DATABASE_TYPE: postgres
       GF_DATABASE_SSL_MODE: disable
       GF_DATABASE_NAME: *dbName
       GF_DATABASE_HOST: *dbHost
-    envFromSecrets:
-      - name: grafana-secret
+    envValueFrom:
+      GF_DATABASE_USER:
+        secretKeyRef:
+          name: grafana-secret
+          key: GF_DATABASE_USER
+      GF_DATABASE_PASSWORD:
+        secretKeyRef:
+          name: grafana-secret
+          key: GF_DATABASE_PASSWORD
     grafana.ini:
       analytics:
         check_for_updates: false
         check_for_plugin_updates: false
         reporting_enabled: false
+      database:
+        type: postgres
+        host: *dbHost
+        name: *dbName
+        ssl_mode: disable
       #auth:
       #  oauth_auto_login: true
       #  oauth_allow_insecure_email_lookup: true
