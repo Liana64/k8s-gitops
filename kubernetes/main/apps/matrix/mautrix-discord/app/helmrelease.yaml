@@ -16,21 +16,31 @@ spec:
           postgres: "true"
         annotations:
           reloader.stakater.com/auto: "true"
+        pod:
+          labels:
+            app.kubernetes.io/component: matrix-bridge
         initContainers:
           init-db:
             image:
               repository: ghcr.io/liana64/postgres-init
               tag: 16
+            env:
+              - name: INIT_POSTGRES_SUPER_PASS
+                valueFrom:
+                  secretKeyRef:
+                    name: cloudnative-pg-secret
+                    key: password
             envFrom:
               - secretRef:
                   name: mautrix-discord-db-secret
         containers:
           app:
             image:
-              repository: dock.mau.dev/mautrix/discord
-              tag: v0.7.5@sha256:898c6c59d65b49cb408f0bd23d6be720bd85c81164a775760fbfc9d6fd2c501e
-            command: ["/usr/bin/mautrix-discord"]
-            args: ["-c", "/data/config.yaml", "--no-update"]
+              repository: ghcr.io/liana64/mautrix-discord
+              tag: rolling@sha256:4a550cc077f2e4cbad55dddc0911ede9bafe95d295cb9c137c1146f6064e24b6
+            env:
+              CONFIG_FILE: "/data/config.yaml"
+              REGISTRATION_FILE: "/data/registration.yaml"
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -41,13 +51,15 @@ spec:
                 memory: 128Mi
               limits:
                 memory: 512Mi
+
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        runAsUser: 1337
+        runAsGroup: 1337
+        fsGroup: 1337
         fsGroupChangePolicy: OnRootMismatch
+
     service:
       app:
         ports:

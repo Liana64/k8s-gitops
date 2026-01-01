@@ -15,21 +15,31 @@ spec:
       mautrix-meta:
         annotations:
           reloader.stakater.com/auto: "true"
+        pod:
+          labels:
+            app.kubernetes.io/component: matrix-bridge
         initContainers:
           init-db:
             image:
               repository: ghcr.io/liana64/postgres-init
               tag: 16
+            env:
+              - name: INIT_POSTGRES_SUPER_PASS
+                valueFrom:
+                  secretKeyRef:
+                    name: cloudnative-pg-secret
+                    key: password
             envFrom:
               - secretRef:
                   name: mautrix-meta-db-secret
         containers:
           app:
             image:
-              repository: dock.mau.dev/mautrix/meta
-              tag: v25.12@sha256:1ba769047d4910675eed1ceb820c5cb6e8f6d0633ef4ce005ab802128c3b904f
-            command: ["/usr/bin/mautrix-meta"]
-            args: ["-c", "/config/config.yaml", "--no-update"]
+              repository: ghcr.io/liana64/mautrix-meta
+              tag: rolling@sha256:ff45e71e91270e77266a34adfea6436f5eecacd8e5b0919e369a3e7355c52ccc
+            env:
+              CONFIG_FILE: "/data/config.yaml"
+              REGISTRATION_FILE: "/data/registration.yaml"
 
             securityContext:
               allowPrivilegeEscalation: false
@@ -46,9 +56,9 @@ spec:
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        runAsUser: 1337
+        runAsGroup: 1337
+        fsGroup: 1337
         fsGroupChangePolicy: OnRootMismatch
 
     service:
@@ -81,10 +91,10 @@ spec:
         type: secret
         name: mautrix-meta-secret
         globalMounts:
-          - path: /config/config.yaml
+          - path: /data/config.yaml
             subPath: config.yaml
             readOnly: true
-          - path: /config/registration.yaml
+          - path: /data/registration.yaml
             subPath: registration.yaml
             readOnly: true
       tmpfs:

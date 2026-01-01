@@ -17,11 +17,24 @@ spec:
   values:
     serverName: "${SECRET_EXTERNAL_DOMAIN}"
     publicServerName: "matrix.${SECRET_EXTERNAL_DOMAIN}"
+
     wellknown:
       enabled: true
       image:
         repository: ghcr.io/rtsp/docker-lighttpd
         tag: 1.4.76@sha256:b4b58d217a35dbd6cade82927677de404a46fb3d2b1d5fcb42042b6a6f17b2fb
+      #      podSecurityContext:
+      #        fsGroup: 101
+      #        runAsGroup: 101
+      #        runAsUser: 100
+      #      securityContext:
+      #        capabilities:
+      #          drop:
+      #            - ALL
+      #        allowPrivilegeEscalation: false
+      #        readOnlyRootFilesystem: true
+      #        runAsNonRoot: true
+      #        runAsUser: 100
       client:
         m.homeserver:
           base_url: "https://matrix.${SECRET_EXTERNAL_DOMAIN}"
@@ -39,6 +52,8 @@ spec:
         - "/mautrix-discord/registration.yaml"
         - "/mautrix-discord/double-puppet-registration.yaml"
         - "/mautrix-meta/registration.yaml"
+        - "/mautrix-linkedin/registration.yaml"
+        - "/mautrix-twitter/registration.yaml"
       use_appservice_legacy_authorization: true
       #      url_preview_ip_range_blacklist:
       #        - "127.0.0.0/8"
@@ -88,6 +103,16 @@ spec:
           memory: 1000Mi
         limits:
           memory: 2500Mi
+      podSecurityContext:
+        fsGroup: 666
+        runAsGroup: 666
+        runAsUser: 666
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        runAsNonRoot: true
+        runAsUser: 100
+        capabilities: { drop: ["ALL"] }
       annotations:
         reloader.stakater.com/auto: "true"
         prometheus.io/scrape: "true"
@@ -100,6 +125,12 @@ spec:
         - name: mautrix-meta-registration
           secret:
             secretName: mautrix-meta-secret
+        - name: mautrix-linkedin-registration
+          secret:
+            secretName: mautrix-linkedin-secret
+        - name: mautrix-twitter-registration
+          secret:
+            secretName: mautrix-twitter-secret
         #- name: mautrix-signal-registration
         #  secret:
         #    secretName: mautrix-signal-secret
@@ -110,14 +141,38 @@ spec:
         - name: mautrix-meta-registration
           mountPath: /mautrix-meta
           readOnly: true
+        - name: mautrix-linkedin-registration
+          mountPath: /mautrix-linkedin
+          readOnly: true
+        - name: mautrix-twitter-registration
+          mountPath: /mautrix-twitter
+          readOnly: true
         #- name: mautrix-signal-registration
         #  mountPath: /mautrix-signal
         #  readOnly: true
     signingkey:
       job:
         enabled: false
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities: { drop: ["ALL"] }
+          runAsNonRoot: true
+          runAsUser: 666
       existingSecret: synapse-signingkey
       existingSecretKey: signing.key
+    #    workers:
+    #      default:
+    #        podSecurityContext:
+    #          fsGroup: 666
+    #          runAsGroup: 666
+    #          runAsUser: 666
+    #        securityContext:
+    #          allowPrivilegeEscalation: false
+    #          readOnlyRootFilesystem: true
+    #          capabilities: { drop: ["ALL"] }
+    #          runAsNonRoot: true
+    #          runAsUser: 666
     persistence:
       enabled: true
       existingClaim: synapse-data

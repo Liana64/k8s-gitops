@@ -6,3 +6,6 @@ metadata:
   labels:
     kustomize.toolkit.fluxcd.io/prune: disabled
     volsync.backube/privileged-movers: "true"
+    pod-security.kubernetes.io/enforce: baseline # TODO: Fix this
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
