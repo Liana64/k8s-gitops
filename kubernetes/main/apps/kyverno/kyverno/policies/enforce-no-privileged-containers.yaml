@@ -1,0 +1,32 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kyverno.io/clusterpolicy_v1.json
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: enforce-no-privileged-containers
+  annotations:
+    policies.kyverno.io/title: Disallow Privileged Containers in Matrix
+    policies.kyverno.io/category: Security
+    policies.kyverno.io/severity: high
+    policies.kyverno.io/description: >-
+      Privileged containers should never be needed for certain namespaces.
+      This helps prevent container escape.
+spec:
+  validationFailureAction: Audit
+  background: true
+  rules:
+    - name: enforce-no-privileged-containers
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - matrix
+      validate:
+        message: "Privileged containers are not allowed in certain namespaces"
+        pattern:
+          spec:
+            containers:
+              - =(securityContext):
+                  =(privileged): false

@@ -1,0 +1,34 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kyverno.io/clusterpolicy_v1.json
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: enforce-drop-all-capabilities
+  annotations:
+    policies.kyverno.io/title: Drop All Capabilities in Matrix
+    policies.kyverno.io/category: Security
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/description: >-
+      Drops all Linux capabilities from containers. Matrix bridges should not
+      need any special capabilities.
+spec:
+  validationFailureAction: Audit
+  background: true
+  rules:
+    - name: enforce-drop-all-capabilities
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - matrix
+      validate:
+        message: "All capabilities must be dropped"
+        pattern:
+          spec:
+            containers:
+              - securityContext:
+                  capabilities:
+                    drop:
+                      - ALL

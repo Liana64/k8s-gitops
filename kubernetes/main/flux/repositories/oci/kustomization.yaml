@@ -6,7 +6,9 @@ resources:
   - ./app-template.yaml
   - ./external-secrets.yaml
   - ./spegel.yaml
-  - ./stakater.yaml
   - ./ess-matrix.yaml
   - ./matrix-synapse.yaml
   - ./reloader.yaml
+  - ./kyverno.yaml
+  - ./crowdsec.yaml
+  - ./external-dns.yaml

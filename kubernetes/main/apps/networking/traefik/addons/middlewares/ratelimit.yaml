@@ -1,0 +1,32 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: traefik-middleware-ratelimit
+spec:
+  rateLimit:
+    sourceCriterion:
+      ipStrategy:
+        excludedIPs:
+          - 127.0.0.1/32
+          - 10.0.0.0/8
+          - 172.16.0.0/12
+          - 192.168.0.0/16
+    average: 10
+    burst: 30
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: traefik-middleware-ratelimit-streaming
+spec:
+  rateLimit:
+    sourceCriterion:
+      ipStrategy:
+        excludedIPs:
+          - 127.0.0.1/32
+          - 10.0.0.0/8
+          - 172.16.0.0/12
+          - 192.168.0.0/16
+    average: 20
+    burst: 50

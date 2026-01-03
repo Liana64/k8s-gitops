@@ -1,0 +1,34 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kyverno.io/clusterpolicy_v1.json
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-probes-matrix
+  annotations:
+    policies.kyverno.io/title: Require Probes in Matrix
+    policies.kyverno.io/category: Best Practices
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/description: >-
+      Ensures containers have liveness and readiness probes for better
+      reliability and faster failure detection.
+spec:
+  validationFailureAction: Audit
+  background: true
+  rules:
+    - name: require-probes
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - matrix
+      validate:
+        message: "Containers must have both liveness and readiness probes"
+        pattern:
+          spec:
+            containers:
+              - livenessProbe:
+                  periodSeconds: ">0"
+                readinessProbe:
+                  periodSeconds: ">0"

@@ -1,0 +1,31 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kyverno.io/clusterpolicy_v1.json
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: enforce-network-policies
+  annotations:
+    policies.kyverno.io/title: Require Network Policy Label
+    policies.kyverno.io/category: Security
+    policies.kyverno.io/severity: high
+    policies.kyverno.io/description: >-
+      Ensures all pods have a label that network policies can select.
+      Without this, pods might bypass network restrictions.
+spec:
+  validationFailureAction: Audit
+  background: true
+  rules:
+    - name: require-netpol-label
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - matrix
+      validate:
+        message: "Pods must have app label for network policy selection"
+        pattern:
+          metadata:
+            labels:
+              app: "?*"

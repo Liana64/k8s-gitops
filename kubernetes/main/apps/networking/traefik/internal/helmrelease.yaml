@@ -100,3 +100,8 @@ spec:
         memory: 512Mi
       limits:
         memory: 768Mi
+    #logs:
+    #  general:
+    #    level: INFO
+    #  access:
+    #    enabled: true

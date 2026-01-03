@@ -107,6 +107,12 @@ spec:
         enabled: false
       news:
         news_feed_enabled: false
+    resources:
+      requests:
+        cpu: 24m
+        memory: 128Mi
+      limits:
+        memory: 1Gi
     datasources:
       datasources.yaml:
         apiVersion: 1

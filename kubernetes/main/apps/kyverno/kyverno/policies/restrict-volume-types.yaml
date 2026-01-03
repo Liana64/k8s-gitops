@@ -1,0 +1,40 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kyverno.io/clusterpolicy_v1.json
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: restrict-volume-types
+  annotations:
+    policies.kyverno.io/title: Restrict Volume Types
+    policies.kyverno.io/category: Security
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/description: >-
+      Only allows safe volume types. Prevents hostPath mounts in indicated
+      namespaces that could access sensitive node data.
+spec:
+  validationFailureAction: Audit
+  background: true
+  rules:
+    - name: restrict-volume-types
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - matrix
+      validate:
+        message: "Only configMap, emptyDir, secret, persistentVolumeClaim, and projected volumes are allowed in indicated namespaces"
+        pattern:
+          spec:
+            =(volumes):
+              - configMap: {}
+                name: "*"
+              - emptyDir: {}
+                name: "*"
+              - secret: {}
+                name: "*"
+              - persistentVolumeClaim: {}
+                name: "*"
+              - projected: {}
+                name: "*"

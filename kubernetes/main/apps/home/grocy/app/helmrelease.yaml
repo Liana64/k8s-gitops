@@ -27,7 +27,7 @@ spec:
           app:
             image:
               repository: ghcr.io/linuxserver/grocy
-              tag: v4.5.0-ls299@sha256:25cb87f21f99acfb50c28374898048f90b5abcebe14eec2cafcf53a5736aa651
+              tag: v4.5.0-ls311@sha256:d2c5caef6ad4646e87884f4a8fd1d2e638e20350836e3acab600dd8110f42ad7
             env:
               PUID: 1000
               PGID: 1000
@@ -70,7 +70,7 @@ spec:
           gethomepage.dev/description: Kitchen organization
           gethomepage.dev/icon: grocy
         hosts:
-          - host: &host "grocy.${SECRET_INTERNAL_DOMAIN}"
+          - host: &host "grocy.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
@@ -83,7 +83,7 @@ spec:
       data:
         storageClass: cluster-nvme
         accessMode: ReadWriteOnce
-        size: 2Gi
+        size: 5Gi
         retain: true
         globalMounts:
           - path: /config
