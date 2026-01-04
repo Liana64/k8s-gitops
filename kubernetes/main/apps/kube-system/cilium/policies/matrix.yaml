@@ -2,7 +2,7 @@
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: default-deny-ingress
+  name: default-deny-ingress-matrix
   namespace: matrix
 spec:
   endpointSelector: {}
@@ -62,7 +62,7 @@ spec:
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: allow-bridges
+  name: allow-matrix-bridges
   namespace: matrix
 spec:
   endpointSelector:
