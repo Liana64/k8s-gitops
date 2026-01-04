@@ -1,0 +1,40 @@
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: default-deny-ingress-test
+  namespace: test
+spec:
+  endpointSelector: {}
+  ingress:
+    - fromEntities:
+        - cluster
+        - health
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-test-twitter
+  namespace: test
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: cilium-debugging-dns-alpine
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+    - toFQDNs:
+        - matchPattern: "*.x.com"
+        - matchPattern: "*.twitter.com"
+        - matchPattern: "*.twimg.com"
+        - matchPattern: "api.x.com"
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP

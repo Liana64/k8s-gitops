@@ -1,0 +1,30 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kyverno.io/clusterpolicy_v1.json
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: restrict-image-registries
+  annotations:
+    policies.kyverno.io/title: Restrict Image Registries
+    policies.kyverno.io/category: Security
+    policies.kyverno.io/severity: high
+    policies.kyverno.io/description: >-
+      Only allows images from trusted registries. Helps prevent supply chain attacks.
+spec:
+  validationFailureAction: Audit
+  background: true
+  rules:
+    - name: restrict-registries-matrix
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - matrix
+      validate:
+        message: "Images must come from approved registries for Matrix namespace"
+        pattern:
+          spec:
+            containers:
+              - image: "ghcr.io/liana64/* | docker.io/ess/* | ghcr.io/rtsp/docker-lighttpd | ghcr.io/etkecc/synapse-admin | dock.mau.dev/mautrix/*"

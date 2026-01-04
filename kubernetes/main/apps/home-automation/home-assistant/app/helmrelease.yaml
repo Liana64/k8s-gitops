@@ -1,5 +1,4 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -19,13 +18,11 @@ spec:
           app:
             image:
               repository: ghcr.io/home-operations/home-assistant
-              tag: 2025.12.4@sha256:c1743f2ed4c2cac05693525d477b73fb45386100660f3f1d6ac23b1720f48023
+              tag: 2025.12.5@sha256:6be0843b06ad82233639e56f261b2377f78df140e3d16d2d08b2c29c8889b697
             env:
-              HASS_HTTP_TRUSTED_PROXY_1: 172.16.5.0/24
-              HASS_HTTP_TRUSTED_PROXY_2: 10.244.0.0/16
-            #            envFrom:
-            #              - secretRef:
-            #                  name: "{{ .Release.Name }}-secret"
+              HOME_ASSISTANT_EXTERNAL_URL: https://home.${SECRET_DOMAIN}
+              HOME_ASSISTANT_PURGE_KEEP_DAYS: 30
+              HOME_ASSISTANT_TRUSTED_PROXIES: 10.244.0.0/16
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -33,8 +30,36 @@ spec:
             resources:
               requests:
                 cpu: 10m
+                memory: 128Mi
               limits:
-                memory: 2Gi
+                memory: 512Mi
+          code-server:
+            image:
+              repository: ghcr.io/coder/code-server
+              tag: 4.107.0@sha256:4b622c4cd1b0f559fec0df67fcf09042d63e9ce84c575102066afd9511695627
+            args:
+              - --auth
+              - none
+              - --disable-telemetry
+              - --disable-update-check
+              - --user-data-dir
+              - /config/.code-server
+              - --extensions-dir
+              - /config/.code-server
+              - --port
+              - "8080"
+              - /config
+            env:
+              HASS_SERVER: http://localhost:8123
+            envFrom:
+              - secretRef:
+                  name: home-assistant-secret
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -47,50 +72,67 @@ spec:
         ports:
           http:
             port: 8123
+          code-server:
+            port: 8080
     ingress:
       app:
+        forceRename: *app
         className: traefik
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-production"
           traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
           traefik.ingress.kubernetes.io/router.middlewares: "networking-traefik-middleware-chain-no-auth@kubernetescrd"
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Home
-          gethomepage.dev/name: home-assistant
-          gethomepage.dev/description: Automate home devices and IoT
-          gethomepage.dev/icon: home-assistant
         hosts:
-          - host: &host "hass.${SECRET_DOMAIN}"
+          - host: &host "home.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
                   identifier: app
                   port: http
         tls:
-          - secretName: home-assistant-tls
-            hosts: [*host]
+          - hosts:
+              - *host
+            secretName: "hass-production-tls"
+      code-server:
+        className: traefik
+        annotations:
+          cert-manager.io/cluster-issuer: "letsencrypt-production"
+          traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+          traefik.ingress.kubernetes.io/router.middlewares: "networking-traefik-middleware-chain-no-auth@kubernetescrd"
+        hosts:
+          - host: &host "hass-code.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: code-server
+        tls:
+          - hosts:
+              - *host
+            secretName: "hass-code-production-tls"
     persistence:
       config:
         storageClass: cluster-nvme
         accessMode: ReadWriteOnce
-        size: 1Gi
+        size: 2Gi
         retain: true
         globalMounts:
           - path: /config
-      config-cache:
-        storageClass: cluster-nvme
-        accessMode: ReadWriteOnce
-        size: 512Mi
-        globalMounts:
-          - path: /config/.venv
       tmpfs:
         type: emptyDir
         advancedMounts:
           home-assistant:
             app:
+              - path: /config/.venv
+                subPath: .venv
               - path: /config/logs
                 subPath: logs
               - path: /config/tts
                 subPath: tts
               - path: /tmp
                 subPath: tmp
+            code-server:
+              - path: /tmp
+                subPath: code-server-tmp
+              - path: /nonexistent
+                subPath: nonexistent

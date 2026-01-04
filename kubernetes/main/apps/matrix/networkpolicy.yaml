@@ -1,0 +1,31 @@
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: default-deny-ingress-matrix
+  namespace: matrix
+spec:
+  endpointSelector: {}
+  ingress:
+    - fromEntities:
+        - cluster
+        - health
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-traefik-to-bridges
+  namespace: matrix
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/component: matrix-bridge
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: traefik
+            app.kubernetes.io/instance: traefik-external-networking
+      toPorts:
+        - ports:
+            - port: "8000"
+              protocol: TCP

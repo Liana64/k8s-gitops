@@ -105,7 +105,7 @@ spec:
     - fromEndpoints:
         - matchLabels:
             app.kubernetes.io/name: traefik
-            app.kubernetes.io/instance: traefik-external
+            app.kubernetes.io/instance: traefik-external-networking
       toPorts:
         - ports:
             - port: "8080"
@@ -124,7 +124,7 @@ spec:
     - fromEndpoints:
         - matchLabels:
             app.kubernetes.io/name: traefik
-            app.kubernetes.io/instance: traefik-external
+            app.kubernetes.io/instance: traefik-external-networking
       toPorts:
         - ports:
             - port: "8080"

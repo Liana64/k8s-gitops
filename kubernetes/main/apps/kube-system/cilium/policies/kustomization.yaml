@@ -4,7 +4,6 @@ kind: Kustomization
 resources:
   - ./database.yaml
   - ./media.yaml
-  - ./matrix.yaml
   - ./sec-tools.yaml
   - ./cert-manager.yaml
   - ./external-secrets.yaml

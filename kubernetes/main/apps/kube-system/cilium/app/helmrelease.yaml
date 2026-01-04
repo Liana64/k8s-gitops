@@ -25,6 +25,11 @@ spec:
     - kind: ConfigMap
       name: cilium-helm-values
   values:
+    dnsproxy:
+      enabled: true
+    proxy:
+      dns:
+        enabled: true
     hubble:
       enabled: true
       metrics:
@@ -52,6 +57,8 @@ spec:
         ingress:
           enabled: true
           className: traefik
+          annotations:
+            cert-manager.io/cluster-issuer: "letsencrypt-production"
           hosts: ["hubble.${SECRET_INTERNAL_DOMAIN}"]
     operator:
       prometheus:

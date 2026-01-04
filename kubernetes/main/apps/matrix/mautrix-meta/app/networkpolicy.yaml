@@ -1,0 +1,64 @@
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-mautrix-meta
+  namespace: matrix
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: mautrix-meta
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: matrix-synapse
+      toPorts:
+        - ports:
+            - port: "8000"
+              protocol: TCP
+        - ports:
+            - port: "8008"
+              protocol: TCP
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+    - toEndpoints:
+        - matchLabels:
+            cnpg.io/cluster: postgres-1
+            io.kubernetes.pod.namespace: database
+      toPorts:
+        - ports:
+            - port: "5432"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: matrix-synapse
+      toPorts:
+        - ports:
+            - port: "8008"
+              protocol: TCP
+    - toEntities:
+        - world
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+    # TODO: Fix this urgently
+    #- toFQDNs:
+    #    - matchPattern: "*.facebook.com"
+    #    - matchPattern: "*.messenger.com"
+    #    - matchPattern: "*.fbcdn.net"
+    #    - matchPattern: "*.instagram.com"
+    #    - matchPattern: "*.cdninstagram.com"
+    #    - matchPattern: "edge-chat.facebook.com"
+    #    - matchPattern: "mqtt-mini.facebook.com"
+    #  toPorts:
+    #    - ports:
+    #        - port: "443"
+    #          protocol: TCP

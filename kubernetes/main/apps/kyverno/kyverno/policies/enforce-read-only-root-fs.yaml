@@ -1,0 +1,38 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kyverno.io/clusterpolicy_v1.json
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: enforce-readonly-root-fs
+  annotations:
+    policies.kyverno.io/title: Enforce Read-Only Root Filesystem
+    policies.kyverno.io/category: Security
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/description: >-
+      Requires containers to use read-only root filesystem. Indicated containers
+      should only write to mounted volumes, not the container filesystem.
+spec:
+  validationFailureAction: Audit
+  background: true
+  rules:
+    - name: require-readonly-root-fs
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - matrix
+      exclude:
+        any:
+          # Exclude synapse as it may need to write to /tmp
+          - resources:
+              names:
+                - synapse-*
+      validate:
+        message: "Containers must use read-only root filesystem"
+        pattern:
+          spec:
+            containers:
+              - securityContext:
+                  readOnlyRootFilesystem: true

@@ -1,0 +1,79 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-traefik-to-synapse
+  namespace: matrix
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: matrix-synapse
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: traefik
+            app.kubernetes.io/instance: traefik
+            io.kubernetes.pod.namespace: networking
+      toPorts:
+        - ports:
+            - port: "8008"
+              protocol: TCP
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-synapse
+  namespace: matrix
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: matrix-synapse
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+    - toEndpoints:
+        - matchLabels:
+            cnpg.io/cluster: postgres-1
+            io.kubernetes.pod.namespace: database
+      toPorts:
+        - ports:
+            - port: "5432"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: dragonfly
+            io.kubernetes.pod.namespace: database
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: smtp-relay
+            io.kubernetes.pod.namespace: networking
+      toPorts:
+        - ports:
+            - port: "25"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/component: matrix-bridge
+      toPorts:
+        - ports:
+            - port: "8000"
+              protocol: TCP
+    #- toFQDNs:
+    #    - matchPattern: "*.matrix.org"
+    #  toPorts:
+    #    - ports:
+    #        - port: "443"
+    #          protocol: TCP
+    #        - port: "8448"
+    #          protocol: TCP
+    - toEntities:
+        - kube-apiserver

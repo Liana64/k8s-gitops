@@ -1,0 +1,30 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kyverno.io/clusterpolicy_v1.json
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: add-seccomp-profiles
+  annotations:
+    policies.kyverno.io/title: Add Seccomp Profile to pods
+    policies.kyverno.io/category: Security
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/description: >-
+      Automatically adds RuntimeDefault seccomp profile to pods that don't
+      have one. Restricts syscalls available to containers.
+spec:
+  background: true
+  rules:
+    - name: add-seccomp-profile
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - matrix
+      mutate:
+        patchStrategicMerge:
+          spec:
+            securityContext:
+              +(seccompProfile):
+                +(type): RuntimeDefault
