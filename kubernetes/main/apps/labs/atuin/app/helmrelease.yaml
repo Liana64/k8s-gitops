@@ -105,7 +105,7 @@ spec:
           gethomepage.dev/group: Services
           gethomepage.dev/name: Atuin
           gethomepage.dev/description: Magical shell history
-          gethomepage.dev/icon: /icons/atuin.png
+          gethomepage.dev/icon: atuin
         hosts:
           - host: &host "sh.${SECRET_INTERNAL_DOMAIN}"
             paths:

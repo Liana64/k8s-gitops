@@ -9,4 +9,6 @@ resources:
   - ./element/ks.yaml
   - ./mautrix-discord/ks.yaml
   - ./mautrix-meta/ks.yaml
+  - ./mautrix-linkedin/ks.yaml
+  - ./mautrix-twitter/ks.yaml
   #- ./mautrix-signal/ks.yaml

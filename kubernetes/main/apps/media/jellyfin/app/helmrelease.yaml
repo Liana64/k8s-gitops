@@ -59,8 +59,7 @@ spec:
                 memory: 512Mi
                 #nvidia.com/gpu: 1
               limits:
-                cpu: "8"
-                memory: 4Gi
+                memory: 4096Mi
                 #nvidia.com/gpu: 1
 
     service:
