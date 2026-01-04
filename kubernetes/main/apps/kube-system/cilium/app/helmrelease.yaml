@@ -25,11 +25,11 @@ spec:
     - kind: ConfigMap
       name: cilium-helm-values
   values:
-    dnsproxy:
+    dnsProxy:
       enabled: true
-    proxy:
-      dns:
-        enabled: true
+
+      # NOTE: Testing FQDN DNS resolution when `false`
+      enableTransparentMode: true
     hubble:
       enabled: true
       metrics:
@@ -52,14 +52,14 @@ spec:
           serviceMonitor:
             enabled: true
       ui:
-        enabled: true
-        rollOutPods: true
-        ingress:
-          enabled: true
-          className: traefik
-          annotations:
-            cert-manager.io/cluster-issuer: "letsencrypt-production"
-          hosts: ["hubble.${SECRET_INTERNAL_DOMAIN}"]
+        enabled: false
+        #rollOutPods: true
+        #ingress:
+        #  enabled: true
+        #  className: traefik
+        #  annotations:
+        #    cert-manager.io/cluster-issuer: "letsencrypt-production"
+        #  hosts: ["hubble.${SECRET_INTERNAL_DOMAIN}"]
     operator:
       prometheus:
         enabled: true
