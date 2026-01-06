@@ -28,6 +28,17 @@ spec:
         - ports:
             - port: "53"
               protocol: ANY
+    # why only you?
+    # matrix/mautrix-discord:53322  <> networking/traefik:8443  Policy denied DROPPED (TCP Flags: SYN)
+    # matrix/mautrix-discord:53328  <> networking/traefik:8443  policy-verdict:none EGRESS DENIED (TCP Flags: SYN)
+    #- toEndpoints:
+    #    - matchLabels:
+    #        app.kubernetes.io/name: traefik
+    #        app.kubernetes.io/instance: traefik-networking
+    #  toPorts:
+    #    - ports:
+    #        - port: "8443"
+    #          protocol: TCP
     - toEndpoints:
         - matchLabels:
             cnpg.io/cluster: postgres-1

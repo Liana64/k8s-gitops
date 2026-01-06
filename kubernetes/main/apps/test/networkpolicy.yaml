@@ -1,4 +1,5 @@
-# https://github.com/cilium/cilium/issues/42459
+# https://github.com/cilium/cilium/issues/42046
+# https://github.com/cilium/cilium/issues/42594
 ---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
@@ -22,22 +23,14 @@ spec:
     matchLabels:
       app.kubernetes.io/name: cilium-debugging-dns-alpine
   egress:
-    #- toEndpoints:
-    #    - matchLabels:
-    #        io.kubernetes.pod.namespace: kube-system
-    #        k8s-app: kube-dns
-    #  toPorts:
-    #    - ports:
-    #        - port: "53"
-    #          protocol: ANY
-    - toEntities:
-        - host
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
       toPorts:
         - ports:
             - port: "53"
-          rules:
-            dns:
-              - matchPattern: "*"
+              protocol: ANY
     - toEndpoints:
         - matchLabels:
             cnpg.io/cluster: postgres-1

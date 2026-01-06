@@ -8,5 +8,5 @@ resources:
   - ./it-tools/ks.yaml
   - ./web-check/ks.yaml
   - ./stirling-pdf/ks.yaml
-  - ./sec-tools/ks.yaml
+  #- ./sec-tools/ks.yaml # TODO: Finish networkpolicies
   - ./blog/ks.yaml

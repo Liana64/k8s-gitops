@@ -11,3 +11,4 @@ spec:
       image: alpine/curl
       command: ["/bin/sh", "-c", "--"]
       args: ["while true; do sleep 3600; done;"]
+# kubectl exec -n kube-system ds/cilium -- hubble observe --namespace test --verdict DROPPED -f

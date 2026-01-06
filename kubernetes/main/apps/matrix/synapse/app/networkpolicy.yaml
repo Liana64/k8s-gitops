@@ -35,7 +35,7 @@ spec:
       toPorts:
         - ports:
             - port: "53"
-              protocol: UDP
+              protocol: ANY
     - toEndpoints:
         - matchLabels:
             cnpg.io/cluster: postgres-1
@@ -66,6 +66,12 @@ spec:
       toPorts:
         - ports:
             - port: "8000"
+              protocol: TCP
+    - toEntities:
+        - world
+      toPorts:
+        - ports:
+            - port: "443"
               protocol: TCP
     #- toFQDNs:
     #    - matchPattern: "*.matrix.org"
