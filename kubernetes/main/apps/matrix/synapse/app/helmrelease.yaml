@@ -54,6 +54,7 @@ spec:
         - "/mautrix-meta/registration.yaml"
         - "/mautrix-linkedin/registration.yaml"
         - "/mautrix-twitter/registration.yaml"
+        #- "/mautrix-signal/registration.yaml"
       use_appservice_legacy_authorization: true
       #      url_preview_ip_range_blacklist:
       #        - "127.0.0.0/8"

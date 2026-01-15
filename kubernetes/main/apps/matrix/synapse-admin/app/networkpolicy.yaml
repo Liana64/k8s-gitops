@@ -26,4 +26,14 @@ spec:
       toPorts:
         - ports:
             - port: "53"
-              protocol: UDP
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: matrix-synapse
+      toPorts:
+        - ports:
+            - port: "8008"
+              protocol: TCP

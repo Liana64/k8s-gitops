@@ -10,6 +10,10 @@ spec:
     - fromEntities:
         - cluster
         - health
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
 ---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
@@ -28,4 +32,6 @@ spec:
       toPorts:
         - ports:
             - port: "8000"
+              protocol: TCP
+            - port: "8443"
               protocol: TCP

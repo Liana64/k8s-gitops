@@ -28,6 +28,17 @@ spec:
         - ports:
             - port: "53"
               protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: traefik
+            app.kubernetes.io/instance: traefik-networking
+      toPorts:
+        - ports:
+            - port: "8443"
+              protocol: TCP
     - toEndpoints:
         - matchLabels:
             cnpg.io/cluster: postgres-1
@@ -43,20 +54,14 @@ spec:
         - ports:
             - port: "8008"
               protocol: TCP
-    - toEntities:
-        - world
+    - toFQDNs:
+        - matchPattern: "discord.com"
+        - matchPattern: "*.discord.com"
+        - matchPattern: "*.discord.gg"
+        - matchPattern: "gateway.discord.gg"
+        - matchPattern: "*.discordapp.com"
+        - matchPattern: "*.discordapp.net"
       toPorts:
         - ports:
             - port: "443"
               protocol: TCP
-    # TODO: Fix this urgently
-    #- toFQDNs:
-    #    - matchPattern: "*.discord.com"
-    #    - matchPattern: "*.discord.gg"
-    #    - matchPattern: "gateway.discord.gg"
-    #    - matchPattern: "*.discordapp.com"
-    #    - matchPattern: "*.discordapp.net"
-    #  toPorts:
-    #    - ports:
-    #        - port: "443"
-    #          protocol: TCP

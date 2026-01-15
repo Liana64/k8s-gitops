@@ -28,6 +28,9 @@ spec:
         - ports:
             - port: "53"
               protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
     - toEndpoints:
         - matchLabels:
             cnpg.io/cluster: postgres-1
@@ -43,22 +46,18 @@ spec:
         - ports:
             - port: "8008"
               protocol: TCP
-    - toEntities:
-        - world
+    - toFQDNs:
+        - matchPattern: "facebook.com"
+        - matchPattern: "messenger.com"
+        - matchPattern: "instagram.com"
+        - matchPattern: "*.facebook.com"
+        - matchPattern: "*.messenger.com"
+        - matchPattern: "*.fbcdn.net"
+        - matchPattern: "*.instagram.com"
+        - matchPattern: "*.cdninstagram.com"
+        - matchPattern: "edge-chat.facebook.com"
+        - matchPattern: "mqtt-mini.facebook.com"
       toPorts:
         - ports:
             - port: "443"
               protocol: TCP
-    # TODO: Fix this urgently
-    #- toFQDNs:
-    #    - matchPattern: "*.facebook.com"
-    #    - matchPattern: "*.messenger.com"
-    #    - matchPattern: "*.fbcdn.net"
-    #    - matchPattern: "*.instagram.com"
-    #    - matchPattern: "*.cdninstagram.com"
-    #    - matchPattern: "edge-chat.facebook.com"
-    #    - matchPattern: "mqtt-mini.facebook.com"
-    #  toPorts:
-    #    - ports:
-    #        - port: "443"
-    #          protocol: TCP

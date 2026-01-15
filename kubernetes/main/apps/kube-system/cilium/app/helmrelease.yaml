@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: cilium
-      version: 1.18.5
+      version: 1.18.5 # https://github.com/cilium/cilium/issues/42046#issuecomment-3520323198 :(
       sourceRef:
         kind: HelmRepository
         name: cilium
@@ -25,11 +25,11 @@ spec:
     - kind: ConfigMap
       name: cilium-helm-values
   values:
+    # NOTE: Testing FQDN DNS resolution when `false`
     dnsProxy:
       enabled: true
-
-      # NOTE: Testing FQDN DNS resolution when `false`
       enableTransparentMode: true
+    l7Proxy: true
     hubble:
       enabled: true
       metrics:

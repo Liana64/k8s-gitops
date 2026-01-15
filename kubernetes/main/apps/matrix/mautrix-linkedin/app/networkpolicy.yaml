@@ -28,6 +28,9 @@ spec:
         - ports:
             - port: "53"
               protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
     - toEndpoints:
         - matchLabels:
             cnpg.io/cluster: postgres-1
@@ -43,18 +46,17 @@ spec:
         - ports:
             - port: "8008"
               protocol: TCP
-    - toEntities:
-        - world
-      toPorts:
-        - ports:
-            - port: "443"
-              protocol: TCP
-    # TODO: Fix this urgently
-    #- toFQDNs:
-    #    - matchPattern: "*.linkedin.com"
-    #    - matchPattern: "*.licdn.com"
-    #    - matchPattern: "realtime.www.linkedin.com"
+    #- toEntities:
+    #    - world
     #  toPorts:
     #    - ports:
     #        - port: "443"
     #          protocol: TCP
+    - toFQDNs:
+        - matchPattern: "*.linkedin.com"
+        - matchPattern: "*.licdn.com"
+        - matchPattern: "realtime.www.linkedin.com"
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP

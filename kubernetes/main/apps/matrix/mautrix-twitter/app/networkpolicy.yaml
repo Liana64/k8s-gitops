@@ -27,6 +27,9 @@ spec:
         - ports:
             - port: "53"
               protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
     - toEndpoints:
         - matchLabels:
             cnpg.io/cluster: postgres-1
@@ -42,19 +45,18 @@ spec:
         - ports:
             - port: "8008"
               protocol: TCP
-    - toEntities:
-        - world
+    - toFQDNs:
+        - matchPattern: "x.com"
+        - matchPattern: "twitter.com"
+        - matchPattern: "twttr.net"
+        - matchPattern: "twttr.com"
+        - matchPattern: "*.twttr.net"
+        - matchPattern: "*.twttr.com"
+        - matchPattern: "*.x.com"
+        - matchPattern: "*.twitter.com"
+        - matchPattern: "*.twimg.com"
+        - matchPattern: "api.x.com"
       toPorts:
         - ports:
             - port: "443"
               protocol: TCP
-    # TODO: Fix this urgently
-    #- toFQDNs:
-    #    - matchPattern: "*.x.com"
-    #    - matchPattern: "*.twitter.com"
-    #    - matchPattern: "*.twimg.com"
-    #    - matchPattern: "api.x.com"
-    #  toPorts:
-    #    - ports:
-    #        - port: "443"
-    #          protocol: TCP
