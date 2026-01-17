@@ -31,14 +31,14 @@ spec:
           rules:
             dns:
               - matchPattern: "*"
-    - toEndpoints:
-        - matchLabels:
-            app.kubernetes.io/name: traefik
-            app.kubernetes.io/instance: traefik-networking
-      toPorts:
-        - ports:
-            - port: "8443"
-              protocol: TCP
+    #- toEndpoints:
+    #    - matchLabels:
+    #        app.kubernetes.io/name: traefik
+    #        app.kubernetes.io/instance: traefik-external-networking
+    #  toPorts:
+    #    - ports:
+    #        - port: "8443"
+    #          protocol: TCP
     - toEndpoints:
         - matchLabels:
             cnpg.io/cluster: postgres-1

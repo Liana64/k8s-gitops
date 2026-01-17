@@ -25,14 +25,28 @@ spec:
               repository: ghcr.io/liana64/postgres-init
               tag: 16
             env:
+              - name: INIT_POSTGRES_HOST
+                value: "postgres-1-rw.database.svc.cluster.local"
               - name: INIT_POSTGRES_SUPER_PASS
                 valueFrom:
                   secretKeyRef:
                     name: cloudnative-pg-secret
                     key: password
-            envFrom:
-              - secretRef:
-                  name: mautrix-discord-db-secret
+              - name: INIT_POSTGRES_DBNAME
+                valueFrom:
+                  secretKeyRef:
+                    name: mautrix-discord-secret
+                    key: MAUTRIX_DISCORD_POSTGRES_DB
+              - name: INIT_POSTGRES_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: mautrix-discord-secret
+                    key: MAUTRIX_DISCORD_POSTGRES_USER
+              - name: INIT_POSTGRES_PASS
+                valueFrom:
+                  secretKeyRef:
+                    name: mautrix-discord-secret
+                    key: MAUTRIX_DISCORD_POSTGRES_PASSWORD
         containers:
           app:
             image:
