@@ -12,4 +12,4 @@ resources:
   - ./mautrix-meta/ks.yaml
   - ./mautrix-linkedin/ks.yaml
   - ./mautrix-twitter/ks.yaml
-  #- ./mautrix-signal/ks.yaml
+  - ./mautrix-signal/ks.yaml
