@@ -1,0 +1,125 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app lldap
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: flux-system
+  values:
+    controllers:
+      lldap:
+        replicas: 1
+        strategy: RollingUpdate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/liana64/postgres-init
+              tag: 16
+            env:
+              - name: INIT_POSTGRES_HOST
+                value: "postgres-1-rw.database.svc.cluster.local"
+              - name: INIT_POSTGRES_SUPER_PASS
+                valueFrom:
+                  secretKeyRef:
+                    name: cloudnative-pg-secret
+                    key: password
+              - name: INIT_POSTGRES_DBNAME
+                valueFrom:
+                  secretKeyRef:
+                    name: lldap-secret
+                    key: LLDAP_POSTGRES_DB
+              - name: INIT_POSTGRES_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: lldap-secret
+                    key: LLDAP_POSTGRES_USER
+              - name: INIT_POSTGRES_PASS
+                valueFrom:
+                  secretKeyRef:
+                    name: lldap-secret
+                    key: LLDAP_POSTGRES_PASSWORD
+        containers:
+          app:
+            image:
+              repository: ghcr.io/lldap/lldap
+              tag: 2026-01-06-alpine-rootless@sha256:824adeb6f765994d09ab2b28b7a5656c13f6d5fbd311b6f6039f07b99f2b3b0e
+            env:
+              LLDAP_HTTP_PORT: &httpPort 8080
+              LLDAP_LDAP_PORT: &ldapPort 1389
+              LLDAP_LDAP_BASE_DN: dc=lianalabs,dc=arpa
+              LLDAP_HTTP_URL: https://{{ .Release.Name }}.${SECRET_DOMAIN}
+              LLDAP_SMTP_OPTIONS__ENABLE_PASSWORD_RESET: false
+            envFrom:
+              - secretRef:
+                  name: lldap-secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *httpPort
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: false
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 256Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+        pod:
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            runAsNonRoot: true
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
+    ingress:
+      app:
+        className: traefik
+        annotations:
+          cert-manager.io/cluster-issuer: "letsencrypt-production"
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Services
+          gethomepage.dev/name: LLDAP
+          gethomepage.dev/description: LDAP server
+          gethomepage.dev/icon: mdi-account-key
+        hosts:
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - secretName: lldap-tls
+            hosts: [*host]
+    persistence:
+      data:
+        type: emptyDir
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *httpPort
+          ldap:
+            port: *ldapPort

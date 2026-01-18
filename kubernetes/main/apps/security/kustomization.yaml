@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./anubis/ks.yaml
+  - ./lldap/ks.yaml
