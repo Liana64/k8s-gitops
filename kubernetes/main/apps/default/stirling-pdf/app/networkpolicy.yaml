@@ -2,16 +2,23 @@
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: default-deny
+  name: stirling-pdf
   namespace: default
 spec:
-  endpointSelector: {}
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: stirling-pdf
   ingress:
-    - fromEntities:
-        - health
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: networking
+            app.kubernetes.io/name: traefik
+            app.kubernetes.io/instance: traefik-networking
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
   egress:
-    - toEntities:
-        - health
     - toEndpoints:
         - matchLabels:
             io.kubernetes.pod.namespace: kube-system
