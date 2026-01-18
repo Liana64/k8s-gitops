@@ -5,4 +5,5 @@ kind: Kustomization
 resources:
   - ./secret.sops.yaml
   - ./helmrelease.yaml
+  - ./networkpolicy.yaml
   - ../../../database/cloudnative-pg/app/secret.sops.yaml

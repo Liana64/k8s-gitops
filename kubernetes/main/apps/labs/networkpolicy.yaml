@@ -3,7 +3,7 @@ apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: default-deny
-  namespace: matrix
+  namespace: labs
 spec:
   endpointSelector: {}
   ingress:
@@ -18,17 +18,17 @@ spec:
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: allow-traefik-to-bridges
-  namespace: matrix
+  name: allow-traefik
+  namespace: labs
 spec:
   endpointSelector:
     matchLabels:
-      app.kubernetes.io/component: matrix-bridge
+      io.kubernetes.pod.namespace: labs
   ingress:
     - fromEndpoints:
         - matchLabels:
             app.kubernetes.io/name: traefik
-            app.kubernetes.io/instance: traefik-external-networking
+            app.kubernetes.io/instance: traefik-networking
       toPorts:
         - ports:
             - port: "8000"

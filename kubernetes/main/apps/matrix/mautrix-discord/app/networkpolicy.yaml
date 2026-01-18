@@ -61,6 +61,7 @@ spec:
         - matchPattern: "gateway.discord.gg"
         - matchPattern: "*.discordapp.com"
         - matchPattern: "*.discordapp.net"
+        - matchPattern: "discord-attachments-uploads-prd.storage.googleapis.com"
       toPorts:
         - ports:
             - port: "443"
