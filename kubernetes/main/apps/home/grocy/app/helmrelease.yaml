@@ -1,0 +1,111 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: grocy
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: flux-system
+  interval: 30m
+  values:
+    controllers:
+      grocy:
+        pod:
+          securityContext:
+            #runAsUser: 1000
+            #runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: "OnRootMismatch"
+            seccompProfile:
+              type: RuntimeDefault
+        containers:
+          app:
+            image:
+              repository: lscr.io/linuxserver/grocy
+              tag: 4.5.0@sha256:b54ce832dadc8e6fac6cc8d8f0d5f1c32b54da2e2d7605ac203a3683523f31b3
+            # TODO: Make my own container
+            #securityContext:
+            #  allowPrivilegeEscalation: false
+            #  readOnlyRootFilesystem: true
+            #  capabilities:
+            #    drop: ["ALL"]
+            env:
+              PUID: 1000
+              PGID: 1000
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &port 80
+                  initialDelaySeconds: 30
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: *port
+                  initialDelaySeconds: 10
+                  periodSeconds: 5
+                  timeoutSeconds: 3
+                  failureThreshold: 30
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+
+    service:
+      app:
+        controller: grocy
+        ports:
+          http:
+            port: *port
+
+    ingress:
+      app:
+        className: traefik
+        annotations:
+          cert-manager.io/cluster-issuer: "letsencrypt-production"
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Home
+          gethomepage.dev/name: Grocy
+          gethomepage.dev/description: Household management
+          gethomepage.dev/icon: grocy
+        hosts:
+          - host: &host "grocy.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - hosts:
+              - *host
+            secretName: "grocy-tls"
+
+    persistence:
+      config:
+        storageClass: cluster-nvme
+        accessMode: ReadWriteOnce
+        size: 8Gi
+        globalMounts:
+          - path: /config
+      run:
+        type: emptyDir
+        globalMounts:
+          - path: /run
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
