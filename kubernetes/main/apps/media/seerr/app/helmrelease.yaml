@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: jellyseerr
+  name: seerr
 spec:
   interval: 1h
   chartRef:
@@ -12,13 +12,13 @@ spec:
     namespace: flux-system
   values:
     controllers:
-      jellyseerr:
+      seerr:
         strategy: RollingUpdate
         containers:
           app:
             image:
-              repository: ghcr.io/fallenbagel/jellyseerr
-              tag: 2.7.3@sha256:9cc9e9ee6cd5cf5a23feb45c37742ba34cfd6314d81d259cddb373a97ac92cdd
+              repository: ghcr.io/seerr-team/seerr
+              tag: 3.0.1@sha256:1b5fc1ea825631d9d165364472663b817a4c58ef6aa1013f58d82c1570d7c866
             env:
               TZ: ${TIMEZONE}
               PORT: &port 5055
@@ -51,7 +51,7 @@ spec:
         seccompProfile: { type: RuntimeDefault }
     service:
       app:
-        controller: jellyseerr
+        controller: seerr
         ports:
           http:
             port: *port
@@ -66,10 +66,10 @@ spec:
           traefik.ingress.kubernetes.io/router.middlewares: "networking-traefik-middleware-chain-no-auth-anubis@kubernetescrd"
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Media
-          gethomepage.dev/name: Jellyseerr
+          gethomepage.dev/name: seerr
           gethomepage.dev/description: Media requests
-          gethomepage.dev/icon: jellyseerr
-          #gethomepage.dev/widget.type: "jellyseerr"
+          gethomepage.dev/icon: seerr
+          #gethomepage.dev/widget.type: "seerr"
           #gethomepage.dev/widget.key: "${HOMEPAGE_VAR_JELLYSEERR_API_KEY}"
           #gethomepage.dev/widget.url: &host "requests.${SECRET_EXTERNAL_DOMAIN}"
         hosts:
@@ -100,7 +100,7 @@ spec:
       tmp:
         type: emptyDir
         advancedMounts:
-          jellyseerr:
+          seerr:
             app:
               - path: /app/config/logs
                 subPath: logs
