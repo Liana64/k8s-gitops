@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env/bash
 
 # Improved version of brettinternet's wip.sh
 # https://github.com/brettinternet/homeops/blob/main/scripts/wip.sh

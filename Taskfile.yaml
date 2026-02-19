@@ -6,7 +6,7 @@ vars:
   KUBECONFIG_FILE: "{{.ROOT_DIR}}/kubeconfig"
   SCRIPTS_DIR: "{{.ROOT_DIR}}/scripts"
   SOPS_CONFIG_FILE: "{{.ROOT_DIR}}/.sops.yaml"
-  AGE_DIR: /Users/liana/.config/sops/age
+  AGE_DIR: "/home/liana/.config/sops/age"
   AGE_FILE: "{{.AGE_DIR}}/lianalabs.key"
   CLUSTER: "main"
   CLUSTER_NAME: "lianalabs"

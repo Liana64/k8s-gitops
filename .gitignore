@@ -5,6 +5,7 @@ tmp
 .task
 Brewfile.lock.json
 *.log
+*.bak
 
 # Kubernetes
 kubeconfig
