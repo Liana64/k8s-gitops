@@ -62,12 +62,12 @@ spec:
           mqtt:
             port: 1883
     persistence:
-      config:
+      data:
         storageClass: cluster-nvme
         accessMode: ReadWriteOnce
         size: 512Mi
         globalMounts:
-          - path: /config
+          - path: /data
       config-file:
         type: configMap
         identifier: config
