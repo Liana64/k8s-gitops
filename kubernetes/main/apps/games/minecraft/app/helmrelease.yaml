@@ -1,0 +1,149 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app minecraft
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: flux-system
+  interval: 30m
+  values:
+    controllers:
+      minecraft:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/itzg/minecraft-server
+              tag: 2026.1.2@sha256:b27a382b660ffee91866c1441ca3f2166461921bff4284c48674e0d143c5f6fb
+            env:
+              EULA: true
+              SERVER_NAME: Shoujo Magical Gamers
+              MOTD: "Minecraft Server"
+              MAX_PLAYERS: 16
+              MODE: survival
+              VERSION: "1.21.10"
+              DIFFICULTY: normal
+              LEVEL: world
+              MEMORY: 8192M
+              JVM_XX_OPTS: "-XX:MaxRAMPercentage=75"
+              ENABLE_WHITELIST: true
+              MAX_TICK_TIME: -1
+              MAX_WORLD_SIZE: 29999984
+              VIEW_DISTANCE: 12
+              MAX_BUILD_HEIGHT: 320
+              SPAWN_PROTECTION: 0
+              ENABLE_AUTOPAUSE: true
+              AUTOPAUSE_TIMEOUT_EST: 600
+              AUTOPAUSE_TIMEOUT_INIT: 300
+              FORCE_GAMEMODE: true
+              OVERRIDE_ICON: true
+              ICON: https://i.ibb.co/q7PkGt4/shoujomagical.png
+              TYPE: FABRIC
+              #FABRIC_LAUNCHER_VERSION: 1.1.1
+              #FABRIC_LOADER_VERSION: 0.16.9
+              CURSEFORGE_FILES: |
+                balm-fabric:5848095
+                collective:5847007
+                glitchcore:5884524
+                fabric-api:5937030
+                cristel-lib:5871655
+                advanced-shulkerboxes:5850153
+                waystones:5841762
+                serene-seasons:5861336
+                mouse-tweaks:5856191
+                towns-and-towers:5871683
+                gui-clock:5847307
+                gui-compass:5847304
+                hand-over-your-items:5847302
+                husk-spawn:5847275
+                pet-names:5847197
+                stray-spawn:5847085
+                villager-names:5847043
+                dismount-entity:5847382
+                stack-refill:5847097
+                bottled-air:5847458
+                cave-spider-spawn:5847436
+                areas:5847486
+                spark:5924846
+                chat-heads:5902516
+                first-join-message:5847342
+              #              OPS:
+              #                valueFrom:
+              #                  secretKeyRef:
+              #                    name: minecraft-secret
+              #                    key: OPS
+              #              WHITELIST:
+              #                valueFrom:
+              #                  secretKeyRef:
+              #                    name: minecraft-secret
+              #                    key: WHITELIST
+              #              CF_API_KEY:
+              #                valueFrom:
+              #                  secretKeyRef:
+              #                    name: minecraft-secret
+              #                    key: CF_API_KEY
+            envFrom:
+              - secretRef:
+                  name: minecraft-secret
+            resources:
+              requests:
+                cpu: 100m
+                memory: 100Mi
+              limits:
+                memory: 8192Mi
+            securityContext:
+              allowPrivilegeEscalation: true
+              readOnlyRootFilesystem: true
+              capabilities:
+                add: ["NET_RAW"]
+                drop: ["ALL"]
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  periodSeconds: 60
+                  exec: &probeexec { command: ["mc-health"] }
+              readiness: *probe
+              startup:
+                <<: *probe
+                spec:
+                  initialDelaySeconds: 30
+                  periodSeconds: 1
+                  failureThreshold: 300
+                  exec: *probeexec
+        pod:
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            fsGroup: 1000
+            fsGroupChangePolicy: Always
+    service:
+      app:
+        controller: minecraft
+        annotations:
+          external-dns.alpha.kubernetes.io/hostname: "shoujo.${SECRET_EXTERNAL_DOMAIN}"
+          external-dns.alpha.kubernetes.io/target: "mc-router.${SECRET_EXTERNAL_DOMAIN}"
+          mc-router.itzg.me/externalServerName: shoujo.${SECRET_EXTERNAL_DOMAIN}
+        ports:
+          minecraft:
+            port: 25565
+    persistence:
+      data:
+        storageClass: nvme-fast
+        accessMode: ReadWriteOnce
+        size: 64Gi
+        retain: true
+        globalMounts:
+          - path: /data
+      tmp:
+        type: emptyDir
+        medium: Memory
+        globalMounts:
+          - path: /tmp
