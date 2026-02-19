@@ -5,11 +5,11 @@
         siteMonitor: https://edge.${SECRET_DOMAIN}
         icon: opnsense
         description: Edge networking
-#        widget:
-#          type: opnsense
-#          url: https://opnsense.${SECRET_OLD_DOMAIN}
-#          username: "{{HOMEPAGE_VAR_OPNSENSE_API_KEY}}"
-#          password: "{{HOMEPAGE_VAR_OPNSENSE_API_SECRET}}"
+    - Unifi:
+        href: https://oob.${SECRET_DOMAIN}:8443
+        siteMonitor: https://oob.${SECRET_DOMAIN}:8443
+        icon: unifi
+        description: Unifi Controller
 - Devices:
     - n1:
         href: http://ms-01.${SECRET_DOMAIN}:8006

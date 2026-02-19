@@ -50,7 +50,7 @@ spec:
           app:
             image:
               repository: ghcr.io/liana64/mautrix-signal
-              tag: rolling@sha256:029955ab4dc1ceee5dd6c8aa87302f4efe4ce2ed63949a4c6cd407e8bd3976bf
+              tag: rolling@sha256:b901bef03a91f71cfe1cb1e3af2d26b48f43425a3a6085c353d3a01dd837e545
             env:
               CONFIG_FILE: "/data/config.yaml"
               REGISTRATION_FILE: "/data/registration.yaml"
