@@ -1,14 +1,14 @@
-# 🧪 k8s-gitops
+# k8s-gitops
 
-**Liana Laboratories Self-Hosting Initiative**
+This is my kubernetes homelab, currently running on a cluster of MinisForum devices.
 
-This is my Kubernetes homelab, currently running on a MinisForum ms-01. Feel free to have a look around and adapt however you want!
+<details>
+  <summary>Click here to see my high-level network diagram</summary>
 
-**Are you an aspiring homelabber?**
+  <img src="https://raw.githubusercontent.com/Liana64/k8s-gitops/refs/heads/main/docs/homelab.jpg" align="center" width="600px" alt="Network Diagram" />
+</details>
 
-Have a look at onedr0p's [cluster-template](https://github.com/onedr0p/cluster-template), [kubesearch](https://kubesearch.dev/), and [selfh.st](https://selfh.st/) for inspiration!
-
-## 📌 Features
+## Features (Old)
 
 - [Talos](https://github.com/siderolabs/talos) OS for immutability, security, performance, ease-of-use. For my homelab, I've deployed this on Proxmox so I'm using nocloud, but for a bare metal install there are a lot of great tools you can use
 - Automation, including GitOps using [FluxCD](https://github.com/fluxcd/flux2), [Reloader](https://github.com/stakater/Reloader), and other deployments
@@ -25,7 +25,7 @@ Have a look at onedr0p's [cluster-template](https://github.com/onedr0p/cluster-t
 - Many self-hosted deployments, including a [Homepage](https://github.com/gethomepage/homepage), game servers, and a media stack
 - Taskfiles ([go-task](https://taskfile.dev/)) and scripts for ease-of-use
 
-## ✅ Requirements
+## Requirements
 
 - [Taskfile](https://taskfile.dev/)
 - [Direnv](https://github.com/direnv/direnv)
@@ -34,6 +34,8 @@ Have a look at onedr0p's [cluster-template](https://github.com/onedr0p/cluster-t
 - [SOPS](https://github.com/getsops/sops)
 - [age](https://github.com/FiloSottile/age)
 
-## 🏆 Credit
+## Credit
 
-Thank you [bjw-s](https://github.com/bjw-s/helm-charts) for the incredible app-template helmchart, and [brettinternet](https://github.com/brettinternet/homeops) for so much inspiration, and for making your taskfiles/scripts/helmfile publically available for adaptation!
+- [bjw-s](https://github.com/bjw-s/helm-charts) for app-template
+- [brettinternet](https://github.com/brettinternet/homeops) for inspiration
+- [onedr0p](https://github.com/onedr0p/home-ops) for inspiration
