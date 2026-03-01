@@ -1,67 +1,55 @@
 ---
 # yaml-language-server: $schema=schemas/talconfig.json
 
-# renovate: datasource=docker depName=ghcr.io/siderolabs/installer
-talosVersion: v1.12.0
-# renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
-kubernetesVersion: v1.35.0
+# renovate: datasource=docker depname=ghcr.io/siderolabs/installer
+talosversion: v1.12.4
+# renovate: datasource=docker depname=ghcr.io/siderolabs/kubelet
+kubernetesversion: v1.35.0
 
-clusterName: &clusterName lianalabs
+clustername: &clustername milberry
 
 endpoint: https://172.16.4.10:6443
-clusterPodNets: ["10.244.0.0/16"]
-clusterSvcNets: ["10.86.0.0/16"]
+clusterpodnets: ["10.244.0.0/16"]
+clustersvcnets: ["10.86.0.0/16"]
 
-additionalApiServerCertSans: &sans
-  - &kubeApiIP "172.16.4.10"
-  - 127.0.0.1 # KubePrism
-additionalMachineCertSans: *sans
+additionalapiservercertsans: &sans
+  - &kubeapiip "172.16.4.10"
+  - 127.0.0.1 # kubeprism
+additionalmachinecertsans: *sans
 
 nodes:
   - hostname: n1
-    controlPlane: true
-    ipAddress: 172.16.4.11
-    installDiskSelector: &nvmeDisk
-      size: < 200GB
-    networkInterfaces:
+    controlplane: true
+    ipaddress: 172.16.4.11
+    installdiskselector: &bootdisk
+      size: < 200gb
+    networkinterfaces:
       - interface: eth0
         dhcp: true
         vip:
-          ip: *kubeApiIP
-    # https://factory.talos.dev/?arch=amd64&board=undefined&bootloader=auto&cmdline-set=true&extensions=-&extensions=siderolabs%2Fcrun&extensions=siderolabs%2Fqemu-guest-agent&extensions=siderolabs%2Fthunderbolt&platform=nocloud&secureboot=undefined&target=cloud&version=1.12.0
-    # https://factory.talos.dev/?arch=amd64&bootloader=auto&cmdline=-console+console%3Dtty0&cmdline-set=true&extensions=-&extensions=siderolabs%2Fqemu-guest-agent&extensions=siderolabs%2Fthunderbolt&platform=nocloud&secureboot=true&target=cloud&version=1.12.0
-    talosImageURL: &talosMinimalImage factory.talos.dev/nocloud-installer-secureboot/650b29344f1a1cb82b40720354a44a0b6ce2037dcae47472ddacad7dd891a1eb
-    schematic: &schematicMinimal
+          ip: *kubeapiip
+      - interface: eth1
+        addresses:
+          - 10.10.10.11/24
+    # https://factory.talos.dev/?arch=amd64&board=undefined&bootloader=sd-boot&cmdline=-console+console%3dtty0&cmdline-set=true&extensions=-&extensions=siderolabs%2fqemu-guest-agent&extensions=siderolabs%2fthunderbolt&platform=nocloud&secureboot=true&target=cloud&version=1.12.4
+    talosimageurl: &talosminimalimage factory.talos.dev/nocloud-installer-secureboot/650b29344f1a1cb82b40720354a44a0b6ce2037dcae47472ddacad7dd891a1eb
+    schematic: &schematicminimal
       customization:
-        extraKernelArgs:
+        extrakernelargs:
           - -console
           - console=tty0
-        systemExtensions:
-          officialExtensions:
+        systemextensions:
+          officialextensions:
             - siderolabs/qemu-guest-agent
             - siderolabs/thunderbolt
-    patches:
+    patches: &zfspatches
       - |
         machine:
           kubelet:
-            extraMounts:
-              - destination: /var/mnt/nvme-1
+            extramounts:
+              - destination: /var/mnt/local-pool
                 type: bind
-                source: /var/mnt/nvme-1
-                options:
-                  - bind
-                  - rshared
-                  - rw
-              - destination: /var/mnt/nvme-2
-                type: bind
-                source: /var/mnt/nvme-2
-                options:
-                  - bind
-                  - rshared
-                  - rw
-              - destination: /var/mnt/nvme-3
-                type: bind
-                source: /var/mnt/nvme-3
+                source: /var/mnt/local-pool
                 options:
                   - bind
                   - rshared
@@ -69,19 +57,29 @@ nodes:
           disks:
             - device: /dev/sdb
               partitions:
-                - mountpoint: /var/mnt/nvme-1
-            - device: /dev/sdc
-              partitions:
-                - mountpoint: /var/mnt/nvme-2
-            - device: /dev/sdd
-              partitions:
-                - mountpoint: /var/mnt/nvme-3
-    nodeLabels:
-      hardware/manufacturer: "MinisForum"
-      hardware/model: "MS-01"
+                - mountpoint: /var/mnt/local-pool
+    nodelabels: &ms01cluster
+      hardware/manufacturer: "minisforum"
+      hardware/model: "ms-01"
       node-role.kubernetes.io/control-plane: "control-plane"
       topology.kubernetes.io/region: &region "us-central"
-      topology.kubernetes.io/zone: *clusterName
+      topology.kubernetes.io/zone: *clustername
+  - hostname: n2
+    controlplane: true
+    ipaddress: 172.16.4.12
+    installdiskselector: *bootdisk
+    networkinterfaces:
+      - interface: eth0
+        dhcp: true
+        vip:
+          ip: *kubeapiip
+      - interface: eth1
+        addresses:
+          - 10.10.10.12/24
+    talosimageurl: *talosminimalimage
+    schematic: *schematicminimal
+    patches: *zfspatches
+    nodelabels: *ms01cluster
 
 patches:
   - "@./patches/global/time.yaml"
@@ -93,7 +91,7 @@ patches:
   - "@./patches/global/sysctls.yaml"
   - "@./patches/global/luks2.yaml"
 
-controlPlane:
+controlplane:
   patches:
     - "@./patches/control/cluster.yaml"
     - "@./patches/control/api-access.yaml"

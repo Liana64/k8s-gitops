@@ -7,4 +7,5 @@ machine:
       rotate-server-certificates: true
     nodeIP:
       validSubnets:
-        - 172.16.4.0/24
+        #- 172.16.4.0/24
+        - 10.10.10.0/24 # Use thunderbolt interconnect for data plane
