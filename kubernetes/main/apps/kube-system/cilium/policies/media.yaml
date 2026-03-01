@@ -67,12 +67,12 @@ spec:
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: allow-traefik-external-to-jellyseerr
+  name: allow-traefik-external-to-seerr
   namespace: media
 spec:
   endpointSelector:
     matchLabels:
-      app.kubernetes.io/name: jellyseerr
+      app.kubernetes.io/name: seerr
   ingress:
     - fromEndpoints:
         - matchLabels:
@@ -109,12 +109,12 @@ spec:
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: allow-jellyseerr
+  name: allow-seerr
   namespace: media
 spec:
   endpointSelector:
     matchLabels:
-      app.kubernetes.io/name: jellyseerr
+      app.kubernetes.io/name: seerr
   egress:
     - toEndpoints:
         - matchLabels:
@@ -219,7 +219,7 @@ spec:
               protocol: TCP
     - fromEndpoints:
         - matchLabels:
-            app.kubernetes.io/name: jellyseerr
+            app.kubernetes.io/name: seerr
       toPorts:
         - ports:
             - port: "7878"

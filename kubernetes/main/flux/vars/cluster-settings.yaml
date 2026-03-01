@@ -7,7 +7,7 @@ metadata:
 data:
   TIMEZONE: America/Chicago
   LETSENCRYPT_ENVIRONMENT: production
-  CLUSTER_NAME: lianalabs
+  CLUSTER_NAME: milberry
 
   CLUSTER_CIDR: "10.244.0.0/16"
   SERVICE_CIDR: "10.86.0.0/16"

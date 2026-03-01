@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ./app-template.yaml
   - ./external-secrets.yaml
+  - ./kopia.yaml
   - ./spegel.yaml
   - ./ess-matrix.yaml
   - ./matrix-synapse.yaml
