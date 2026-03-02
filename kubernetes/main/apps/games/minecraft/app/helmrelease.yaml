@@ -136,7 +136,7 @@ spec:
             port: 25565
     persistence:
       data:
-        storageClass: nvme-fast
+        storageClass: cluster-nvme
         accessMode: ReadWriteOnce
         size: 64Gi
         retain: true

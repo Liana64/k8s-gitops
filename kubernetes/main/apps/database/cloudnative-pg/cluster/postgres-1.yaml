@@ -4,12 +4,12 @@ kind: Cluster
 metadata:
   name: postgres-1
 spec:
-  instances: 1
+  instances: 2
   imageName: ghcr.io/cloudnative-pg/postgresql:17.0-30
   primaryUpdateStrategy: unsupervised
   storage:
     size: 128Gi
-    storageClass: nvme-fast
+    storageClass: cluster-nvme
   superuserSecret:
     name: cloudnative-pg-secret
   enableSuperuserAccess: true

@@ -47,6 +47,15 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
     defaultPodOptions:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - "n2"
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -103,9 +112,9 @@ spec:
     persistence:
       # TODO: volsync
       data:
-        storageClass: nvme-fast
+        storageClass: cluster-nvme
         accessMode: ReadWriteOnce
-        size: 800Gi
+        size: 700Gi
         retain: true
         globalMounts:
           - path: /var/syncthing

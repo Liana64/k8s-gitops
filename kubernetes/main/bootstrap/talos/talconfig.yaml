@@ -6,7 +6,7 @@ talosversion: v1.12.4
 # renovate: datasource=docker depname=ghcr.io/siderolabs/kubelet
 kubernetesversion: v1.35.0
 
-clustername: &clustername milberry
+clusterName: &clustername milberry
 
 endpoint: https://172.16.4.10:6443
 clusterpodnets: ["10.244.0.0/16"]
@@ -20,8 +20,8 @@ additionalmachinecertsans: *sans
 nodes:
   - hostname: n1
     controlplane: true
-    ipaddress: 172.16.4.11
-    installdiskselector: &bootdisk
+    ipAddress: 172.16.4.11
+    installDiskSelector: &bootdisk
       size: < 200gb
     networkinterfaces:
       - interface: eth0
@@ -46,7 +46,7 @@ nodes:
       - |
         machine:
           kubelet:
-            extramounts:
+            extraMounts:
               - destination: /var/mnt/local-pool
                 type: bind
                 source: /var/mnt/local-pool
@@ -66,8 +66,8 @@ nodes:
       topology.kubernetes.io/zone: *clustername
   - hostname: n2
     controlplane: true
-    ipaddress: 172.16.4.12
-    installdiskselector: *bootdisk
+    ipAddress: 172.16.4.12
+    installDiskSelector: *bootdisk
     networkinterfaces:
       - interface: eth0
         dhcp: true

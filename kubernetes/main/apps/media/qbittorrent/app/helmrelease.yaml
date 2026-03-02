@@ -134,6 +134,16 @@ spec:
               capabilities:
                 drop:
                   - ALL
+    defaultPodOptions:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - "n1"
     service:
       app:
         controller: qbittorrent
@@ -180,9 +190,9 @@ spec:
             port-forward:
               - path: /config
       media:
-        storageClass: nvme-large
+        storageClass: cluster-nvme
         accessMode: ReadWriteOnce
-        size: 1900Gi
+        size: 512Gi
         retain: true
         advancedMounts:
           qbittorrent:
