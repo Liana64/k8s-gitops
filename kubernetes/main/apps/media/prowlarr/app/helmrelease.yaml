@@ -26,7 +26,7 @@ spec:
           app:
             image:
               repository: ghcr.io/liana64/prowlarr-develop
-              tag: 2.3.0@sha256:df5750e46d71aac3c9d008a049f3317bee51473e608406382ee35d9de750f669
+              tag: 2.3.2@sha256:553cb7fd675753d9d1bdeb67da3182ae8cea1c43c05e47da5c8e9a0d8c2c486e
             env:
               COMPlus_EnableDiagnostics: "0"
               PROWLARR__INSTANCE_NAME: Prowlarr

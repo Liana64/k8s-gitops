@@ -28,7 +28,7 @@ spec:
           app:
             image:
               repository: ghcr.io/liana64/radarr-develop
-              tag: 6.0.4@sha256:e3ec6e3e84a522d671ddc87d00299eb34967f4406b40109983f335efafbee623
+              tag: 6.1.1@sha256:f3fc13b7969858a1b40a6356044868e3da1a760da0716681775492a5549bf4de
             env:
               COMPlus_EnableDiagnostics: "0"
               RADARR__INSTANCE_NAME: Radarr
