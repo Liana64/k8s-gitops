@@ -51,10 +51,9 @@ spec:
     ingressRoute:
       dashboard:
         enabled: false
-    globalArguments:
+    additionalArguments:
       - "--serversTransport.insecureSkipVerify=true"
       - "--global.sendanonymoususage=false"
-    additionalArguments:
       - "--entrypoints.web.transport.respondingTimeouts.readTimeout=0"
       - "--entrypoints.websecure.transport.respondingTimeouts.readTimeout=0"
     ports:
@@ -62,15 +61,13 @@ spec:
         expose:
           default: false
       web:
-        redirections:
-          entryPoint:
-            to: websecure
-            scheme: https
-            permanent: true
+        redirectTo:
+          port: websecure
       websecure:
-        tls:
-          enabled: true
-          options: default
+        asDefault: true
+        transport:
+          respondingTimeouts:
+            readTimeout: 0
         forwardedHeaders:
           trustedIPs:
             - 10.0.0.0/8
