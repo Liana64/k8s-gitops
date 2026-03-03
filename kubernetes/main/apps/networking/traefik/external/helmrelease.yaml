@@ -61,8 +61,11 @@ spec:
         expose:
           default: false
       web:
-        redirectTo:
-          port: websecure
+        http:
+          redirections:
+            entryPoint:
+              to: websecure
+              scheme: https
       websecure:
         asDefault: true
         transport:
@@ -132,8 +135,6 @@ spec:
         entryPoint: metrics
         service:
           enabled: true
-    pilot:
-      enabled: false
     providers:
       kubernetesCRD:
         enabled: true
