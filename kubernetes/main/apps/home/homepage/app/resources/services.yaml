@@ -15,7 +15,12 @@
         href: http://ms-01.${SECRET_DOMAIN}:8006
         siteMonitor: http://ms-01.${SECRET_DOMAIN}:8006
         icon: proxmox
-        description: ms-01
+        description: Node 1
+    - n2:
+        href: http://n2.${SECRET_DOMAIN}:8006
+        siteMonitor: http://n2.${SECRET_DOMAIN}:8006
+        icon: proxmox
+        description: Node 2
     - SLZB06:
         href: http://slzb.${SECRET_DOMAIN}
         siteMonitor: http://slzb.${SECRET_DOMAIN}
