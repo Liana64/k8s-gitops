@@ -1,6 +1,6 @@
 # k8s-gitops
 
-This is my kubernetes homelab, currently running on a cluster of MinisForum devices.
+This is my kubernetes homelab, currently running on a cluster of MinisForum devices. Photos to be added when I finish the enclosure.
 
 <details>
   <summary>Click here to see my high-level network diagram</summary>
@@ -14,15 +14,15 @@ This is my kubernetes homelab, currently running on a cluster of MinisForum devi
 - Automation, including GitOps using [FluxCD](https://github.com/fluxcd/flux2), [Reloader](https://github.com/stakater/Reloader), and other deployments
 - Local OCI registry mirror using [spegel](https://github.com/spegel-org/spegel)
 - [Cert-manager](https://github.com/cert-manager/cert-manager) with LetsEncrypt and DNS authorization
-- [Cilium](https://github.com/cilium/cilium) container networking and CoreDNS
-- Secrets encrypted using [SOPS](https://github.com/getsops/sops) and stored with git (I don't think there are enough qubits for this to ever matter, but if I'm wrong, oh well!)
-- OIDC authentication with [Authelia](https://github.com/authelia/authelia) and [LLDAP](https://github.com/lldap/lldap)
-- [Traefik](https://github.com/traefik/traefik) ingresses with security measures
-- Databases for [Cloudnative PG](https://github.com/cloudnative-pg/cloudnative-pg), [MinIO](https://min.io/), [Dragonfly](https://github.com/dragonflydb/dragonfly), and even [MS SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)!
-- Storage using [OpenEBS](https://github.com/openebs/openebs) (I didn't have great experiences with NVMe over TCP, i.e. Mayastor, but that might go differently for you. Also, maybe that was just related to the Talos v1.8.2 kernel panic on nocloud bug). I haven't moved over to Rook Ceph yet, but it's also included.
+- [Cilium](https://github.com/cilium/cilium) container networking and CoreDNS with network policies for most things
+- Secrets encrypted using a mix of [SOPS](https://github.com/getsops/sops) and [external-secrets](https://github.com/external-secrets/external-secrets) accessing Bitwarden
+- OIDC authentication with [Authelia](https://github.com/authelia/authelia) and [LLDAP](https://github.com/lldap/lldap) (TODO: Reimplement this)
+- [Traefik](https://github.com/traefik/traefik) internal and external ingress with hardened security and [Anubis](https://github.com/TecharoHQ/anubis) to block AI crawlers
+- Databases for [Cloudnative PG](https://github.com/cloudnative-pg/cloudnative-pg), [MinIO](https://min.io/), [Dragonfly](https://github.com/dragonflydb/dragonfly), [Mosquitto](https://github.com/eclipse-mosquitto/mosquitto), and, if you can find it in my archive, [MS SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
+- Storage managed by [OpenEBS](https://github.com/openebs/openebs)
 - Various drivers and utilities
 - Observability tools and exporters including Prometheus, Grafana, Loki, and others
-- Many self-hosted deployments, including a [Homepage](https://github.com/gethomepage/homepage), game servers, and a media stack
+- Many self-hosted deployments, including a [Homepage](https://github.com/gethomepage/homepage), game servers, a media stack, and my personal website
 - Taskfiles ([go-task](https://taskfile.dev/)) and scripts for ease-of-use
 
 ## Requirements
