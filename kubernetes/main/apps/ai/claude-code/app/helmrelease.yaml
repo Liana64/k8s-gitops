@@ -33,116 +33,34 @@ spec:
               tag: rolling
             env:
               CLAUDE_CODE_USE_BEDROCK: "0"
+              CLAUDE_CONFIG_DIR: /workspace/claude
             envFrom:
               - secretRef:
                   name: claude-code-secret
             command: ["sleep", "infinity"]
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities:
-                drop:
-                  - ALL
             resources:
               requests:
                 cpu: 100m
                 memory: 512Mi
               limits:
                 memory: 4Gi
-          filebrowser:
-            image:
-              repository: docker.io/filebrowser/filebrowser
-              tag: v2.45.0@sha256:c751c3a0ed38a8a18b647ae7897b57c793f52a6501a75be2fe4b72d1c27b60ea
-            env:
-              FB_DATABASE: /config/filebrowser.db
-              FB_ROOT: /workspace
-              FB_LOG: stdout
-              FB_PORT: &fbPort 8080
-              FB_NOAUTH: "true"
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /health
-                    port: *fbPort
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities:
                 drop:
                   - ALL
-            resources:
-              requests:
-                cpu: 10m
-                memory: 16Mi
-              limits:
-                memory: 256Mi
-    service:
-      app:
-        controller: claude-code
-        ports:
-          http:
-            primary: true
-            port: *fbPort
-    ingress:
-      app:
-        className: traefik
-        annotations:
-          cert-manager.io/cluster-issuer: "letsencrypt-production"
-          traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
-          traefik.ingress.kubernetes.io/router.middlewares: "networking-traefik-middleware-chain-no-auth@kubernetescrd"
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Tools
-          gethomepage.dev/name: Claude Code
-          gethomepage.dev/description: AI coding workspace
-          gethomepage.dev/icon: anthropic
-        hosts:
-          - host: &host "claude-code.${SECRET_INTERNAL_DOMAIN}"
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
-        tls:
-          - secretName: claude-code-tls
-            hosts: [*host]
     persistence:
-      workspace:
-        storageClass: cluster-nvme
-        accessMode: ReadWriteOnce
-        size: 12Gi
+      claude:
+        enabled: true
+        existingClaim: filebrowser-claude
         globalMounts:
-          - path: /workspace
-      claude-code-home:
-        type: emptyDir
-        advancedMounts:
-          claude-code:
-            app:
-              - path: /home/claude
-      npm-cache:
-        type: emptyDir
-        advancedMounts:
-          claude-code:
-            app:
-              - path: /home/claude/.npm
-      tmp:
-        type: emptyDir
-        advancedMounts:
-          claude-code:
-            app:
-              - path: /tmp
-            filebrowser:
-              - path: /tmp
-      fb-config:
-        type: emptyDir
-        advancedMounts:
-          claude-code:
-            filebrowser:
-              - path: /config
+          - path: /workspace/claude
+#      tmp:
+#        type: emptyDir
+#        advancedMounts:
+#          claude-code:
+#            app:
+#              - path: /tmp
+#            filebrowser:
+#              - path: /tmp
