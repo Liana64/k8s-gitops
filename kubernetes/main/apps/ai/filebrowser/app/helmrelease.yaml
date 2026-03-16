@@ -79,7 +79,7 @@ spec:
           gethomepage.dev/description: Browse agent files
           gethomepage.dev/icon: filebrowser
         hosts:
-          - host: &host "aifs.${SECRET_EXTERNAL_DOMAIN}"
+          - host: &host "aifs.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
@@ -104,3 +104,10 @@ spec:
         size: 8Gi
         globalMounts:
           - path: /workspace/claude
+      openclaw:
+        enabled: true
+        storageClass: cluster-nvme
+        accessMode: ReadWriteOnce
+        size: 8Gi
+        globalMounts:
+          - path: /home/

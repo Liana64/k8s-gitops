@@ -56,11 +56,11 @@ spec:
         existingClaim: filebrowser-claude
         globalMounts:
           - path: /workspace/claude
-#      tmp:
-#        type: emptyDir
-#        advancedMounts:
-#          claude-code:
-#            app:
-#              - path: /tmp
-#            filebrowser:
-#              - path: /tmp
+      tmp:
+        type: emptyDir
+        advancedMounts:
+          claude-code:
+            app:
+              - path: /tmp
+            filebrowser:
+              - path: /tmp
