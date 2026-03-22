@@ -33,6 +33,10 @@ spec:
               tag: rolling
             env:
               CLAUDE_CODE_USE_BEDROCK: "0"
+              CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: "1"
+              CLAUDE_CODE_ATTRIBUTION_HEADER: "0"
+              CLAUDE_CODE_PROXY_RESOLVES_HOSTS: "1"
+              ENABLE_TOOL_SEARCH: "1"
               CLAUDE_CONFIG_DIR: /workspace/claude
             envFrom:
               - secretRef:
