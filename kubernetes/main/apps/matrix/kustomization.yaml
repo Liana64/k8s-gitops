@@ -8,8 +8,10 @@ resources:
   - ./synapse/ks.yaml
   - ./synapse-admin/ks.yaml
   - ./element/ks.yaml
-  - ./mautrix-discord/ks.yaml
   - ./mautrix-meta/ks.yaml
   - ./mautrix-linkedin/ks.yaml
   - ./mautrix-twitter/ks.yaml
+
+  # Not really worth the maintenance
+  #- ./mautrix-discord/ks.yaml
   #- ./mautrix-signal/ks.yaml
