@@ -29,6 +29,7 @@ spec:
               PUBLIC_URL: https://anubis.${SECRET_DOMAIN}
               REDIRECT_DOMAINS: "*.${SECRET_DOMAIN},${SECRET_DOMAIN}"
               SERVE_ROBOTS_TXT: true
+              POLICY_FNAME: /config/botPolicies.yaml
               TARGET: " "
             envFrom:
               - secretRef:
@@ -72,3 +73,11 @@ spec:
           - hosts:
               - *host
             secretName: "anubis-production-tls"
+    persistence:
+      bot-policy:
+        type: configMap
+        name: anubis-bot-policy
+        globalMounts:
+          - path: /config/botPolicies.yaml
+            subPath: botPolicies.yaml
+            readOnly: true
