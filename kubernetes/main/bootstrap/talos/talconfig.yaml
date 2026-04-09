@@ -103,6 +103,10 @@ nodes:
                   - bind
                   - rshared
                   - rw
+          disks:
+            - device: /dev/sdb
+              partitions:
+                - mountpoint: /var/mnt/local-pool
     nodeLabels:
       hardware/manufacturer: "dell"
       hardware/model: "optiplex-7050"
