@@ -42,6 +42,9 @@ nodes:
       - |
         machine:
           kubelet:
+            nodeIP:
+              validSubnets:
+                - 10.10.10.0/24
             extraMounts:
               - destination: /var/mnt/local-pool
                 type: bind
@@ -59,7 +62,7 @@ nodes:
       hardware/manufacturer: "minisforum"
       hardware/model: "ms-01"
       node-role.kubernetes.io/control-plane: "control-plane"
-      topology.kubernetes.io/region: &region "us-central"
+      topology.kubernetes.io/region: "us-central"
       topology.kubernetes.io/zone: *clustername
   - hostname: n2
     controlPlane: true
@@ -86,15 +89,15 @@ nodes:
         dhcp: true
         vip:
           ip: *kubeapiip
-      - interface: eth1
-        addresses:
-          - 10.10.10.13/24
     talosImageURL: *talosMinimalImage
     schematic: *schematicMinimal
     patches: &zfsPatches
       - |
         machine:
           kubelet:
+            nodeIP:
+              validSubnets:
+                - 172.16.4.0/24
             extraMounts:
               - destination: /var/mnt/local-pool
                 type: bind
@@ -111,7 +114,7 @@ nodes:
       hardware/manufacturer: "dell"
       hardware/model: "optiplex-7050"
       node-role.kubernetes.io/control-plane: "control-plane"
-      topology.kubernetes.io/region: &region "us-central"
+      topology.kubernetes.io/region: "us-central"
       topology.kubernetes.io/zone: *clustername
 
 patches:
