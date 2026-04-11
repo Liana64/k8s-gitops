@@ -1,0 +1,62 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: thunderbolt-routes
+  namespace: kube-system
+  labels:
+    app: thunderbolt-routes
+spec:
+  selector:
+    matchLabels:
+      app: thunderbolt-routes
+  template:
+    metadata:
+      labels:
+        app: thunderbolt-routes
+    spec:
+      hostNetwork: true
+      nodeSelector:
+        hardware/model: ms-01
+      tolerations:
+        - operator: Exists
+      initContainers:
+        - name: setup-routes
+          image: busybox:1.37
+          securityContext:
+            privileged: true
+            capabilities:
+              add: ["NET_ADMIN"]
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              # Determine peer based on Thunderbolt IP
+              MY_IP=$(ip -4 addr show dev eth1 | grep -oP '10\.10\.10\.\K\d+')
+              if [ "$MY_IP" = "11" ]; then
+                PEER="10.10.10.12"
+              elif [ "$MY_IP" = "12" ]; then
+                PEER="10.10.10.11"
+              else
+                echo "Unknown Thunderbolt IP, skipping"
+                exit 0
+              fi
+
+              # Add route table if not exists
+              ip route replace 10.244.0.0/16 via "$PEER" dev eth1 table 100
+
+              # Add rule if not exists
+              ip rule show | grep -q "to 10.244.0.0/16 lookup 100" || \
+                ip rule add to 10.244.0.0/16 table 100 prio 100
+
+              echo "Thunderbolt routes configured: pod traffic via $PEER"
+      containers:
+        - name: pause
+          image: registry.k8s.io/pause:3.10
+          resources:
+            requests:
+              cpu: 1m
+              memory: 1Mi
+            limits:
+              memory: 1Mi
