@@ -31,6 +31,10 @@ nodes:
       - interface: eth1
         addresses:
           - 10.10.10.11/24
+        routes:
+          - network: 10.244.0.0/24
+            gateway: 10.10.10.12
+          - network: 10.10.10.0/24
     # https://factory.talos.dev/?arch=amd64&board=undefined&bootloader=sd-boot&cmdline=-console+console%3Dtty0&cmdline-set=true&extensions=-&extensions=siderolabs%2Fqemu-guest-agent&platform=nocloud&secureboot=true&target=cloud&version=1.12.6
     talosImageURL: &talosMinimalImage factory.talos.dev/nocloud-installer-secureboot/d9cb0be10f95f364c88e92c9a695cc38373fb0f2f5ad8b612cba97d81c6b75be
     schematic: &schematicMinimal
@@ -76,6 +80,10 @@ nodes:
       - interface: eth1
         addresses:
           - 10.10.10.12/24
+        routes:
+          - network: 10.244.2.0/24
+            gateway: 10.10.10.11
+          - network: 10.10.10.0/24
     talosImageURL: *talosMinimalImage
     schematic: *schematicMinimal
     patches: *hybridPatches
