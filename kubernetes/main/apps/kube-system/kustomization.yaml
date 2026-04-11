@@ -7,4 +7,4 @@ resources:
   - ./cilium/ks.yaml
   - ./coredns/ks.yaml
   - ./metrics-server/ks.yaml
-  - ./thunderbolt-routes/ks.yaml
+  #- ./thunderbolt-routes/ks.yaml
