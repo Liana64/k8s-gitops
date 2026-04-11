@@ -29,7 +29,7 @@ nodes:
         vip:
           ip: *kubeapiip
       - interface: eth1
-        mtu: 4000
+        #mtu: 4000
         addresses:
           - 10.10.10.11/24
         routes:
@@ -62,6 +62,7 @@ nodes:
               partitions:
                 - mountpoint: /var/mnt/local-pool
       - "@./patches/control/disable-admission-control.yaml"
+      - "@./patches/mesh/etcd.yaml"
     nodeLabels: &ms01cluster
       hardware/manufacturer: "minisforum"
       hardware/model: "ms-01"
@@ -78,7 +79,7 @@ nodes:
         vip:
           ip: *kubeapiip
       - interface: eth1
-        mtu: 4000
+        #mtu: 4000
         addresses:
           - 10.10.10.12/24
         routes:
