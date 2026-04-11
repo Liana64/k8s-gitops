@@ -44,7 +44,7 @@ nodes:
           kubelet:
             nodeIP:
               validSubnets:
-                - 10.10.10.0/24
+                - 172.16.4.0/24
             extraMounts:
               - destination: /var/mnt/local-pool
                 type: bind
