@@ -29,7 +29,7 @@ nodes:
         vip:
           ip: *kubeapiip
       - interface: eth1
-        #mtu: 9000
+        mtu: 9000
         addresses:
           - 10.10.10.11/24
         routes:
@@ -78,7 +78,7 @@ nodes:
         vip:
           ip: *kubeapiip
       - interface: eth1
-        #mtu: 9000
+        mtu: 9000
         addresses:
           - 10.10.10.12/24
         routes:
