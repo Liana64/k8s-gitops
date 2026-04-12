@@ -38,7 +38,7 @@ nodes:
         systemExtensions:
           officialExtensions:
             - siderolabs/qemu-guest-agent
-    patches: &hybridPatches
+    patches: &clusterPatches
       - |
         machine:
           kubelet:
@@ -79,9 +79,11 @@ nodes:
           - 10.10.10.12/24
     talosImageURL: *talosMinimalImage
     schematic: *schematicMinimal
-    patches: *hybridPatches
+    patches: *clusterPatches
     nodeLabels: *ms01cluster
   - hostname: n3
+    nodeTaints:
+      node-role.kubernetes.io/etcd-only: "true:NoSchedule"
     controlPlane: true
     ipAddress: 172.16.4.13
     installDiskSelector: *bootdisk
@@ -92,26 +94,7 @@ nodes:
           ip: *kubeapiip
     talosImageURL: *talosMinimalImage
     schematic: *schematicMinimal
-    patches: &zfsPatches
-      - |
-        machine:
-          kubelet:
-            nodeIP:
-              validSubnets:
-                - 172.16.4.0/24
-            extraMounts:
-              - destination: /var/mnt/local-pool
-                type: bind
-                source: /var/mnt/local-pool
-                options:
-                  - bind
-                  - rshared
-                  - rw
-          disks:
-            - device: /dev/sdb
-              partitions:
-                - mountpoint: /var/mnt/local-pool
-      - "@./patches/mesh/etcd.yaml"
+    patches: *clusterPatches
     nodeLabels:
       hardware/manufacturer: "dell"
       hardware/model: "optiplex-7050"
