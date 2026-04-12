@@ -49,12 +49,12 @@ spec:
         enabled: true
       enable_3pid_lookup: false
       app_service_config_files:
-        - "/mautrix-discord/registration.yaml"
-        - "/mautrix-discord/double-puppet-registration.yaml"
+        #- "/mautrix-discord/registration.yaml"
+        #- "/mautrix-discord/double-puppet-registration.yaml"
         - "/mautrix-meta/registration.yaml"
         - "/mautrix-linkedin/registration.yaml"
         - "/mautrix-twitter/registration.yaml"
-        - "/mautrix-signal/registration.yaml"
+        #- "/mautrix-signal/registration.yaml"
       use_appservice_legacy_authorization: true
       #      url_preview_ip_range_blacklist:
       #        - "127.0.0.0/8"
@@ -120,9 +120,9 @@ spec:
         prometheus.io/path: "/_synapse/metrics"
         prometheus.io/port: "9090"
       extraVolumes:
-        - name: mautrix-discord-registration
-          secret:
-            secretName: mautrix-discord-secret
+        #- name: mautrix-discord-registration
+        #  secret:
+        #    secretName: mautrix-discord-secret
         - name: mautrix-meta-registration
           secret:
             secretName: mautrix-meta-secret
@@ -132,13 +132,13 @@ spec:
         - name: mautrix-twitter-registration
           secret:
             secretName: mautrix-twitter-secret
-        - name: mautrix-signal-registration
-          secret:
-            secretName: mautrix-signal-secret
+        #- name: mautrix-signal-registration
+        #  secret:
+        #    secretName: mautrix-signal-secret
       extraVolumeMounts:
-        - name: mautrix-discord-registration
-          mountPath: /mautrix-discord
-          readOnly: true
+        #- name: mautrix-discord-registration
+        #  mountPath: /mautrix-discord
+        #  readOnly: true
         - name: mautrix-meta-registration
           mountPath: /mautrix-meta
           readOnly: true
@@ -148,9 +148,9 @@ spec:
         - name: mautrix-twitter-registration
           mountPath: /mautrix-twitter
           readOnly: true
-        - name: mautrix-signal-registration
-          mountPath: /mautrix-signal
-          readOnly: true
+        #- name: mautrix-signal-registration
+        #  mountPath: /mautrix-signal
+        #  readOnly: true
     signingkey:
       job:
         enabled: false
