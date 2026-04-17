@@ -78,3 +78,16 @@ variable "serial_device" {
   type    = string
   default = null
 }
+
+variable "hostpci" {
+  type = list(object({
+    mapping = optional(string)
+    id      = optional(string)
+    pcie    = optional(bool)
+    rombar  = optional(bool)
+    xvga    = optional(bool)
+    rom_file = optional(string)
+    mdev    = optional(string)
+  }))
+  default = []
+}
