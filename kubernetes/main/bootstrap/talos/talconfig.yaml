@@ -28,9 +28,9 @@ nodes:
         dhcp: true
         vip:
           ip: *kubeapiip
-      - interface: eth1
-        addresses:
-          - 10.10.10.11/24
+      #- interface: eth1
+      #  addresses:
+      #    - 10.10.10.11/24
     # https://factory.talos.dev/?arch=amd64&board=undefined&bootloader=sd-boot&cmdline=-console+console%3Dtty0&cmdline-set=true&extensions=-&extensions=siderolabs%2Fqemu-guest-agent&platform=nocloud&secureboot=true&target=cloud&version=1.12.6
     talosImageURL: &talosMinimalImage factory.talos.dev/nocloud-installer-secureboot/d9cb0be10f95f364c88e92c9a695cc38373fb0f2f5ad8b612cba97d81c6b75be
     schematic: &schematicMinimal
@@ -74,12 +74,39 @@ nodes:
         dhcp: true
         vip:
           ip: *kubeapiip
-      - interface: eth1
-        addresses:
-          - 10.10.10.12/24
-    talosImageURL: *talosMinimalImage
-    schematic: *schematicMinimal
-    patches: *clusterPatches
+      #- interface: eth1
+      #  addresses:
+      #    - 10.10.10.12/24
+    # https://factory.talos.dev/?arch=amd64&bootloader=sd-boot&cmdline=-console+console%3Dtty0&cmdline-set=true&extensions=-&extensions=siderolabs%2Fnvidia-container-toolkit-lts&extensions=siderolabs%2Fqemu-guest-agent&extensions=siderolabs%2Fnonfree-kmod-nvidia-lts&platform=nocloud&secureboot=true&target=cloud&version=1.12.6
+    talosImageURL: &talosNvidiaImage factory.talos.dev/nocloud-installer-secureboot/6951b9af7ee1333ba6431429e14c6f096ef257d27c82ffdfa976ff55a293b409
+    schematic: &schematicNvidia
+      customization:
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/nonfree-kmod-nvidia-lts
+            - siderolabs/nvidia-container-toolkit-lts
+    patches: &nvidiaPatches
+      - |
+        machine:
+          kubelet:
+            nodeIP:
+              validSubnets:
+                - 172.16.4.0/24
+            extraMounts:
+              - destination: /var/mnt/local-pool
+                type: bind
+                source: /var/mnt/local-pool
+                options:
+                  - bind
+                  - rshared
+                  - rw
+          disks:
+            - device: /dev/sdb
+              partitions:
+                - mountpoint: /var/mnt/local-pool
+      - "@./patches/control/disable-admission-control.yaml"
+      - "@./patches/mesh/etcd.yaml"
+      - "@./patches/mesh/nvidia.yaml"
     nodeLabels: *ms01cluster
   - hostname: n3
     nodeTaints:
