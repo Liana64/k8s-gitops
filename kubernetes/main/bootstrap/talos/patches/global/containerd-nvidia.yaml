@@ -1,0 +1,22 @@
+---
+machine:
+  files:
+    - op: create
+      path: /etc/cri/conf.d/20-customization.part
+      content: |
+        [plugins]
+          [plugins."io.containerd.grpc.v1.cri"]
+            enable_unprivileged_ports = true
+            enable_unprivileged_icmp = true
+          [plugins."io.containerd.cri.v1.runtime"]
+            cdi_spec_dirs = ["/var/cdi/static", "/var/cdi/dynamic"]
+          [plugins."io.containerd.cri.v1.runtime".containerd.runtimes.nvidia]
+            runtime_type = "io.containerd.runc.v2"
+          [plugins."io.containerd.cri.v1.runtime".containerd.runtimes.nvidia.options]
+            BinaryName = "/usr/bin/nvidia-container-runtime"
+            SystemdCgroup = true
+            device_ownership_from_security_context = true
+          [plugins."io.containerd.cri.v1.images"]
+            discard_unpacked_layers = false
+          [plugins."io.containerd.cri.v1.images".registry]
+            config_path = "/var/etc/containerd/certs.d"

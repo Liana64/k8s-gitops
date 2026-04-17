@@ -59,6 +59,7 @@ nodes:
                 - mountpoint: /var/mnt/local-pool
       - "@./patches/control/disable-admission-control.yaml"
       - "@./patches/mesh/etcd.yaml"
+      - "@./patches/global/containerd.yaml"
     nodeLabels: &ms01cluster
       hardware/manufacturer: "minisforum"
       hardware/model: "ms-01"
@@ -107,6 +108,7 @@ nodes:
       - "@./patches/control/disable-admission-control.yaml"
       - "@./patches/mesh/etcd.yaml"
       - "@./patches/mesh/nvidia.yaml"
+      - "@./patches/global/containerd-nvidia.yaml"
     nodeLabels: *ms01cluster
   - hostname: n3
     nodeTaints:
@@ -132,7 +134,6 @@ nodes:
 patches:
   - "@./patches/global/time.yaml"
   - "@./patches/global/cluster-discovery.yaml"
-  - "@./patches/global/containerd.yaml"
   - "@./patches/global/hostdns.yaml"
   - "@./patches/global/kubelet.yaml"
   - "@./patches/global/openebs.yaml"
