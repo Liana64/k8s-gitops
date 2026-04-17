@@ -9,7 +9,6 @@ resources:
   - ./spegel.yaml
   - ./ess-matrix.yaml
   - ./matrix-synapse.yaml
-  - ./nvidia.yaml
   - ./reloader.yaml
   - ./kyverno.yaml
   - ./crowdsec.yaml
