@@ -18,6 +18,7 @@ tasks:
     desc: Bootstrap the Talos cluster
     dir: "/{{.BOOTSTRAP_TALOS_DIR}}"
     cmds:
+      - task: provision
       - task: generate
       - task: apply
       - until talhelper gencommand bootstrap --config-file {{.TALHELPER_CONFIG_FILE}} --out-dir {{.TALHELPER_CLUSTER_DIR}} | bash; do sleep 10; done
@@ -49,6 +50,17 @@ tasks:
         sh: test -f {{.SOPS_CONFIG_FILE}}
       - msg: Missing Sops Age key file
         sh: test -f {{.AGE_FILE}}
+
+  provision:
+      desc: Provision nodes with OpenTofu
+      cmds:
+        - for: ["talos-n1", "talos-n2", "talos-n3"]
+          cmd: tofu -chdir={{.ROOT_DIR}}/tofu/nodes/{{.ITEM}} apply -auto-approve
+      requires:
+        vars: ["cluster"]
+      preconditions:
+        - msg: Missing one or more tofu node directories
+          sh: test -d {{.ROOT_DIR}}/tofu/nodes/talos-n1 && test -d {{.ROOT_DIR}}/tofu/nodes/talos-n2 && test -d {{.ROOT_DIR}}/tofu/nodes/talos-n3
 
   apply:
     desc: Apply Talos node configs
