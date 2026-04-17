@@ -7,9 +7,9 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1h
-  layerSelector:
-    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
-    operation: copy
+  #layerSelector:
+  #  mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+  #  operation: copy
   ref:
-    tag: 0.17.4
+    tag: eb98db48
   url: oci://ghcr.io/nvidia/k8s-device-plugin
