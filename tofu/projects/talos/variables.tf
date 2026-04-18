@@ -31,8 +31,8 @@ variable "nodes" {
   }))
 
   default = {
-    n1 = {
-      target_node  = "n1"
+    ms-01 = {
+      target_node  = "ms-01"
       vm_id        = 100
       cores        = 10
       memory       = 24576

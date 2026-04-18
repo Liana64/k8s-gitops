@@ -1,9 +1,9 @@
-module "n1" {
+module "ms-01" {
   source    = "../../modules/proxmox-vm"
-  providers = { proxmox = proxmox.n1 }
+  providers = { proxmox = proxmox.ms-01 }
 
   name        = "talos-n1"
-  target_node = "n1"
+  target_node = "ms-01"
   vm_id       = 100
   cores       = 10
   memory      = 24576
@@ -42,9 +42,10 @@ module "n2" {
     { bridge = "vmbr1", vlan_id = 10, mac_address = "BC:24:11:25:31:59" },
   ]
 
-  hostpci = [
-    { mapping = "GTX_1080", pcie = true },
-  ]
+  # NVIDIA card, which I'm keeping unplugged right now
+  #hostpci = [
+  #  { mapping = "GTX_1080", pcie = true },
+  #]
 
   smbios_uuid = "efd7776f-3f94-425d-bcb8-e2613708f4d1"
 }
@@ -74,7 +75,7 @@ module "n3" {
 
 output "vm_ids" {
   value = {
-    n1 = module.n1.vm_id
+    ms-01 = module.ms-01.vm_id
     n2 = module.n2.vm_id
     n3 = module.n3.vm_id
   }
@@ -82,7 +83,7 @@ output "vm_ids" {
 
 output "ipv4_addresses" {
   value = {
-    n1 = module.n1.ipv4_addresses
+    ms-01 = module.ms-01.ipv4_addresses
     n2 = module.n2.ipv4_addresses
     n3 = module.n3.ipv4_addresses
   }
