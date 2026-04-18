@@ -84,8 +84,9 @@ nodes:
       customization:
         systemExtensions:
           officialExtensions:
-            - siderolabs/nonfree-kmod-nvidia-lts
-            - siderolabs/nvidia-container-toolkit-lts
+            - siderolabs/qemu-guest-agent
+            #- siderolabs/nonfree-kmod-nvidia-lts
+            #- siderolabs/nvidia-container-toolkit-lts
     patches: &nvidiaPatches
       - |
         machine:
@@ -107,8 +108,8 @@ nodes:
                 - mountpoint: /var/mnt/local-pool
       - "@./patches/control/disable-admission-control.yaml"
       - "@./patches/mesh/etcd.yaml"
-      - "@./patches/mesh/nvidia.yaml"
-      - "@./patches/global/containerd-nvidia.yaml"
+      #- "@./patches/mesh/nvidia.yaml"
+      #- "@./patches/global/containerd-nvidia.yaml"
     nodeLabels: *ms01cluster
   - hostname: n3
     nodeTaints:
