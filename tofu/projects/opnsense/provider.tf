@@ -19,10 +19,10 @@ variable "proxmox_hosts" {
 }
 
 provider "proxmox" {
-  alias    = "n1"
-  endpoint = var.proxmox_hosts["n1"].endpoint
-  username = var.proxmox_hosts["n1"].username
-  password = var.proxmox_hosts["n1"].password
+  alias    = "ms-01"
+  endpoint = var.proxmox_hosts["ms-01"].endpoint
+  username = var.proxmox_hosts["ms-01"].username
+  password = var.proxmox_hosts["ms-01"].password
   insecure = true
 }
 

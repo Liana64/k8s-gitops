@@ -1,9 +1,9 @@
-module "n1" {
+module "ms-01" {
   source    = "../../modules/proxmox-vm"
-  providers = { proxmox = proxmox.n1 }
+  providers = { proxmox = proxmox.ms-01 }
 
   name         = "opnsense"
-  target_node  = "n1"
+  target_node  = "ms-01"
   vm_id        = 101
   cores        = 4
   memory       = 4096
@@ -53,7 +53,7 @@ module "n2" {
 
 output "vm_ids" {
   value = {
-    n1 = module.n1.vm_id
+    ms-01 = module.ms-01.vm_id
     n2 = module.n2.vm_id
   }
 }
