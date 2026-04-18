@@ -1,4 +1,5 @@
 terraform {
+  required_version = ">= 1.6"
   required_providers {
     proxmox = {
       source  = "bpg/proxmox"
@@ -8,7 +9,8 @@ terraform {
 }
 
 variable "proxmox_endpoint" {
-  type = string
+  type        = string
+  description = "Proxmox API endpoint, e.g. https://pve.example.com:8006/"
 }
 
 variable "proxmox_username" {
