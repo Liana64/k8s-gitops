@@ -33,11 +33,3 @@ provider "proxmox" {
   password = var.proxmox_hosts["n2"].password
   insecure = true
 }
-
-provider "proxmox" {
-  alias    = "n3"
-  endpoint = var.proxmox_hosts["n3"].endpoint
-  username = var.proxmox_hosts["n3"].username
-  password = var.proxmox_hosts["n3"].password
-  insecure = true
-}

@@ -29,6 +29,9 @@ includes:
   talos:
     taskfile: .taskfiles/talos.yaml
     aliases: [t]
+  tofu:
+    taskfile: .taskfiles/tofu.yaml
+    aliases: [tf]
   precommit: .taskfiles/precommit.yaml
 
 tasks:

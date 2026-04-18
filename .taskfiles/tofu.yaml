@@ -1,0 +1,32 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+tasks:
+  provision:
+    desc: Provision a tofu project
+    cmd:
+      task: _apply
+      vars:
+        project: "{{.project}}"
+    requires:
+      vars: ["project"]
+
+  _apply:
+    internal: true
+    cmd: tofu -chdir={{.ROOT_DIR}}/tofu/projects/{{.project}} apply -auto-approve
+    requires:
+      vars: ["project", "TF_VAR_proxmox_username"]
+    preconditions:
+      - msg: Missing tofu project directory
+        sh: test -d {{.ROOT_DIR}}/tofu/projects/{{.project}}
+
+  nuke-talos:
+    desc: Destroy the talos tofu project
+    prompt: "This will destroy all talos infrastructure. Continue?"
+    cmd: tofu -chdir={{.ROOT_DIR}}/tofu/projects/talos destroy -auto-approve
+    requires:
+      vars: ["TF_VAR_proxmox_username"]
+    preconditions:
+      - msg: Missing tofu project directory
+        sh: test -d {{.ROOT_DIR}}/tofu/projects/talos

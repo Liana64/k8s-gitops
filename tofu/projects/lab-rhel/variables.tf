@@ -17,5 +17,5 @@ variable "target_node" {
 
 variable "vm_id" {
   type    = number
-  default = 200
+  default = 400
 }

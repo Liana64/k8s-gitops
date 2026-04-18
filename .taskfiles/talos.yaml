@@ -51,17 +51,6 @@ tasks:
       - msg: Missing Sops Age key file
         sh: test -f {{.AGE_FILE}}
 
-  provision:
-      desc: Provision nodes with OpenTofu
-      cmds:
-        - for: ["talos-n1", "talos-n2", "talos-n3"]
-          cmd: tofu -chdir={{.ROOT_DIR}}/tofu/nodes/{{.ITEM}} apply -auto-approve
-      requires:
-        vars: ["cluster"]
-      preconditions:
-        - msg: Missing one or more tofu node directories
-          sh: test -d {{.ROOT_DIR}}/tofu/nodes/talos-n1 && test -d {{.ROOT_DIR}}/tofu/nodes/talos-n2 && test -d {{.ROOT_DIR}}/tofu/nodes/talos-n3
-
   apply:
     desc: Apply Talos node configs
     dir: "/{{.BOOTSTRAP_TALOS_DIR}}"
