@@ -21,6 +21,11 @@
         siteMonitor: http://n2.${SECRET_DOMAIN}:8006
         icon: proxmox
         description: Node 2
+    - n3:
+        href: http://n3.${SECRET_DOMAIN}:8006
+        siteMonitor: http://n3.${SECRET_DOMAIN}:8006
+        icon: proxmox
+        description: Node 3
     - SLZB06:
         href: http://slzb.${SECRET_DOMAIN}
         siteMonitor: http://slzb.${SECRET_DOMAIN}
