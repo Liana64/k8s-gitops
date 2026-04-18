@@ -24,6 +24,7 @@ identity
 # Terraform
 .terraform/
 *.tfstate
-*.tfstate.backup
+*.tfstate.*
 *.tfvars
+*.tfvars.*
 .terraform.lock.hcl
