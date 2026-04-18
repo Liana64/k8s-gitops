@@ -55,7 +55,7 @@ spec:
       multiplayerReplicas: 1
       workerGroups:
         - name: default
-          replicas: 2
+          replicas: 3
           resources:
             requests:
               memory: 1028Mi

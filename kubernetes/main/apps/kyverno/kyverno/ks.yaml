@@ -14,7 +14,7 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: k8s-gitops
+    name: home-infra
   wait: false
   interval: 30m
   retryInterval: 1m
@@ -37,7 +37,7 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: k8s-gitops
+    name: home-infra
   wait: false
   interval: 30m
   retryInterval: 1m

@@ -1,11 +1,11 @@
-# k8s-gitops
+# home-infra
 
 This is my kubernetes homelab, currently running on a cluster of MinisForum devices. Photos to be added when I finish the enclosure.
 
 <details>
   <summary>Click here to see my high-level network diagram</summary>
 
-  <img src="https://raw.githubusercontent.com/Liana64/k8s-gitops/refs/heads/main/docs/homelab.jpg" align="center" width="600px" alt="Network Diagram" />
+  <img src="https://raw.githubusercontent.com/Liana64/home-infra/refs/heads/main/docs/homelab.jpg" align="center" width="600px" alt="Network Diagram" />
 </details>
 
 ## Features (Old)
