@@ -18,7 +18,9 @@ tasks:
     desc: Bootstrap the Talos cluster
     dir: "/{{.BOOTSTRAP_TALOS_DIR}}"
     cmds:
-      - task: provision
+      #- task: :tofu:provision
+      #  vars:
+      #    project: talos
       - task: generate
       - task: apply
       - until talhelper gencommand bootstrap --config-file {{.TALHELPER_CONFIG_FILE}} --out-dir {{.TALHELPER_CLUSTER_DIR}} | bash; do sleep 10; done
@@ -30,6 +32,15 @@ tasks:
     preconditions:
       - msg: Missing talhelper config file
         sh: test -f {{.TALHELPER_CONFIG_FILE}}
+
+  rebuild:
+    desc: Bootstrap the Talos cluster
+    dir: "/{{.BOOTSTRAP_TALOS_DIR}}"
+    cmds:
+      - task: :tofu:nuke-talos
+      - task: bootstrap
+    requires:
+      vars: ["cluster"]
 
   generate:
     desc: Generate Talos configs with talhelper

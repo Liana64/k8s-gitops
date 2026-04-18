@@ -16,7 +16,7 @@ tasks:
     internal: true
     cmd: tofu -chdir={{.ROOT_DIR}}/tofu/projects/{{.project}} apply -auto-approve
     requires:
-      vars: ["project", "TF_VAR_proxmox_username"]
+      vars: ["project"]
     preconditions:
       - msg: Missing tofu project directory
         sh: test -d {{.ROOT_DIR}}/tofu/projects/{{.project}}
