@@ -14,7 +14,7 @@ tasks:
 
   _apply:
     internal: true
-    cmd: tofu -chdir={{.ROOT_DIR}}/tofu/projects/{{.project}} apply -auto-approve
+    cmd: tofu -chdir={{.ROOT_DIR}}/tofu/projects/{{.project}} apply
     requires:
       vars: ["project"]
     preconditions:
