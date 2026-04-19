@@ -1,18 +1,10 @@
-# Trash
-.DS_Store
-Thumbs.db
-tmp
-.task
-Brewfile.lock.json
-*.log
-*.bak
-
 # Kubernetes
 kubeconfig
 talosconfig
 
 # Secrets
 identity
+.env
 .envrc
 *.agekey
 *.pub

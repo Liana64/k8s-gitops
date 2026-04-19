@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(**/kubeconfig)",
+      "Read(**/talosconfig)",
+      "Read(**/identity)",
+      "Read(**/.env)",
+      "Read(**/.envrc)",
+      "Read(**/*.agekey)",
+      "Read(**/*.pub)",
+      "Read(**/*.key)",
+      "Read(**/*.pem)",
+      "Read(**/*.p12)",
+      "Read(**/*.crt)",
+      "Read(**/*.csr)",
+      "Read(**/.terraform/**)",
+      "Read(**/*.tfstate)",
+      "Read(**/*.tfstate.*)",
+      "Read(**/*.tfvars)",
+      "Read(**/*.tfvars.*)",
+      "Read(**/.terraform.lock.hcl)"
+    ]
+  }
+}
