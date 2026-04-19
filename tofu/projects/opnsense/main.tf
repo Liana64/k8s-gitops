@@ -54,6 +54,6 @@ module "n2" {
 output "vm_ids" {
   value = {
     ms-01 = module.ms-01.vm_id
-    n2 = module.n2.vm_id
+    n2    = module.n2.vm_id
   }
 }

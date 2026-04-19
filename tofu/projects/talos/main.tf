@@ -76,16 +76,16 @@ module "n3" {
 output "vm_ids" {
   value = {
     ms-01 = module.ms-01.vm_id
-    n2 = module.n2.vm_id
-    n3 = module.n3.vm_id
+    n2    = module.n2.vm_id
+    n3    = module.n3.vm_id
   }
 }
 
 output "ipv4_addresses" {
   value = {
     ms-01 = module.ms-01.ipv4_addresses
-    n2 = module.n2.ipv4_addresses
-    n3 = module.n3.ipv4_addresses
+    n2    = module.n2.ipv4_addresses
+    n3    = module.n3.ipv4_addresses
   }
 }
 
