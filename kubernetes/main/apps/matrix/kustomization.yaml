@@ -5,12 +5,12 @@ kind: Kustomization
 resources:
   - ./networkpolicy.yaml
   - ./namespace.yaml
-  - ./synapse/ks.yaml
-  - ./synapse-admin/ks.yaml
-  - ./element/ks.yaml
-  - ./mautrix-meta/ks.yaml
-  - ./mautrix-linkedin/ks.yaml
-  - ./mautrix-twitter/ks.yaml
+#  - ./synapse/ks.yaml
+#  - ./synapse-admin/ks.yaml
+#  - ./element/ks.yaml
+#  - ./mautrix-meta/ks.yaml
+#  - ./mautrix-linkedin/ks.yaml
+#  - ./mautrix-twitter/ks.yaml
 
   # Not really worth the maintenance
   #- ./mautrix-discord/ks.yaml
