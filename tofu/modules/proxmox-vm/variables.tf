@@ -43,11 +43,34 @@ variable "datastore_id" {
 
 variable "disks" {
   type = list(object({
-    size = number
-    ssd  = optional(bool, true)
-    aio  = optional(string, "native")
+    size        = number
+    ssd         = optional(bool, true)
+    aio         = optional(string, "native")
+    file_id     = optional(string)
+    file_format = optional(string, "raw")
   }))
   default = [{ size = 128 }]
+}
+
+variable "cloud_init" {
+  type = object({
+    datastore_id = optional(string)
+    interface    = optional(string, "ide0")
+    user_account = optional(object({
+      username = string
+      password = optional(string)
+      keys     = optional(list(string), [])
+    }))
+    dns = optional(object({
+      domain  = optional(string)
+      servers = optional(list(string))
+    }))
+    ip_config = optional(list(object({
+      ipv4 = optional(object({ address = optional(string), gateway = optional(string) }))
+      ipv6 = optional(object({ address = optional(string), gateway = optional(string) }))
+    })), [])
+  })
+  default = null
 }
 
 variable "networks" {
@@ -81,13 +104,13 @@ variable "serial_device" {
 
 variable "hostpci" {
   type = list(object({
-    mapping = optional(string)
-    id      = optional(string)
-    pcie    = optional(bool)
-    rombar  = optional(bool)
-    xvga    = optional(bool)
+    mapping  = optional(string)
+    id       = optional(string)
+    pcie     = optional(bool)
+    rombar   = optional(bool)
+    xvga     = optional(bool)
     rom_file = optional(string)
-    mdev    = optional(string)
+    mdev     = optional(string)
   }))
   default = []
 }

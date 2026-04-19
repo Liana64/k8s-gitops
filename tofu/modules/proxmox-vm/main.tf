@@ -62,11 +62,57 @@ resource "proxmox_virtual_environment_vm" "this" {
       datastore_id = var.datastore_id
       interface    = "scsi${disk.key}"
       size         = disk.value.size
-      file_format  = "raw"
+      file_id      = disk.value.file_id
+      file_format  = disk.value.file_format
       discard      = "on"
       iothread     = true
       ssd          = disk.value.ssd
       aio          = disk.value.aio
+    }
+  }
+
+  dynamic "initialization" {
+    for_each = var.cloud_init != null ? [var.cloud_init] : []
+    content {
+      datastore_id = coalesce(initialization.value.datastore_id, var.datastore_id)
+      interface    = initialization.value.interface
+
+      dynamic "user_account" {
+        for_each = initialization.value.user_account != null ? [initialization.value.user_account] : []
+        content {
+          username = user_account.value.username
+          password = user_account.value.password
+          keys     = user_account.value.keys
+        }
+      }
+
+      dynamic "dns" {
+        for_each = initialization.value.dns != null ? [initialization.value.dns] : []
+        content {
+          domain  = dns.value.domain
+          servers = dns.value.servers
+        }
+      }
+
+      dynamic "ip_config" {
+        for_each = initialization.value.ip_config
+        content {
+          dynamic "ipv4" {
+            for_each = ip_config.value.ipv4 != null ? [ip_config.value.ipv4] : []
+            content {
+              address = ipv4.value.address
+              gateway = ipv4.value.gateway
+            }
+          }
+          dynamic "ipv6" {
+            for_each = ip_config.value.ipv6 != null ? [ip_config.value.ipv6] : []
+            content {
+              address = ipv6.value.address
+              gateway = ipv6.value.gateway
+            }
+          }
+        }
+      }
     }
   }
 
