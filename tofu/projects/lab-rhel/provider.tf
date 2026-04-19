@@ -8,24 +8,19 @@ terraform {
   }
 }
 
-variable "proxmox_endpoint" {
-  type        = string
-  description = "Proxmox API endpoint, e.g. https://pve.example.com:8006/"
-}
-
-variable "proxmox_username" {
-  type    = string
-  default = "root@pam"
-}
-
-variable "proxmox_password" {
-  type      = string
-  sensitive = true
+variable "proxmox_hosts" {
+  description = "Per-host credentials. Keys must match the target node."
+  sensitive   = true
+  type = map(object({
+    endpoint = string
+    username = optional(string, "root@pam")
+    password = string
+  }))
 }
 
 provider "proxmox" {
-  endpoint = var.proxmox_endpoint
-  username = var.proxmox_username
-  password = var.proxmox_password
+  endpoint = var.proxmox_hosts[var.target_node].endpoint
+  username = var.proxmox_hosts[var.target_node].username
+  password = var.proxmox_hosts[var.target_node].password
   insecure = true
 }

@@ -161,4 +161,11 @@ resource "proxmox_virtual_environment_vm" "this" {
       mdev     = hostpci.value.mdev
     }
   }
+
+  # Global safety net: VMs managed by this module cannot be destroyed by
+  # `tofu destroy` or an implicit replace. Intentional rebuilds require
+  # `tofu state rm` first (see .taskfiles/tofu.yaml nuke-talos).
+  lifecycle {
+    prevent_destroy = true
+  }
 }

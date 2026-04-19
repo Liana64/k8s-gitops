@@ -1,11 +1,10 @@
-
-variable "rhel_version" {
-  type        = string
-  description = "RHEL version. Must have a matching qcow2 file in ./images/."
-  default     = "10.1"
+variable "rhel_versions" {
+  type        = list(string)
+  description = "RHEL versions to deploy. Each entry spawns its own VM."
+  default     = ["8.4", "9.2", "10.1"]
 
   validation {
-    condition     = contains(["8.4", "9.2", "10.1"], var.rhel_version)
+    condition     = alltrue([for v in var.rhel_versions : contains(["8.4", "9.2", "10.1"], v)])
     error_message = "Supported versions: 8.4, 9.2, 10.1. Add more to qcow2_filename_map in main.tf."
   }
 }
@@ -15,9 +14,22 @@ variable "target_node" {
   default = "n3"
 }
 
-variable "vm_id" {
-  type    = number
-  default = 400
+variable "vm_id_base" {
+  type        = number
+  description = "Each lab VM gets vm_id_base + its index in rhel_versions."
+  default     = 400
+}
+
+variable "datastore_id" {
+  type        = string
+  description = "Datastore for VM disks, EFI, TPM, cloud-init."
+  default     = "local-ssd"
+}
+
+variable "image_datastore_id" {
+  type        = string
+  description = "Datastore where staged qcow2 images live on the PVE node."
+  default     = "local"
 }
 
 variable "ssh_public_keys" {
@@ -34,17 +46,6 @@ variable "admin_password" {
   type      = string
   sensitive = true
   default   = null
-}
-
-variable "image_datastore_id" {
-  type    = string
-  default = "local"
-}
-
-variable "qcow2_checksums" {
-  type        = map(string)
-  default     = {}
-  description = "Optional sha256 checksums keyed by rhel_version, e.g. { \"10.1\" = \"<hex>\" }."
 }
 
 variable "ip_config" {
