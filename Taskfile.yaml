@@ -31,6 +31,9 @@ includes:
     aliases: [t]
   tofu:
     taskfile: .taskfiles/tofu.yaml
+  ansible:
+    taskfile: .taskfiles/ansible.yaml
+    aliases: [a]
   precommit: .taskfiles/precommit.yaml
 
 tasks:
