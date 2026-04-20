@@ -61,6 +61,17 @@ spec:
               limits:
                 memory: 4096Mi
                 #nvidia.com/gpu: 1
+                
+    defaultPodOptions:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - "n1"
 
     service:
       app:
