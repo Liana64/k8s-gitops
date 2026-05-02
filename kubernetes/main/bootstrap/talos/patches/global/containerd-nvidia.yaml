@@ -14,7 +14,7 @@ machine:
             runtime_type = "io.containerd.runc.v2"
           [plugins."io.containerd.cri.v1.runtime".containerd.runtimes.nvidia.options]
             BinaryName = "/usr/local/bin/nvidia-container-runtime"
-            SystemdCgroup = true
+            SystemdCgroup = false
             device_ownership_from_security_context = true
           [plugins."io.containerd.cri.v1.images"]
             discard_unpacked_layers = false
