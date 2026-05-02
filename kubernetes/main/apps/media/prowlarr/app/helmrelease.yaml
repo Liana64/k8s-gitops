@@ -61,6 +61,17 @@ spec:
               capabilities:
                 drop:
                   - ALL
+    defaultPodOptions:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - "n1"
+
     service:
       app:
         controller: prowlarr
