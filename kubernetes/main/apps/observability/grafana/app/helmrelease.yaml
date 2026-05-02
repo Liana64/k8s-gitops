@@ -219,7 +219,9 @@ spec:
           url: https://raw.githubusercontent.com/traefik/traefik/aa8eb1af6eb5457516169315676ec22f968e727d/contrib/grafana/traefik-kubernetes.json
           datasource: Prometheus
         nvidia-dcgm-exporter:
-          url: https://raw.githubusercontent.com/NVIDIA/dcgm-exporter/900d465675d3c227a6992b93b2206f66aa3385cd/grafana/dcgm-exporter-dashboard.json
+          # renovate: depName="NVIDIA DCGM Exporter Dashboard"
+          gnetId: 15117
+          revision: 2
           datasource: Prometheus
         node-exporter-full:
           # renovate: depName="Node Exporter Full"
