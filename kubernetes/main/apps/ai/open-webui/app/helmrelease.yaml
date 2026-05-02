@@ -38,6 +38,9 @@ spec:
               ENABLE_OLLAMA_API: "true"
               ENABLE_OPENAI_API: "false"
               DATA_DIR: /app/backend/data
+            envFrom:
+              - secretRef:
+                  name: open-webui-secret
             probes:
               liveness: &probes
                 enabled: true
