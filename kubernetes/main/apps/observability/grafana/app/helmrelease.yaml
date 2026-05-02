@@ -220,10 +220,11 @@ spec:
           datasource: Prometheus
         nvidia-dcgm-exporter:
           # renovate: depName="NVIDIA DCGM Exporter Dashboard"
-          gnetId: 12239
+          gnetId: 15117
           revision: 2
           datasource:
             - { name: DS_PROMETHEUS, value: Prometheus }
+            - { name: DS_PROMETHEUS-HPC, value: Prometheus }
         node-exporter-full:
           # renovate: depName="Node Exporter Full"
           gnetId: 1860
