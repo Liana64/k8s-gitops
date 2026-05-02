@@ -104,10 +104,12 @@ spec:
             memory: 1500Mi
         storageSpec:
           volumeClaimTemplate:
+            metadata:
+              annotations:
+                helm.sh/resource-policy: keep
             spec:
               storageClassName: "cluster-nvme"
               accessModes: ["ReadWriteOnce"]
-              retain: true
               resources:
                 requests:
                   storage: 75Gi
