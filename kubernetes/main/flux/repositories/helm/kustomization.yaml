@@ -27,3 +27,4 @@ resources:
   - ./rook-ceph.yaml
   - ./traefik.yaml
   - ./csi-driver-smb.yaml
+  - ./dcgm-exporter.yaml
