@@ -220,14 +220,14 @@ spec:
           datasource: Prometheus
         nvidia-dcgm-exporter:
           # renovate: depName="NVIDIA DCGM Exporter Dashboard"
-          gnetId: 15117
+          gnetId: 12239
           revision: 2
-          datasource: Prometheus
         node-exporter-full:
           # renovate: depName="Node Exporter Full"
           gnetId: 1860
           revision: 37
-          datasource: Prometheus
+          datasource:
+            - { name: DS_PROMETHEUS, value: Prometheus }
         redis:
           # renovate: depName="Redis Dashboard for Prometheus Redis Exporter 1.x"
           gnetId: 763 # https://grafana.com/grafana/dashboards/763?tab=revisions
