@@ -31,6 +31,7 @@ spec:
     - toFQDNs:
         - matchName: registry.ollama.ai
         - matchPattern: "*.ollama.com"
+        - matchPattern: "*.r2.cloudflarestorage.com"
         - matchName: huggingface.co
         - matchPattern: "*.hf.co"
         - matchName: cdn-lfs.huggingface.co
