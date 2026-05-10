@@ -9,3 +9,4 @@ resources:
   - ./miniflux/ks.yaml
   - ./syncthing/ks.yaml
   - ./grocy/ks.yaml
+  - ./radicale/ks.yaml
