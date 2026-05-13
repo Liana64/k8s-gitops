@@ -1,0 +1,56 @@
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: forgejo
+  namespace: labs
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: forgejo
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: traefik
+            io.kubernetes.pod.namespace: networking
+      toPorts:
+        - ports:
+            - port: "3000"
+              protocol: TCP
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: prometheus
+            io.kubernetes.pod.namespace: observability
+      toPorts:
+        - ports:
+            - port: "3000"
+              protocol: TCP
+    - fromEntities:
+        - world
+        - cluster
+      toPorts:
+        - ports:
+            - port: "2222"
+              protocol: TCP
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toEndpoints:
+        - matchLabels:
+            cnpg.io/cluster: postgres-1
+            io.kubernetes.pod.namespace: database
+      toPorts:
+        - ports:
+            - port: "5432"
+              protocol: TCP
+    - toEntities:
+        - world
