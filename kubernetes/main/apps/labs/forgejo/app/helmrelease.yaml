@@ -37,12 +37,12 @@ spec:
           app:
             image:
               repository: codeberg.org/forgejo/forgejo
-              tag: 13.0.0
+              tag: 13.0.0-rootless
             env:
-              USER_UID: "1000"
-              USER_GID: "1000"
-              FORGEJO_WORK_DIR: /data
-              FORGEJO_CUSTOM: /data/custom
+              GITEA_WORK_DIR: /data
+              GITEA_CUSTOM: /data/custom
+              GITEA_TEMP: /tmp/gitea
+              GITEA_APP_INI: /etc/forgejo/app.ini
             envFrom: *envFrom
             probes:
               liveness: &probes
