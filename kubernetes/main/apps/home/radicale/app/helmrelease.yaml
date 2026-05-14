@@ -78,6 +78,12 @@ spec:
                 service:
                   identifier: app
                   port: http
+          - host: &host "calendar.${PUBLIC_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
         tls:
           - hosts: [*host]
             secretName: radicale-tls
