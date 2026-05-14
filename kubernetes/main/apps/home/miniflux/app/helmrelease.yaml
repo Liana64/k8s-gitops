@@ -118,6 +118,12 @@ spec:
                 service:
                   identifier: app
                   port: http
+          - host: &publicHost "rss.${PUBLIC_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
         tls:
           - secretName: rss-miniflux-tls
-            hosts: [*host]
+            hosts: [*host, *publicHost]

@@ -27,7 +27,7 @@ spec:
               TZ: ${TIMEZONE}
               COOKIE_DOMAIN: ${SECRET_DOMAIN}
               PUBLIC_URL: https://anubis.${SECRET_DOMAIN}
-              REDIRECT_DOMAINS: "*.${SECRET_DOMAIN},${SECRET_DOMAIN}"
+              REDIRECT_DOMAINS: "*.${SECRET_DOMAIN},${SECRET_DOMAIN},*.${PUBLIC_DOMAIN},${PUBLIC_DOMAIN}"
               SERVE_ROBOTS_TXT: true
               POLICY_FNAME: /config/botPolicies.yaml
               TARGET: " "

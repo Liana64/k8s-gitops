@@ -72,12 +72,6 @@ spec:
           gethomepage.dev/description: CalDAV / CardDAV server
           gethomepage.dev/icon: radicale
         hosts:
-          - host: &host "caldav.${SECRET_DOMAIN}"
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
           - host: &host "calendar.${PUBLIC_DOMAIN}"
             paths:
               - path: /

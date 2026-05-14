@@ -128,20 +128,20 @@ spec:
           gethomepage.dev/description: Git forge
           gethomepage.dev/icon: forgejo
         hosts:
-          - host: &host "git.${SECRET_DOMAIN}"
+          - host: &hostInternal "git.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
                   identifier: app
                   port: http
-          - host: &host "git.${PUBLIC_DOMAIN}"
+          - host: &hostPublic "git.${PUBLIC_DOMAIN}"
             paths:
               - path: /
                 service:
                   identifier: app
                   port: http
         tls:
-          - hosts: [*host]
+          - hosts: [*hostInternal, *hostPublic]
             secretName: forgejo-tls
     persistence:
       data:

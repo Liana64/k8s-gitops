@@ -99,9 +99,15 @@ spec:
                 service:
                   identifier: app
                   port: http
+          - host: &publicHost "bookmarks.${PUBLIC_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
         tls:
           - secretName: linkding-tls
-            hosts: [*host]
+            hosts: [*host, *publicHost]
     persistence:
       data:
         storageClass: cluster-nvme

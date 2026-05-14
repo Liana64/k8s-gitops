@@ -86,9 +86,15 @@ spec:
                 service:
                   identifier: app
                   port: http
+          - host: &publicHost "${PUBLIC_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
         tls:
           - secretName: blog-tls
-            hosts: [*host]
+            hosts: [*host, *publicHost]
 
     persistence:
       tmp:
