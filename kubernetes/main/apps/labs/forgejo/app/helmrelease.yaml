@@ -38,6 +38,8 @@ spec:
             image:
               repository: codeberg.org/forgejo/forgejo
               tag: 13.0.0-rootless
+            command: ["/usr/local/bin/docker-entrypoint.sh"]
+            args: ["/app/gitea/gitea", "web"]
             env:
               GITEA_WORK_DIR: /data
               GITEA_CUSTOM: /data/custom
