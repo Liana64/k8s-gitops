@@ -28,5 +28,10 @@ spec:
       memory: 2Gi
   monitoring:
     enablePodMonitor: true
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: postgres-1-backup
 #  extensions:
 #    - name: vector

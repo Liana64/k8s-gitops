@@ -31,3 +31,6 @@ data:
   LB_SMTP_RELAY: "172.16.5.18"
   LB_TRAEFIK_INSECURE: "172.16.5.19"
   LB_GIT_SERVER: "172.16.5.20"
+
+  # Backups
+  CNPG_B2_REGION: "us-east-005"

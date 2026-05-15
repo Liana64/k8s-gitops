@@ -6,6 +6,7 @@ resources:
   - ./namespace.yaml
   - ./dragonfly/ks.yaml
   - ./cloudnative-pg/ks.yaml
+  - ./cnpg-barman-plugin/ks.yaml
   - ./pgadmin/ks.yaml
   - ./mosquitto/ks.yaml
   #- ./minio/ks.yaml

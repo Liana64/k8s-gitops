@@ -13,6 +13,8 @@ spec:
   dependsOn:
     - name: traefik
     - name: cloudnative-pg
+    - name: volsync
+    - name: kopia
   path: ./kubernetes/main/apps/home/linkding/app
   prune: true
   sourceRef:
@@ -25,3 +27,5 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      VOLSYNC_PVC: data
+      VOLSYNC_CAPACITY: 2Gi

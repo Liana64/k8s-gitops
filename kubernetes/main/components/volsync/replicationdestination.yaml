@@ -14,12 +14,12 @@ spec:
       - "${VOLSYNC_ACCESSMODES:=ReadWriteOnce}"
     cacheAccessModes:
       - "${VOLSYNC_CACHE_ACCESSMODES:=ReadWriteOnce}"
-    cacheCapacity: "${VOLSYNC_CAPACITY:=5Gi}"
+    cacheCapacity: "${VOLSYNC_CACHE_CAPACITY:=5Gi}"
     cacheStorageClassName: "${VOLSYNC_CACHE_STORAGECLASS:=openebs-hostpath}"
     capacity: "${VOLSYNC_CAPACITY:=5Gi}"
     cleanupCachePVC: true
     cleanupTempPVC: true
-    copyMethod: Snapshot
+    copyMethod: "${VOLSYNC_COPYMETHOD:=Direct}"
     enableFileDeletion: true
     moverSecurityContext:
       runAsUser: "${VOLSYNC_PUID:=1000}"
@@ -28,5 +28,4 @@ spec:
     repository: "${APP}-volsync-secret"
     sourceIdentity:
       sourceName: "${APP}"
-    storageClassName: "${VOLSYNC_STORAGECLASS:=local-path}"
-    volumeSnapshotClassName: "${VOLSYNC_SNAPSHOTCLASS:=csi-ceph-blockpool}"
+    storageClassName: "${VOLSYNC_STORAGECLASS:=openebs-hostpath}"

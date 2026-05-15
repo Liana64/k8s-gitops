@@ -1,0 +1,69 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: kopia-maintenance
+spec:
+  schedule: "0 4 * * 6"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        spec:
+          restartPolicy: Never
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+          containers:
+            - name: kopia
+              image: ghcr.io/home-operations/kopia:0.22.3@sha256:17ab64542280197a5368247deaefadc3e3bbe15714ab666c2455a06824e86efd
+              envFrom:
+                - secretRef:
+                    name: kopia-secret
+              env:
+                - name: KOPIA_CONFIG_PATH
+                  value: /config/repository.config
+                - name: KOPIA_LOG_DIR
+                  value: /config/logs
+                - name: KOPIA_CACHE_DIRECTORY
+                  value: /config/cache
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  set -e
+                  kopia repository connect b2 \
+                    --bucket="$KOPIA_B2_BUCKET" \
+                    --key-id="$B2_ACCOUNT_ID" \
+                    --key="$B2_APPLICATION_KEY" \
+                    --override-username=volsync \
+                    --override-hostname=volsync.volsync-system.svc.cluster.local
+                  echo "=== kopia repository check ==="
+                  kopia repository check
+                  echo "=== kopia maintenance run --full ==="
+                  kopia maintenance run --full
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities: {drop: ["ALL"]}
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 256Mi
+                limits:
+                  memory: 2Gi
+              volumeMounts:
+                - name: config
+                  mountPath: /config
+                - name: tmp
+                  mountPath: /tmp
+          volumes:
+            - name: config
+              emptyDir: {}
+            - name: tmp
+              emptyDir: {}

@@ -5,14 +5,12 @@ kind: ReplicationSource
 metadata:
   name: "${APP}"
 spec:
-  sourcePVC: "${APP}"
+  sourcePVC: "${VOLSYNC_PVC}"
   trigger:
     schedule: "0 */12 * * *"
   kopia:
-    accessModes:
-      - "${VOLSYNC_SNAP_ACCESSMODES:=ReadWriteOnce}" # Use ReadOnlyMany for CephFS
+    copyMethod: "${VOLSYNC_COPYMETHOD:=Direct}"
     compression: zstd-fastest
-    copyMethod: Snapshot
     moverSecurityContext:
       runAsUser: "${VOLSYNC_UID:=1000}"
       runAsGroup: "${VOLSYNC_GID:=1000}"
@@ -22,5 +20,3 @@ spec:
     retain:
       hourly: 24
       daily: 7
-    storageClassName: "${VOLSYNC_STORAGECLASS:=local-path}"
-    volumeSnapshotClassName: "${VOLSYNC_SNAPSHOTCLASS:=csi-ceph-blockpool}"

@@ -13,3 +13,6 @@ resources:
   - ./kyverno.yaml
   - ./crowdsec.yaml
   - ./external-dns.yaml
+  - ./forgejo.yaml
+  - ./cnpg.yaml
+  - ./plugin-barman-cloud.yaml
