@@ -8,6 +8,7 @@ spec:
   chartRef:
     kind: OCIRepository
     name: kopia
+    namespace: flux-system
   interval: 1h
   values:
     controllers:
