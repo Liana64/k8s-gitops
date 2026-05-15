@@ -36,10 +36,10 @@ spec:
         APP_NAME: Forgejo
         RUN_MODE: prod
         server:
-          DOMAIN: &host "git.${SECRET_DOMAIN}"
-          ROOT_URL: https://git.${SECRET_DOMAIN}
+          DOMAIN: &host "git.${PUBLIC_DOMAIN}"
+          ROOT_URL: https://git.${PUBLIC_DOMAIN}
           HTTP_PORT: 3000
-          SSH_DOMAIN: git.${SECRET_DOMAIN}
+          SSH_DOMAIN: git.${PUBLIC_DOMAIN}
           SSH_PORT: 22
           SSH_LISTEN_PORT: 2222
           START_SSH_SERVER: true
@@ -62,7 +62,7 @@ spec:
           DEFAULT_KEEP_EMAIL_PRIVATE: true
           DEFAULT_ALLOW_CREATE_ORGANIZATION: true
           DEFAULT_ENABLE_TIMETRACKING: true
-          NO_REPLY_ADDRESS: noreply.${SECRET_DOMAIN}
+          NO_REPLY_ADDRESS: noreply.${PUBLIC_DOMAIN}
         openid:
           ENABLE_OPENID_SIGNIN: false
           ENABLE_OPENID_SIGNUP: false
