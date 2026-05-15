@@ -71,7 +71,7 @@ spec:
         log:
           MODE: console
           LEVEL: info
-          ROUTER: console
+          LOGGER_ROUTER_MODE: console
         security:
           INSTALL_LOCK: true
           PASSWORD_HASH_ALGO: argon2
