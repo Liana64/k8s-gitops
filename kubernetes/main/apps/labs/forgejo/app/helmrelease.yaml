@@ -1,5 +1,4 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,157 +7,165 @@ spec:
   interval: 1h
   chartRef:
     kind: OCIRepository
-    name: app-template
+    name: forgejo
     namespace: flux-system
   values:
-    controllers:
-      forgejo:
-        replicas: 1
-        strategy: Recreate
-        annotations:
-          reloader.stakater.com/auto: "true"
-        initContainers:
-          init-db:
-            image:
-              repository: ghcr.io/liana64/postgres-init
-              tag: 16
-            env:
-              INIT_POSTGRES_DBNAME: forgejo
-              INIT_POSTGRES_HOST: postgres-1-rw.database.svc.cluster.local
-              INIT_POSTGRES_SUPER_PASS:
-                valueFrom:
-                  secretKeyRef:
-                    name: cloudnative-pg-secret
-                    key: password
-            envFrom: &envFrom
-              - secretRef:
-                  name: forgejo-secret
-        containers:
-          app:
-            image:
-              repository: codeberg.org/forgejo/forgejo
-              tag: 13.0.0-rootless
-            command: ["/app/gitea/gitea"]
-            args: ["web", "--config", "/etc/forgejo/app.ini"]
-            env:
-              GITEA_WORK_DIR: /data
-              GITEA_CUSTOM: /data/custom
-              GITEA_TEMP: /tmp/gitea
-              GITEA_APP_INI: /etc/forgejo/app.ini
-            envFrom: *envFrom
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /api/healthz
-                    port: &port 3000
-                  initialDelaySeconds: 30
-                  periodSeconds: 30
-                  timeoutSeconds: 5
-                  failureThreshold: 5
-              readiness: *probes
-              startup:
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /api/healthz
-                    port: *port
-                  initialDelaySeconds: 10
-                  periodSeconds: 10
-                  timeoutSeconds: 5
-                  failureThreshold: 30
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
-              capabilities: { drop: ["ALL"] }
-            resources:
-              requests:
-                cpu: 50m
-                memory: 256Mi
-              limits:
-                memory: 2Gi
-    defaultPodOptions:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
-        fsGroupChangePolicy: OnRootMismatch
-        seccompProfile: { type: RuntimeDefault }
+    image:
+      rootless: true
+    redis-cluster:
+      enabled: false
+    valkey-cluster:
+      enabled: false
+    postgresql:
+      enabled: false
+    postgresql-ha:
+      enabled: false
+    memcached:
+      enabled: false
+    persistence:
+      enabled: true
+      create: true
+      claimName: *app
+      storageClass: cluster-nvme
+      size: 20Gi
+      accessModes: [ReadWriteOnce]
+    gitea:
+      admin:
+        username: ""
+      config:
+        APP_NAME: Forgejo
+        RUN_MODE: prod
+        server:
+          DOMAIN: &host "git.${SECRET_DOMAIN}"
+          ROOT_URL: https://git.${SECRET_DOMAIN}
+          HTTP_PORT: 3000
+          SSH_DOMAIN: git.${SECRET_DOMAIN}
+          SSH_PORT: 22
+          SSH_LISTEN_PORT: 2222
+          START_SSH_SERVER: true
+          LFS_START_SERVER: true
+          OFFLINE_MODE: true
+        database:
+          DB_TYPE: postgres
+          HOST: postgres-1-rw.database.svc.cluster.local:5432
+          NAME: forgejo
+          USER: forgejo
+          SSL_MODE: disable
+        repository:
+          ROOT: /data/git/repositories
+          DEFAULT_BRANCH: main
+        service:
+          DISABLE_REGISTRATION: false
+          REQUIRE_SIGNIN_VIEW: true
+          REGISTER_EMAIL_CONFIRM: false
+          ENABLE_NOTIFY_MAIL: false
+          DEFAULT_KEEP_EMAIL_PRIVATE: true
+          DEFAULT_ALLOW_CREATE_ORGANIZATION: true
+          DEFAULT_ENABLE_TIMETRACKING: true
+          NO_REPLY_ADDRESS: noreply.${SECRET_DOMAIN}
+        openid:
+          ENABLE_OPENID_SIGNIN: false
+          ENABLE_OPENID_SIGNUP: false
+        session:
+          PROVIDER: file
+        log:
+          MODE: console
+          LEVEL: info
+          ROUTER: console
+        security:
+          INSTALL_LOCK: true
+          PASSWORD_HASH_ALGO: argon2
+        indexer:
+          REPO_INDEXER_ENABLED: true
+          ISSUE_INDEXER_TYPE: bleve
+        cron:
+          ENABLED: true
+        packages:
+          ENABLED: true
+        actions:
+          ENABLED: false
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
     service:
-      app:
-        controller: forgejo
-        primary: true
-        ports:
-          http:
-            port: *port
+      http:
+        type: ClusterIP
+        port: 3000
       ssh:
-        controller: forgejo
         type: LoadBalancer
+        port: 22
         annotations:
           lbipam.cilium.io/ips: "${LB_GIT_SERVER}"
         externalTrafficPolicy: Local
-        ports:
-          ssh:
-            port: 22
-            targetPort: 2222
-            protocol: TCP
-    serviceMonitor:
-      app:
-        serviceName: forgejo
-        endpoints:
-          - port: http
-            scheme: http
-            path: /metrics
-            interval: 1m
-            scrapeTimeout: 10s
     ingress:
-      app:
-        className: traefik
-        annotations:
-          cert-manager.io/cluster-issuer: "letsencrypt-production"
-          traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
-          traefik.ingress.kubernetes.io/router.middlewares: "networking-traefik-middleware-chain-no-auth@kubernetescrd"
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Services
-          gethomepage.dev/name: Forgejo
-          gethomepage.dev/description: Git forge
-          gethomepage.dev/icon: forgejo
-        hosts:
-          - host: &hostInternal "git.${SECRET_DOMAIN}"
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
-          - host: &hostPublic "git.${PUBLIC_DOMAIN}"
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
-        tls:
-          - hosts: [*hostInternal, *hostPublic]
-            secretName: forgejo-tls
-    persistence:
-      data:
-        storageClass: cluster-nvme
-        accessMode: ReadWriteOnce
-        size: 20Gi
-        retain: true
-        globalMounts:
-          - path: /data
-      config:
-        type: configMap
-        name: forgejo-config
-        globalMounts:
-          - path: /etc/forgejo/app.ini
-            subPath: app.ini
-            readOnly: true
-      tmp:
-        type: emptyDir
-        globalMounts:
-          - path: /tmp
+      enabled: true
+      className: traefik
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-production
+        traefik.ingress.kubernetes.io/router.entrypoints: websecure
+        traefik.ingress.kubernetes.io/router.middlewares: "networking-traefik-middleware-chain-no-auth@kubernetescrd"
+        gethomepage.dev/enabled: "true"
+        gethomepage.dev/group: Services
+        gethomepage.dev/name: Forgejo
+        gethomepage.dev/description: Git forge
+        gethomepage.dev/icon: forgejo
+      hosts:
+        - host: *host
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - hosts: [*host]
+          secretName: forgejo-tls
+  valuesFrom:
+    - targetPath: gitea.config.database.PASSWD
+      kind: Secret
+      name: forgejo-secret
+      valuesKey: FORGEJO__database__PASSWD
+    - targetPath: gitea.config.security.SECRET_KEY
+      kind: Secret
+      name: forgejo-secret
+      valuesKey: FORGEJO__security__SECRET_KEY
+    - targetPath: gitea.config.security.INTERNAL_TOKEN
+      kind: Secret
+      name: forgejo-secret
+      valuesKey: FORGEJO__security__INTERNAL_TOKEN
+    - targetPath: gitea.config.oauth2.JWT_SECRET
+      kind: Secret
+      name: forgejo-secret
+      valuesKey: FORGEJO__oauth2__JWT_SECRET
+    - targetPath: gitea.config.server.LFS_JWT_SECRET
+      kind: Secret
+      name: forgejo-secret
+      valuesKey: FORGEJO__server__LFS_JWT_SECRET
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Deployment
+              name: forgejo
+            patch: |
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: forgejo
+              spec:
+                template:
+                  spec:
+                    initContainers:
+                      - name: init-db
+                        image: ghcr.io/liana64/postgres-init:16
+                        env:
+                          - name: INIT_POSTGRES_DBNAME
+                            value: forgejo
+                          - name: INIT_POSTGRES_HOST
+                            value: postgres-1-rw.database.svc.cluster.local
+                          - name: INIT_POSTGRES_SUPER_PASS
+                            valueFrom:
+                              secretKeyRef:
+                                name: cloudnative-pg-secret
+                                key: password
+                        envFrom:
+                          - secretRef:
+                              name: forgejo-secret

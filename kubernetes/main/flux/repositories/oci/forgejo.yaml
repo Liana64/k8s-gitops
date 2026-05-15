@@ -6,10 +6,10 @@ metadata:
   name: forgejo
   namespace: flux-system
 spec:
-  interval: 2h
+  interval: 15m
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
   url: oci://code.forgejo.org/forgejo-helm/forgejo
   ref:
-    tag: 13.0.0
+    tag: 17.1.0
