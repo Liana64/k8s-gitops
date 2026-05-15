@@ -16,3 +16,4 @@ resources:
   - ./forgejo.yaml
   - ./cnpg.yaml
   - ./plugin-barman-cloud.yaml
+  - ./volsync.yaml
