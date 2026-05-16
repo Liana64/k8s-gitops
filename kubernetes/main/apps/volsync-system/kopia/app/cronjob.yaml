@@ -42,6 +42,12 @@ spec:
                     --key-id="$B2_ACCOUNT_ID" \
                     --key="$B2_APPLICATION_KEY" \
                     --override-username=volsync \
+                    --override-hostname=volsync.volsync-system.svc.cluster.local \
+                  || kopia repository create b2 \
+                    --bucket="$KOPIA_B2_BUCKET" \
+                    --key-id="$B2_ACCOUNT_ID" \
+                    --key="$B2_APPLICATION_KEY" \
+                    --override-username=volsync \
                     --override-hostname=volsync.volsync-system.svc.cluster.local
                   echo "=== kopia repository check ==="
                   kopia repository check

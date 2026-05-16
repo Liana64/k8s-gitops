@@ -1,5 +1,8 @@
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/volsync.backube/replicationdestination_v1alpha1.json
+# Dormant by default: empty trigger value matches empty status.lastManualSync,
+# so the RD will not fire until a per-app VOLSYNC_RESTORE_TRIGGER is set.
+# enableFileDeletion defaults off so a misfired restore can only add files.
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
@@ -8,7 +11,7 @@ metadata:
     kustomize.toolkit.fluxcd.io/ssa: IfNotPresent
 spec:
   trigger:
-    manual: restore-once
+    manual: "${VOLSYNC_RESTORE_TRIGGER:=}"
   kopia:
     accessModes:
       - "${VOLSYNC_ACCESSMODES:=ReadWriteOnce}"
@@ -20,7 +23,7 @@ spec:
     cleanupCachePVC: true
     cleanupTempPVC: true
     copyMethod: "${VOLSYNC_COPYMETHOD:=Direct}"
-    enableFileDeletion: true
+    enableFileDeletion: ${VOLSYNC_FILE_DELETION:=false}
     moverSecurityContext:
       runAsUser: "${VOLSYNC_PUID:=1000}"
       runAsGroup: "${VOLSYNC_PGID:=1000}"
