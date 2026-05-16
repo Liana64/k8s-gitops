@@ -27,5 +27,4 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_PVC: data
       VOLSYNC_CAPACITY: 2Gi
